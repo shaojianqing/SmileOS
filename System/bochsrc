@@ -1,0 +1,23 @@
+###############################################################
+# Configuration file for Bochs
+###############################################################
+
+# how much memory the emulated machine will have
+megs: 64
+
+# filename of ROM images
+romimage: file=/usr/share/bochs/BIOS-bochs-latest
+vgaromimage: file=/usr/share/vgabios/vgabios.bin
+
+# what disk images will be used
+ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
+ata0-master: type=disk, path="System.vhd", mode=flat, cylinders=65, heads=16, spt=63
+
+# choose the boot disk.
+boot: disk
+
+# disable the mouse
+mouse: enabled=1
+
+# enable key mapping, using US layout as default.
+keyboard_mapping: enabled=1, map=/usr/share/bochs/keymaps/x11-pc-us.map

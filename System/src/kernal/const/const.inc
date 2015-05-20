@@ -1,0 +1,9 @@
+PORT_KEYDAT 			equ 		0x0060
+PORT_KEYSTA 			equ 		0x0064
+PORT_KEYCMD 			equ 		0x0064
+KEYCMD_WRITE_MODE 		equ 		0x0060
+KBC_MODE                equ			0x0047
+KEYCMD_SENDTO_MOUSE     equ 		0x00d4
+MOUSECMD_ENABLE			equ			0x00f4
+PIT_CTRL				equ			0x0043
+PIT_CNT0				equ			0x0040
