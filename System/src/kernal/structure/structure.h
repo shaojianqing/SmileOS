@@ -5,14 +5,14 @@ typedef unsigned short u16;
 
 typedef unsigned int u32;
 
-typedef struct SegmentDescriptor 
+typedef struct GlobalDescriptor 
 {
 	short limitLow, baseLow;
 
 	char baseMid, accessRight;
 
 	char limitHigh, baseHigh;
-} SegmentDescriptor;
+} GlobalDescriptor;
 
 typedef struct GateDescriptor
 {

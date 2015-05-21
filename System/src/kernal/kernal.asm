@@ -23,9 +23,8 @@ _start:
 	mov gs, eax
 
 	call initPic
-	call initTiming
-	call initKeyboard	
-	call initMouse
+	;call initKeyboard
+	;call initMouse
 	call initSystem
 
 	jmp $

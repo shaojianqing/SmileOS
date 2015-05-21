@@ -19,11 +19,32 @@
 
 int mx, my;
 
+void intHandler21(int *esp)
+{
+	u8 *buffer = (u8 *)0xe0000000;
+	int i=0;
+	for (i=0;i<1024*300;++i) {
+		*(buffer+i)=0x88;
+	}
+}
+
+void intHandler2c(int *esp)
+{
+	u8 *buffer = (u8 *)0xe0000000;
+	int i=0;
+	for (i=0;i<1024*300;++i) {
+		*(buffer+i)=0xFF;
+	}
+}
+
 MouseData mouseData;
+
+Sheet *window;
+
+Sheet *mouse;
 
 void initSystem(void)
 {
-
     mouseData.phase = 0;
 
     unsigned int count = 0;
@@ -44,11 +65,11 @@ void initSystem(void)
     prepareStartBarSheet(startBar);
     loadSheet(startBar, 1);*/
 
-    Sheet *window = prepareSheet();
+    window = prepareSheet();
     prepareWindowSheet(window);
     loadSheet(window, 1);
 
-    Sheet *mouse = prepareSheet();
+    mouse = prepareSheet();
     prepareMouseSheet(mouse);
     loadSheet(mouse, 2);
 
@@ -88,10 +109,8 @@ void initSystem(void)
     mx = 500;
     my = 360;
     
-    initMouseBuffer();
 	u8 *a = (u8 *)0x30401;
-	showInfo(window, (int)intHandler20);
-
+	showInfo(window, (int)asmIntHandler2c);
     for (;;)
     {
 

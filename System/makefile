@@ -9,7 +9,7 @@ ELFFLAGES = -f elf
 CCFLAGES = -c -m32
 LD = ld
 LDFLAGES = -m elf_i386 -s -Ttext 
-KERNALSTART = 0x80000
+KERNALSTART = 0x30400
 IMAGETOOL = java -jar ImageTool.jar
 CREATEIMAGE = createImage
 COPYBINARY = copyBinary
@@ -30,6 +30,9 @@ LOADER = tgt/loader.bin
 
 #Public Object#
 PUBLICOBJS = tgt/public.o
+
+#Interrupt Object#
+INTERRUPTOBJS = tgt/interrupt.o
 
 #Kernal Target#
 KERNAL = tgt/kernal.sys
@@ -73,10 +76,10 @@ CHARSET = tgt/charset.bin
 build : clean $(TARGET)
 
 clean :
-	 rm -f $(TARGET) $(BOOT) $(LOADER) $(KERNALOBJS) $(KERNALBIN) $(KERNAL) $(KEYBOARD) $(MOUSE) $(BGS1) $(BGS2) $(BGS3) $(BGS4) $(APP1) $(APP2) $(APP3) $(APP4)  $(PUBLICOBJS) 
+	 rm -f $(TARGET) $(BOOT) $(LOADER) $(KERNALOBJS) $(KERNALBIN) $(KERNAL) $(KEYBOARD) $(MOUSE) $(BGS1) $(BGS2) $(BGS3) $(BGS4) $(APP1) $(APP2) $(APP3) $(APP4)  $(PUBLICOBJS) $(INTERRUPTOBJS)
 
 rmfiles :
-	 rm -f $(BOOT) $(LOADER) $(KERNALOBJS) $(KERNALBIN) $(KERNAL) $(KEYBOARD) $(MOUSE)  $(BGS1) $(BGS2) $(BGS3) $(BGS4) $(APP1) $(APP2) $(APP3) $(APP4) $(PUBLICOBJS)
+	 rm -f $(BOOT) $(LOADER) $(KERNALOBJS) $(KERNALBIN) $(KERNAL) $(KEYBOARD) $(MOUSE)  $(BGS1) $(BGS2) $(BGS3) $(BGS4) $(APP1) $(APP2) $(APP3) $(APP4) $(PUBLICOBJS) $(INTERRUPTOBJS)
 
 #---------------------------------------------------------------#
 tgt/boot.bin : src/boot/boot.asm
@@ -89,6 +92,9 @@ tgt/loader.bin : src/boot/loader.asm src/boot/structure.inc
 tgt/public.o : src/kernal/public/public.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
+tgt/interrupt.o : src/kernal/include/interrupt.asm
+	$(ASM) $(ELFFLAGES) $< -o $@
+
 #---------------------------------------------------------------#
 tgt/ka.o : src/kernal/kernal.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
@@ -96,8 +102,8 @@ tgt/ka.o : src/kernal/kernal.asm
 tgt/kc.o : src/kernal/kernal.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) 
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) -o $@
+tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS)
+	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) -o $@
 
 tgt/kernal.sys : $(KERNALBIN)
 	$(IMAGETOOL) $(TRIMELFHEADER) $< $@
