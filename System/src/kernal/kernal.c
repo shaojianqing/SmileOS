@@ -1,15 +1,18 @@
+#include "const/const.h"
 #include "structure/structure.h"
+#include "structure/algorithm.c"
 #include "macro/macro.h"
-#include "io/io.h"
+#include "inOutput/inOutput.h"
 #include "harddisk/hd.c"
 #include "memory/memory.c"
-#include "const/const.h"
 #include "timing/timing.c"
+#include "include/mouse.c"
+#include "include/keyboard.c"
 #include "include/descriptor.c"
 #include "include/interrupt.c"
+#include "include/peripheral.c"
 #include "sheet/sheet.c"
 #include "charset/charset.c"
-#include "keyboard/keyboard.c"
 #include "gui/image.c"
 #include "graphics/graphics.c"
 #include "mouse/mouse.c"
@@ -32,6 +35,8 @@ void initSystem(void)
     unsigned int count = 0;
 
 	initInterruptHandler();
+	initPeripheralStatus();
+	initQueueBufferData();
     initMemoryManagement();
     initSheetManagement();
 
@@ -107,22 +112,5 @@ void initSystem(void)
 
 
     }
-}
-
-void intHandler21(int *esp)
-{
-	outByte(PIC0_OCW2, 0x61);
-	u8 data = inByte(PORT_KEYDATA);
-
-	showInfo(window, data);
-}
-
-void intHandler2c(int *esp)
-{
-	u8 *buffer = (u8 *)0xe0000000;
-	int i=0;
-	for (i=0;i<1024*300;++i) {
-		*(buffer+i)=0xFF;
-	}
 }
 

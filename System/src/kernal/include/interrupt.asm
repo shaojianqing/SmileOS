@@ -1,8 +1,7 @@
 %include "src/kernal/const/const.inc"
 
 global initPic
-global initMouse
-global initKeyboard
+global asmIntHandler20
 global asmIntHandler21
 global asmIntHandler2c
 
@@ -42,29 +41,16 @@ initPic:
 
     ret
 
-initKeyboard:
-	call waitKBCReady
-	mov al, KEYCMD_WRITE_MODE
-	out PORT_KEYCMD, al
-	call waitKBCReady
-	mov al, KBC_MODE
-	out PORT_KEYDAT, al
-	ret
+asmIntHandler20:
+	push ds
+	pushad
 
-waitKBCReady:
-readKBC:in al, PORT_KEYSTA
-	and al, 0x02
-	jnz readKBC
-	ret
-
-initMouse:
-	call waitKBCReady
-	mov al, KEYCMD_SENDTO_MOUSE
-	out PORT_KEYCMD, al
-	call waitKBCReady
-	mov al, MOUSECMD_ENABLE
-	out PORT_KEYDAT, al
-	ret
+	mov eax, 00010_000B
+	mov ds, eax
+	
+	popad
+	pop ds
+	iretd
 
 asmIntHandler21:
 	push ds

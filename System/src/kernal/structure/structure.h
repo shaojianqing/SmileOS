@@ -23,6 +23,13 @@ typedef struct GateDescriptor
 	short offsetHigh;
 } GateDescriptor;
 
+typedef struct QueueBuffer
+{
+	u8 *buffer;
+
+	int p, q, size, free, flags;
+} QueueBuffer;
+
 typedef struct Color
 {
     u8 red;

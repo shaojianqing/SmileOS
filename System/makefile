@@ -43,9 +43,6 @@ KERNALBIN = tgt/kernal.bin
 
 KERNALOBJS = tgt/ka.o tgt/kc.o
 
-#Keyboard Target#
-KEYBOARD = tgt/keyboard.sys
-
 #Mouse Target#
 MOUSE = tgt/mouse.sys
 
@@ -118,10 +115,6 @@ tgt/gate.bin : src/kernal/gate/gate.asm
 	$(ASM) $< -o $@
 
 #---------------------------------------------------------------#
-tgt/keyboard.sys : src/kernal/keyboard/keyboard.asm
-	$(ASM) $< -o $@
-
-#---------------------------------------------------------------#
 tgt/mouse.sys : src/kernal/mouse/mouse.asm
 	$(ASM) $< -o $@
 
@@ -152,7 +145,7 @@ tgt/app4.image : res/images/app4.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/keyboard.sys tgt/mouse.sys tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/app1.image tgt/app2.image tgt/app3.image tgt/app4.image tgt/charset.bin tgt/gate.bin
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/mouse.sys tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/app1.image tgt/app2.image tgt/app3.image tgt/app4.image tgt/charset.bin tgt/gate.bin
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512

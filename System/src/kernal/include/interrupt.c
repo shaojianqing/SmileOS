@@ -1,3 +1,5 @@
+void asmIntHandler20();
+
 void asmIntHandler21();
 
 void asmIntHandler2c();
