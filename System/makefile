@@ -18,6 +18,8 @@ BUILDCHARSET = buildCharSet
 TRIMELFHEADER = trimElfHeader
 RUN-SYSTEM = VBoxManage startvm System
 
+TGT = tgt/*
+
 EMPTY = Empty.vhd
 
 TARGET = System.vhd
@@ -76,10 +78,10 @@ CHARSET = tgt/charset.bin
 build : clean $(TARGET)
 
 clean :
-	 rm -f $(TARGET) $(BOOT) $(LOADER) $(KERNALOBJS) $(KERNALBIN) $(KERNAL) $(KEYBOARD) $(MOUSE) $(BGS1) $(BGS2) $(BGS3) $(BGS4) $(APP1) $(APP2) $(APP3) $(APP4)  $(PUBLICOBJS) $(INTERRUPTOBJS)
+	 rm -f $(TARGET) $(TGT)
 
 rmfiles :
-	 rm -f $(BOOT) $(LOADER) $(KERNALOBJS) $(KERNALBIN) $(KERNAL) $(KEYBOARD) $(MOUSE)  $(BGS1) $(BGS2) $(BGS3) $(BGS4) $(APP1) $(APP2) $(APP3) $(APP4) $(PUBLICOBJS) $(INTERRUPTOBJS)
+	 rm -f $(BOOT) $(TGT)
 
 #---------------------------------------------------------------#
 tgt/boot.bin : src/boot/boot.asm

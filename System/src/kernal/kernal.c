@@ -19,24 +19,6 @@
 
 int mx, my;
 
-void intHandler21(int *esp)
-{
-	u8 *buffer = (u8 *)0xe0000000;
-	int i=0;
-	for (i=0;i<1024*300;++i) {
-		*(buffer+i)=0x88;
-	}
-}
-
-void intHandler2c(int *esp)
-{
-	u8 *buffer = (u8 *)0xe0000000;
-	int i=0;
-	for (i=0;i<1024*300;++i) {
-		*(buffer+i)=0xFF;
-	}
-}
-
 MouseData mouseData;
 
 Sheet *window;
@@ -108,9 +90,6 @@ void initSystem(void)
 
     mx = 500;
     my = 360;
-    
-	u8 *a = (u8 *)0x30401;
-	showInfo(window, (int)asmIntHandler2c);
     for (;;)
     {
 
@@ -128,5 +107,22 @@ void initSystem(void)
 
 
     }
+}
+
+void intHandler21(int *esp)
+{
+	outByte(PIC0_OCW2, 0x61);
+	u8 data = inByte(PORT_KEYDATA);
+
+	showInfo(window, data);
+}
+
+void intHandler2c(int *esp)
+{
+	u8 *buffer = (u8 *)0xe0000000;
+	int i=0;
+	for (i=0;i<1024*300;++i) {
+		*(buffer+i)=0xFF;
+	}
 }
 
