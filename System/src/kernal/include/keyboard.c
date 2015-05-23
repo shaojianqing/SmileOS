@@ -5,7 +5,7 @@ typedef struct KeyData
 
 QueueBuffer keyBuffer;
 
-void intHandler21(int *esp)
+void intHandler21()
 {
 	outByte(PIC0_OCW2, 0x61);
 	u8 data = inByte(PORT_KEYDATA);

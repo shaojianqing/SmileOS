@@ -33,8 +33,7 @@ void initSystem(void)
 {
     mouseData.phase = 0;
 
-	initInterruptHandler();
-	
+	initInterruptHandler();	
 	initQueueBufferData();
 	initPeripheralStatus();
 

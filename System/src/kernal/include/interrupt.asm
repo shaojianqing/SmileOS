@@ -5,6 +5,7 @@ global asmIntHandler20
 global asmIntHandler21
 global asmIntHandler2c
 
+extern intHandler20
 extern intHandler21
 extern intHandler2c
 
@@ -47,6 +48,8 @@ asmIntHandler20:
 
 	mov eax, 00010_000B
 	mov ds, eax
+
+	call intHandler20
 	
 	popad
 	pop ds
@@ -71,12 +74,6 @@ asmIntHandler2c:
 	
 	mov eax, 00010_000B	
 	mov ds, eax
-
-	mov al, 0x64
-	out 0xa0, al
-	mov al, 0x62
-	out 0x20, al
-	in  al, 0x60
 
 	call intHandler2c
 		

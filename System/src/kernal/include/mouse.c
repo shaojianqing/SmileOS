@@ -11,7 +11,7 @@ typedef struct MouseData
 
 QueueBuffer mouseBuffer;
 
-void intHandler2c(int *esp)
+void intHandler2c()
 {
 	u8 data;
 	outByte(PIC1_OCW2, 0x64);
