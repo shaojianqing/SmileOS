@@ -1,3 +1,8 @@
+typedef struct KeyData
+{
+    int key;
+} KeyData;
+
 QueueBuffer keyBuffer;
 
 void intHandler21(int *esp)
@@ -9,5 +14,8 @@ void intHandler21(int *esp)
 	return;
 }
 
-
-
+void processKeyData(KeyData *keyData, Sheet *input) 
+{
+	(*keyData).key = getQueueBuffer(&keyBuffer);
+	setupInterrupt();
+}

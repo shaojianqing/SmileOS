@@ -9,7 +9,7 @@ void initQueueBuffer(QueueBuffer *queueBuffer, int size, u8 *buffer)
 	return;
 }
 
-int putQueueBuffer(QueueBuffer *queueBuffer, u8 data)
+int putQueueBuffer(QueueBuffer *queueBuffer, signed char data)
 {
 	if ((*queueBuffer).free == 0) {
 		(*queueBuffer).flags |= FLAGS_OVERRUN;
@@ -24,9 +24,9 @@ int putQueueBuffer(QueueBuffer *queueBuffer, u8 data)
 	return 0;
 }
 
-int getQueueBuffer(QueueBuffer *queueBuffer)
+u8 getQueueBuffer(QueueBuffer *queueBuffer)
 {
-	int data;
+	u8 data;
 	if ((*queueBuffer).free == (*queueBuffer).size) {
 		return -1;
 	}
@@ -39,7 +39,7 @@ int getQueueBuffer(QueueBuffer *queueBuffer)
 	return data;
 }
 
-int QueueBufferStatus(QueueBuffer *queueBuffer)
+int queueBufferStatus(QueueBuffer *queueBuffer)
 {
 	return (*queueBuffer).size - (*queueBuffer).free;
 }

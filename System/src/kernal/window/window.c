@@ -46,7 +46,7 @@ Sheet* prepareWindowSheet(Sheet *sheet)
     }
 }
 
-void showInfo(Sheet *sheet, int count)
+void showInfo(Sheet *sheet, int key)
 {
 
     Color mainColor;
@@ -60,7 +60,7 @@ void showInfo(Sheet *sheet, int count)
     color.blue = 220;
 
     drawRect((*sheet).buffer, sheet, 20, 100, 300, 200, color);
-    printInteger(sheet, count, 100, 100, mainColor);
+    printInteger(sheet, key, 100, 100, mainColor);
     refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0);
     refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
 }
