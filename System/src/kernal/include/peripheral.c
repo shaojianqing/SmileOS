@@ -10,6 +10,14 @@ void waitKBCReady()
 	return;
 }
 
+void initTiming()
+{
+	outByte(PIT_CTRL, 0x34);
+	outByte(PIT_CNT0, 0x9c);
+	outByte(PIT_CNT0, 0x2e);
+	return;
+}
+
 void initKeyboard()
 {
 	waitKBCReady();
@@ -30,6 +38,7 @@ void initMouseData()
 
 void initPeripheralStatus()
 {
+	initTiming();
 	initKeyboard();
 	initMouseData();
 }

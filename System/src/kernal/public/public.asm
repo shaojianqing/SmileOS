@@ -5,7 +5,6 @@ global outByte
 global loadGdtr
 global loadIdtr
 global readPort
-global initTiming
 global readHardDisk
 global clearInterrupt
 global setupInterrupt
@@ -23,18 +22,6 @@ loadIdtr:
 	mov ax, [esp+4]
 	mov [esp+6],ax
 	lidt [esp+6]
-	ret
-
-initTiming:
-	mov al, 0x34
-	out PIT_CTRL, al
-	
-	mov al, 0x9c
-	out PIT_CNT0, al
-
-	mov al, 0x2e
-	out PIT_CNT0, al
-
 	ret
 
 clearInterrupt:

@@ -6,7 +6,7 @@
 #include "harddisk/hd.c"
 #include "memory/memory.c"
 #include "sheet/sheet.c"
-#include "timing/timing.c"
+#include "include/timing.c"
 #include "include/mouse.c"
 #include "include/keyboard.c"
 #include "include/descriptor.c"
@@ -30,7 +30,7 @@ Sheet *window;
 Sheet *mouse;
 
 void initSystem(void)
-{
+{	
     mouseData.phase = 0;
 
 	initInterruptHandler();	

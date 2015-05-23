@@ -31,6 +31,9 @@
 #define PIC1_ICW3		0x00a1
 #define PIC1_ICW4		0x00a1
 
+#define PIT_CTRL		0x0043
+#define PIT_CNT0		0x0040
+
 #define INTERRUPT_MOUSE 0x2c
 #define INTERRUPT_TIMING 0x20
 #define INTERRUPT_KEYBOARD 0x21

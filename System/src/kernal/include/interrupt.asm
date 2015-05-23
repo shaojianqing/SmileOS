@@ -32,7 +32,7 @@ initPic:
     out 0x21, al
     out 0xa1, al
 
-    mov al, 11111001B
+    mov al, 11111000B
     out 0x21, al
 
     mov al, 11101111B

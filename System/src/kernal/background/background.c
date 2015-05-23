@@ -18,7 +18,7 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
         for (i=0; i<size; i+=3)
         {
             *((*sheet).buffer+i) = 240;
-            *((*sheet).buffer+i+1) = 120;
+            *((*sheet).buffer+i+1) = 200;
             *((*sheet).buffer+i+2) = 120;
         }
 
