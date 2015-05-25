@@ -3,11 +3,11 @@
 #include "structure/algorithm.c"
 #include "macro/macro.h"
 #include "inOutput/inOutput.h"
-#include "harddisk/hd.c"
 #include "memory/memory.c"
 #include "sheet/sheet.c"
 #include "include/timing.c"
 #include "include/mouse.c"
+#include "include/harddisk.c"
 #include "include/keyboard.c"
 #include "include/descriptor.c"
 #include "include/interrupt.c"
@@ -35,6 +35,7 @@ void initSystem(void)
 
 	initInterruptHandler();	
 	initQueueBufferData();
+	initTimerManagement();
 	initPeripheralStatus();
 
     initMemoryManagement();
@@ -54,8 +55,10 @@ void initSystem(void)
 
     mx = 500;
     my = 360;
+
     while(TRUE)
     {
+		//showInfo(window, timeManager.time);
         clearInterrupt();
 		if (queueBufferStatus(&keyBuffer) + queueBufferStatus(&mouseBuffer) == 0) {
 			setupInterrupt();

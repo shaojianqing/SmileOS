@@ -4,7 +4,6 @@
 
 typedef struct Image
 {
-
     char *head;
 
     char *data;
@@ -29,17 +28,13 @@ Image* loadImageFromStorage(unsigned int sector)
     unsigned char *buffer = (unsigned char *)allocMemoryInPage(size);
 
     int page = 0;
-    if (size%READ_BLOCK_SIZE==0)
-    {
+    if (size%READ_BLOCK_SIZE==0) {
         page = size/READ_BLOCK_SIZE;
-    }
-    else
-    {
+    } else {
         page = size/READ_BLOCK_SIZE+1;
     }
     unsigned int i=0, pageSize=0;
-    for (i=0; i<page; ++i)
-    {
+    for (i=0; i<page; ++i) {
         pageSize = (i<page-1?READ_BLOCK_SIZE:size-i*READ_BLOCK_SIZE);
         readHardDisk(sector, buffer, pageSize);
         buffer+=pageSize;
@@ -63,10 +58,8 @@ void addImage(Sheet* sheet, Image* image)
     unsigned int sheetWidth = (*sheet).width;
 
     unsigned int x=0, y=0;
-    for (y=0; y<height; ++y)
-    {
-        for (x=0; x<width; ++x)
-        {
+    for (y=0; y<height; ++y) {
+        for (x=0; x<width; ++x) {
             *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3) = *((*image).data+(y*80+x)*3);
             *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3+1) = *((*image).data+(y*80+x)*3+1);
             *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3+2) = *((*image).data+(y*80+x)*3+2);

@@ -9,18 +9,18 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
         (*sheet).width = SCREEN_WIDTH;
         (*sheet).height = SCREEN_HEIGHT;
         unsigned int size = SCREEN_WIDTH*SCREEN_HEIGHT*SCREEN_DENSITY+8;
-        //Image *bgImage = loadImageFromStorage(0x4000);
-        (*sheet).buffer = (unsigned char *)allocMemoryInPage(size);
-        //(*sheet).buffer = (*bgImage).buffer;
+        Image *bgImage = loadImageFromStorage(0x00);
+        //(*sheet).buffer = (unsigned char *)allocMemoryInPage(size);
+        (*sheet).buffer = (*bgImage).buffer;
 
-        unsigned int i=0;
+        /*unsigned int i=0;
 
         for (i=0; i<size; i+=3)
         {
             *((*sheet).buffer+i) = 240;
             *((*sheet).buffer+i+1) = 200;
-            *((*sheet).buffer+i+2) = 120;
-        }
+            *((*sheet).buffer+i+2) = 80;
+        }*/
 
         Color startColor;
         startColor.red = 250;
