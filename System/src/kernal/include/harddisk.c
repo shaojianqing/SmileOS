@@ -43,12 +43,31 @@ typedef struct HdCmd
 	u8 command;
 } HdCmd;
 
+bool isHardDiskReady=FALSE;
+
+void intHandler2e()
+{
+	inByte(REG_STATUS);
+	isHardDiskReady=TRUE;
+	return;
+}
+
 bool waitForStatus(int mask, int val, int timeout) 
 {
 	long time = getTime();
 	while((getTime() - time)<timeout) {
 		if ((inByte(REG_STATUS) & mask) == val)	{
 			return TRUE;	
+		}
+	}
+	return FALSE;
+}
+
+bool waitForHdInterrupt()
+{
+	while(TRUE) {
+		if (isHardDiskReady==TRUE) {
+			return TRUE;
 		}
 	}
 	return FALSE;
@@ -81,9 +100,10 @@ void readHardDisk(int sector, void *buffer, int size)
 	cmd.lbaHigh = (sector>>16) & 0xFF;
 	cmd.device = ((sector>>24) & 0x0F) | 0xE0;
 	cmd.command = ATA_READ;
-	
+	isHardDiskReady = FALSE;
 	if (sendHdCmd(&cmd) == TRUE) {
 		while(size>0) {
+			waitForHdInterrupt();
 			int bytes = min(SECTOR_SIZE, size);
 			readPort(REG_DATA, buffer, bytes);
 			buffer+=bytes;			

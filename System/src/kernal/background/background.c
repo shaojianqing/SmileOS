@@ -9,7 +9,7 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
         (*sheet).width = SCREEN_WIDTH;
         (*sheet).height = SCREEN_HEIGHT;
         unsigned int size = SCREEN_WIDTH*SCREEN_HEIGHT*SCREEN_DENSITY+8;
-        Image *bgImage = loadImageFromStorage(0x00);
+        Image *bgImage = loadImageFromStorage(0x4000);
         //(*sheet).buffer = (unsigned char *)allocMemoryInPage(size);
         (*sheet).buffer = (*bgImage).buffer;
 
