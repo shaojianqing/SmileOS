@@ -1,12 +1,11 @@
 
 Sheet* prepareWindowSheet(Sheet *sheet)
 {
-    if (sheet != 0)
-    {
-        (*sheet).x = 300;
-        (*sheet).y = 200;
-        (*sheet).width = 400;
-        (*sheet).height = 300;
+    if (sheet != 0) {
+        (*sheet).x = 112;
+        (*sheet).y = 50;
+        (*sheet).width = 800;
+        (*sheet).height = 640;
         (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
 
         resetSheet(sheet);
@@ -39,16 +38,15 @@ Sheet* prepareWindowSheet(Sheet *sheet)
 
         drawCornerRect((*sheet).buffer, sheet, 0, 0, (*sheet).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect((*sheet).buffer, sheet, 1, 1, (*sheet).width-1, 21, startColor, endColor, corner);
-        drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 300, mainBgColor);
-        drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-1, 298, mainColor);
+        drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 640, mainBgColor);
+        drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-1, 638, mainColor);
 
         return sheet;
     }
 }
 
-void showInfo(Sheet *sheet, int key)
+void showInfo(Sheet *sheet, int x, int y, int key)
 {
-
     Color mainColor;
     mainColor.red = 30;
     mainColor.green = 30;
@@ -59,8 +57,31 @@ void showInfo(Sheet *sheet, int key)
     color.green = 220;
     color.blue = 220;
 
-    drawRect((*sheet).buffer, sheet, 20, 100, 300, 200, color);
-    printInteger(sheet, key, 100, 100, mainColor);
+    drawRect((*sheet).buffer, sheet, x, y, 300, 200, color);
+    printHexInteger(sheet, key, x, y, mainColor);
     refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0);
     refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
 }
+
+void showBufferInfo(Sheet *sheet, char *buffer)
+{
+	Color mainColor;
+    mainColor.red = 30;
+    mainColor.green = 30;
+    mainColor.blue = 30;	
+		
+	int totalSize = 256, rowNum = 16, columnNum = 16;
+
+	int x=0,y=0;
+	for (y=0;y<columnNum;++y) {
+		for (x=0;x<rowNum;++x) {
+			char data= *(buffer+y*16+x);
+			printHexByte(sheet, data, x*36+130, y*36+32, mainColor);
+		}	
+	}
+
+	refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0);
+    refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
+}
+
+

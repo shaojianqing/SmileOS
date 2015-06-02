@@ -19,7 +19,7 @@ typedef struct Image
 Image* loadImageFromStorage(unsigned int sector)
 {
     char *head = (char *)allocMemory(IMAGE_HEADER_SIZE);
-    readHardDisk(sector, head, IMAGE_HEADER_SIZE);
+    //readHardDisk(sector, head, IMAGE_HEADER_SIZE);
     unsigned short *width = (unsigned short *)(head+4);
     unsigned short *height = (unsigned short *)(head+6);
     freeMemory((unsigned int)head, IMAGE_HEADER_SIZE);
@@ -36,7 +36,7 @@ Image* loadImageFromStorage(unsigned int sector)
     unsigned int i=0, pageSize=0;
     for (i=0; i<page; ++i) {
         pageSize = (i<page-1?READ_BLOCK_SIZE:size-i*READ_BLOCK_SIZE);
-        readHardDisk(sector, buffer, pageSize);
+        //readHardDisk(sector, buffer, pageSize);
         buffer+=pageSize;
         sector+=0x80;
     }

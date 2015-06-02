@@ -1,7 +1,8 @@
+#define 	ATA_IDENTIFY		0xEC
 #define 	ATA_READ		0x20
 #define 	ATA_WRITE		0x30
 #define		SECTOR_SIZE		512
-#define		HD_TIMEOUT		1000
+#define		HD_TIMEOUT		10000
 
 #define 	REG_DATA		0x1F0		
 #define 	REG_FEATURES	0x1F1		
@@ -16,7 +17,7 @@
 #define 	REG_DEV_CTRL	0x3F6
 #define 	REG_ALT_STATUS	REG_DEV_CTRL
 #define 	REG_DRV_ADDR	0x3F7
-
+	
 #define		STATUS_BSY		0x80
 #define		STATUS_DRDY		0x40
 #define		STATUS_DFSE		0x20
@@ -26,7 +27,7 @@
 #define		STATUS_IDX		0x02
 #define		STATUS_ERR		0x01
 
-typedef struct HdCmd
+typedef struct HdCommand
 {
     u8 features;
 	
@@ -41,14 +42,16 @@ typedef struct HdCmd
 	u8 device;
 
 	u8 command;
-} HdCmd;
+} HdCommand;
 
-bool isHardDiskReady=FALSE;
+HdCommand command;
+
+bool isHardDiskReady = FALSE;
 
 void intHandler2e()
 {
 	inByte(REG_STATUS);
-	isHardDiskReady=TRUE;
+	isHardDiskReady = TRUE;
 	return;
 }
 
@@ -73,42 +76,43 @@ bool waitForHdInterrupt()
 	return FALSE;
 }
 
-bool sendHdCmd(HdCmd *cmd)
+bool sendHdCommand(HdCommand *command)
 {
 	if (waitForStatus(STATUS_BSY, 0, HD_TIMEOUT) == TRUE) {
 		outByte(REG_DEV_CTRL, 0);
-		outByte(REG_FEATURES, cmd->features);
-		outByte(REG_NSECTOR, cmd->count);
-		outByte(REG_LBA_LOW, cmd->lbaLow);
-		outByte(REG_LBA_MID, cmd->lbaMid);
-		outByte(REG_LBA_HIGH, cmd->lbaHigh);
-		outByte(REG_DEVICE, cmd->device);
-		outByte(REG_CMD, cmd->command);
+		outByte(REG_FEATURES, command->features);
+		outByte(REG_NSECTOR, command->count);
+		outByte(REG_LBA_LOW, command->lbaLow);
+		outByte(REG_LBA_MID, command->lbaMid);
+		outByte(REG_LBA_HIGH, command->lbaHigh);
+		outByte(REG_DEVICE, command->device);
+
+		outByte(REG_CMD, command->command);
+
 		return TRUE;
 	} else {
 		return FALSE;	
 	}
 }
 
-void readHardDisk(int sector, void *buffer, int size)
+void readHardDisk(int sector, void *buffer, int sectorCount)
 {
-	HdCmd cmd;
-	cmd.features = 0;
-	cmd.count = (size+SECTOR_SIZE-1)/SECTOR_SIZE;
-	cmd.lbaLow = sector & 0xFF;
-	cmd.lbaMid = (sector>>8) & 0xFF;
-	cmd.lbaHigh = (sector>>16) & 0xFF;
-	cmd.device = ((sector>>24) & 0x0F) | 0xE0;
-	cmd.command = ATA_READ;
+	command.features = 0;
+	command.count = sectorCount;
+	command.lbaLow	= sector & 0xFF;
+	command.lbaMid	= (sector >>  8) & 0xFF;
+	command.lbaHigh	= (sector >> 16) & 0xFF;
+
+	command.device = MAKE_DEVICE_REG(1, 0, (sector >> 24) & 0xF);
+	command.command = ATA_READ;
+	
 	isHardDiskReady = FALSE;
-	if (sendHdCmd(&cmd) == TRUE) {
-		while(size>0) {
-			waitForHdInterrupt();
-			int bytes = min(SECTOR_SIZE, size);
-			readPort(REG_DATA, buffer, bytes);
-			buffer+=bytes;			
-			size-=bytes;
-		}
+	sendHdCommand(&command);
+	int sectorLeft = command.count;
+	while (sectorLeft>0) {
+		waitForStatus(STATUS_BSY, 0, HD_TIMEOUT);
+		readPort(REG_DATA, buffer, 512);
+		buffer+=512;
+		sectorLeft--;
 	}
 }
-
