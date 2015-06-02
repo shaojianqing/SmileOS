@@ -2,11 +2,11 @@
 Sheet* prepareWindowSheet(Sheet *sheet)
 {
     if (sheet != 0) {
-        (*sheet).x = 112;
-        (*sheet).y = 50;
-        (*sheet).width = 800;
-        (*sheet).height = 640;
-        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+        (*sheet).x = 212;
+        (*sheet).y = 120;
+        (*sheet).width = 600;
+        (*sheet).height = 500;
+        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*		(*sheet).height*SCREEN_DENSITY);
 
         resetSheet(sheet);
 
@@ -38,8 +38,8 @@ Sheet* prepareWindowSheet(Sheet *sheet)
 
         drawCornerRect((*sheet).buffer, sheet, 0, 0, (*sheet).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect((*sheet).buffer, sheet, 1, 1, (*sheet).width-1, 21, startColor, endColor, corner);
-        drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 640, mainBgColor);
-        drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-1, 638, mainColor);
+        drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 500, mainBgColor);
+        drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-1, 498, mainColor);
 
         return sheet;
     }

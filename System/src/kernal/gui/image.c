@@ -16,34 +16,22 @@ typedef struct Image
 
 } Image;
 
-Image* loadImageFromStorage(unsigned int sector)
+Image* loadImageFromStorage(u32 sector)
 {
-    char *head = (char *)allocMemory(IMAGE_HEADER_SIZE);
-    //readHardDisk(sector, head, IMAGE_HEADER_SIZE);
-    unsigned short *width = (unsigned short *)(head+4);
-    unsigned short *height = (unsigned short *)(head+6);
-    freeMemory((unsigned int)head, IMAGE_HEADER_SIZE);
+    u8 *head = (u8 *)allocMemory(IMAGE_HEADER_SIZE);
+    readHardDisk(sector, head, IMAGE_HEADER_SIZE);
+    u16 *width = (u16 *)(head+4);
+    u16 *height = (u16 *)(head+6);
+    freeMemory((u32)head, IMAGE_HEADER_SIZE);
 
-    unsigned int size = (*width)*(*height)*SCREEN_DENSITY+8;
-    unsigned char *buffer = (unsigned char *)allocMemoryInPage(size);
+    u32 size = (*width)*(*height)*SCREEN_DENSITY;
+   	u8 *buffer = (u8 *)allocMemory(size);
 
-    int page = 0;
-    if (size%READ_BLOCK_SIZE==0) {
-        page = size/READ_BLOCK_SIZE;
-    } else {
-        page = size/READ_BLOCK_SIZE+1;
-    }
-    unsigned int i=0, pageSize=0;
-    for (i=0; i<page; ++i) {
-        pageSize = (i<page-1?READ_BLOCK_SIZE:size-i*READ_BLOCK_SIZE);
-        //readHardDisk(sector, buffer, pageSize);
-        buffer+=pageSize;
-        sector+=0x80;
-    }
+	readHardDisk(sector, buffer, size);
 
     Image *image = (Image*)allocMemoryInPage(sizeof(Image));
-    (*image).width = *width;
-    (*image).height = *height;
+    (*image).width = 1024;
+    (*image).height = 768;
     (*image).x = 0;
     (*image).y = 0;
     (*image).data = buffer+8;

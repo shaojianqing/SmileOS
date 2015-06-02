@@ -47,7 +47,7 @@ void initSystem(void)
 
     window = prepareSheet();
     prepareWindowSheet(window);
-    //loadSheet(window, 1);
+    loadSheet(window, 1);
 
     mouse = prepareSheet();
     prepareMouseSheet(mouse);
@@ -55,18 +55,6 @@ void initSystem(void)
 
     mx = 500;
     my = 360;
-
-	char *buffer  = (char *)0xe0000000-8;
-	int sectorOffset = 0x4000;
-	int bmpSize = 1024*768*3;
-	while(bmpSize>0) {
-		int sectorCount = (bmpSize/512 ) > 255 ? 255 : (bmpSize/512 + 1);
-
-		readHardDisk(sectorOffset, buffer, sectorCount);
-		sectorOffset += sectorCount;
-		buffer += sectorCount*512;
-		bmpSize -=  sectorCount*512;
-	}
 
     while(TRUE) {
         clearInterrupt();
