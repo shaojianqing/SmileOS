@@ -51,6 +51,7 @@ bool isHardDiskReady = FALSE;
 void intHandler2e()
 {
 	inByte(REG_STATUS);
+	outByte(0x20, 0xA0);
 	isHardDiskReady = TRUE;
 	return;
 }

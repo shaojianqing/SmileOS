@@ -12,7 +12,7 @@
 
 #define PIC0_OCW2 0x0020
 
-#define ADDRESS_GDT 0x7e00
+#define ADDRESS_GDT 0x7e002
 #define ADDRESS_IDT 0x17e00
 #define LIMIT_IDT 0x7FF
 

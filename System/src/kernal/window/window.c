@@ -76,7 +76,7 @@ void showBufferInfo(Sheet *sheet, char *buffer)
 	for (y=0;y<columnNum;++y) {
 		for (x=0;x<rowNum;++x) {
 			char data= *(buffer+y*16+x);
-			printHexByte(sheet, data, x*36+130, y*36+32, mainColor);
+			printHexByte(sheet, data, x*28+90, y*28+32, mainColor);
 		}	
 	}
 

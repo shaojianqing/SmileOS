@@ -56,6 +56,8 @@ void initSystem(void)
     mx = 500;
     my = 360;
 
+	showBufferInfo(window, (u8 *)0xe0000000);
+
     while(TRUE) {
         clearInterrupt();
 		if (queueBufferStatus(&keyBuffer) + queueBufferStatus(&mouseBuffer) == 0) {
