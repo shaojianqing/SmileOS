@@ -1,6 +1,6 @@
 #define INFO_BAR_HEIGHT 30
 
-#define START_BAR_WIDTH 800
+#define START_BAR_WIDTH 1000
 #define START_BAR_HEIGHT 120
 
 

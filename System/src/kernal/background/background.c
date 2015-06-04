@@ -7,7 +7,7 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
         (*sheet).y = 0;
         (*sheet).width = SCREEN_WIDTH;
         (*sheet).height = SCREEN_HEIGHT;
-        unsigned int size = SCREEN_WIDTH*SCREEN_HEIGHT*SCREEN_DENSITY+8;
+        u32 size = SCREEN_WIDTH*SCREEN_HEIGHT*SCREEN_DENSITY+8;
         Image *bgImage = loadImageFromStorage(0x4000);        
         (*sheet).buffer = (*bgImage).data;
 
@@ -28,8 +28,8 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
 
         drawGradualVerticalRectAlpha((*sheet).buffer, sheet, 0, 0, SCREEN_WIDTH, 24, startColor, endColor, 160);
 
-        drawGradualVerticalTrapezium((*sheet).buffer, sheet, 112, 680, 112 + START_BAR_WIDTH, 680+START_BAR_BG_HEIGHT -5, START_BAR_BG_HEIGHT -5, startColor, endColor, 200);
-        drawRectAlpha((*sheet).buffer, sheet, 112, 680+START_BAR_BG_HEIGHT -5, 112+START_BAR_WIDTH, 680+START_BAR_BG_HEIGHT -4, sepColor, 240);
-        drawRectAlpha((*sheet).buffer, sheet, 112, 680+START_BAR_BG_HEIGHT -4, 112+START_BAR_WIDTH, 680+START_BAR_BG_HEIGHT , endColor, 200);
+        drawGradualVerticalTrapezium((*sheet).buffer, sheet, 140, 930, 140 + START_BAR_WIDTH, 930+START_BAR_BG_HEIGHT -5, START_BAR_BG_HEIGHT -5, startColor, endColor, 200);
+        drawRectAlpha((*sheet).buffer, sheet, 140, 930+START_BAR_BG_HEIGHT -5, 140+START_BAR_WIDTH, 930+START_BAR_BG_HEIGHT -4, sepColor, 240);
+        drawRectAlpha((*sheet).buffer, sheet, 140, 930+START_BAR_BG_HEIGHT -4, 140+START_BAR_WIDTH, 930+START_BAR_BG_HEIGHT , endColor, 200);
     }
 }

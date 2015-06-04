@@ -116,15 +116,15 @@ void processMouseData(MouseData *mouseData, Sheet *mouse, int *mx, int *my)
         *mx += (*mouseData).x;
         *my += (*mouseData).y;
 
-        if (*mx>1024) {
-            *mx=1024;
+        if (*mx>SCREEN_WIDTH) {
+            *mx=SCREEN_WIDTH;
         }
         if (*mx<0) {
             *mx=0;
         }
 
-        if (*my>768) {
-            *my=768;
+        if (*my>SCREEN_HEIGHT) {
+            *my=SCREEN_HEIGHT;
         }
         if (*my<0) {
             *my=0;
