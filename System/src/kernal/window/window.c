@@ -57,8 +57,8 @@ void showInfo(Sheet *sheet, int x, int y, int key)
     color.green = 220;
     color.blue = 220;
 
-    drawRect((*sheet).buffer, sheet, x, y, 300, 200, color);
-    printHexInteger(sheet, key, x, y, mainColor);
+    drawRect((*sheet).buffer, sheet, x, y, 500, 300, color);
+    printInteger(sheet, key, x, y, mainColor);
     refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0);
     refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
 }

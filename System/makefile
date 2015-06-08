@@ -17,6 +17,8 @@ CONVERTIMAGE = convertImage
 BUILDCHARSET = buildCharSet
 TRIMELFHEADER = trimElfHeader
 FILLBYTECONTENT = fillByteContent
+CONVERT-VHD-FMT = VBoxManage clonehd
+VDI-FORMAT = --format vdi
 RUN-SYSTEM = VBoxManage startvm System
 
 TGT = tgt/*
@@ -24,6 +26,8 @@ TGT = tgt/*
 EMPTY = Empty.vhd
 
 TARGET = System.vhd
+
+VHARDDISK = System.vdi
 
 #Booter Target#
 BOOT = tgt/boot.bin
@@ -76,7 +80,7 @@ clean :
 	 rm -f $(TARGET) $(TGT)
 
 rmfiles :
-	 rm -f $(BOOT) $(TGT)
+	 rm -f $(TGT)
 
 #---------------------------------------------------------------#
 tgt/boot.bin : src/boot/boot.asm
@@ -134,7 +138,7 @@ tgt/app4.image : res/images/app4.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/app1.image tgt/app2.image tgt/app3.image tgt/app4.image tgt/charset.bin tgt/gate.bin
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/app1.image tgt/app2.image tgt/app3.image tgt/app4.image tgt/charset.bin tgt/gate.bin	
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512

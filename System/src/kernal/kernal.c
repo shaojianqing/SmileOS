@@ -19,6 +19,10 @@
 #include "desktop/desktop.c"
 #include "background/background.c"
 
+u8 timeQueueBuffer1[8], timeQueueBuffer2[8], timeQueueBuffer3[8], timeQueueBuffer4[8];
+
+QueueBuffer timeQueue1, timeQueue2, timeQueue3, timeQueue4;
+
 int mx, my;
 
 MouseData mouseData;
@@ -53,20 +57,53 @@ void initSystem(void)
     prepareMouseSheet(mouse);
     loadSheet(mouse, 2);
 
-    mx = 500;
-    my = 360;
+	initQueueBuffer(&timeQueue1, 8, timeQueueBuffer1);
+	initQueueBuffer(&timeQueue2, 8, timeQueueBuffer2);
+	initQueueBuffer(&timeQueue3, 8, timeQueueBuffer3);
+	initQueueBuffer(&timeQueue4, 8, timeQueueBuffer4);
 
-	showBufferInfo(window, (u8 *)0xe0000000);
+	Timer* time1 = requestTimer(1000, &timeQueue1);
+	Timer* time2 = requestTimer(1500, &timeQueue2);
+	Timer* time3 = requestTimer(5000, &timeQueue3);
+	Timer* time4 = requestTimer(8000, &timeQueue4);
+	
+
+    mx = 640;
+    my = 512;
+
+	//showBufferInfo(window, (u8 *)0xe0000000);
 
     while(TRUE) {
         clearInterrupt();
-		if (queueBufferStatus(&keyBuffer) + queueBufferStatus(&mouseBuffer) == 0) {
+		if (queueBufferStatus(&keyBuffer) + queueBufferStatus(&mouseBuffer) + queueBufferStatus(&timeQueue1) +
+			queueBufferStatus(&timeQueue2) + queueBufferStatus(&timeQueue3) + queueBufferStatus(&timeQueue4) == 0) {
 			setupInterrupt();
 		} else {
 			if (queueBufferStatus(&keyBuffer) != 0) {
 				processKeyData(&keyData, window);
-			} else if (queueBufferStatus(&mouseBuffer) != 0) {
+			}
+			if (queueBufferStatus(&mouseBuffer) != 0) {
 				processMouseData(&mouseData, mouse, &mx, &my);
+			}
+			if (queueBufferStatus(&timeQueue1) != 0) {
+				u8 data = getQueueBuffer(&timeQueue1);
+				showInfo(window, 100, 100, 66);
+				setupInterrupt();
+			}
+			if (queueBufferStatus(&timeQueue2) != 0) {
+				u8 data = getQueueBuffer(&timeQueue2);
+				showInfo(window, 100, 160, 77);
+				setupInterrupt();
+			}
+			if (queueBufferStatus(&timeQueue3) != 0) {
+				u8 data = getQueueBuffer(&timeQueue3);
+				showInfo(window, 100, 220, 88);
+				setupInterrupt();
+			}
+			if (queueBufferStatus(&timeQueue4) != 0) {
+				u8 data = getQueueBuffer(&timeQueue4);
+				showInfo(window, 100, 280, 99);
+				setupInterrupt();
 			}
 		}
     }

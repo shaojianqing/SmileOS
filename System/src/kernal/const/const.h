@@ -56,7 +56,14 @@
 #define MOUSE_WIDTH 			12
 #define MOUSE_HEIGHT			22
 
+#define MAX_TIMER_NUM			512
+#define STATUS_TIMER_UNUSE		0
+#define STATUS_TIMER_ALLOC		1
+#define STATUS_TIMER_USING		2
+
 #define TRUE 1
 #define FALSE 0
+
+#define null					0
 
 
