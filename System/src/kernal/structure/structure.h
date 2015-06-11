@@ -28,7 +28,7 @@ typedef struct GateDescriptor
 
 typedef struct QueueBuffer
 {
-	u8 *buffer;
+	u32 *buffer;
 
 	int p, q, size, free, flags;
 } QueueBuffer;

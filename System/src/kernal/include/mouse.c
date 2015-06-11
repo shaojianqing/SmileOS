@@ -9,15 +9,13 @@ typedef struct MouseData
     int btn;
 } MouseData;
 
-QueueBuffer mouseBuffer;
-
 void intHandler2c()
 {
-	u8 data;
+	u32 data;
 	outByte(PIC1_OCW2, 0x64);
 	outByte(PIC0_OCW2, 0x62);
-	data = inByte(PORT_KEYDATA);
-	putQueueBuffer(&mouseBuffer, data);
+	data = inByte(PORT_KEYDATA) + 2048;
+	putQueueBuffer(&systemBuffer, data);
 	return;
 }
 
@@ -74,10 +72,10 @@ Sheet *prepareMouseSheet(Sheet* sheet)
     }
 }
 
-void processMouseData(MouseData *mouseData, Sheet *mouse, int *mx, int *my)
+void processMouseData(MouseData *mouseData, u32 data, Sheet *mouse, int *mx, int *my)
 {
     setupInterrupt();
-    u8 sign = getQueueBuffer(&mouseBuffer);
+	u8 sign = data-2048;
     setupInterrupt();
     if ((*mouseData).phase == 0) {
         if (sign == 0xfa) {

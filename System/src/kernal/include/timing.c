@@ -61,7 +61,7 @@ void initTimerManagement()
 	}
 }
 
-Timer* requestTimer(u64 timeout, QueueBuffer *queue)
+Timer* requestTimer(u64 timeout, u8 data, QueueBuffer *queue)
 {
 	clearInterrupt();
 	int i=0, j=0;
@@ -71,7 +71,8 @@ Timer* requestTimer(u64 timeout, QueueBuffer *queue)
 			if (timeManager.timerList[i].status == STATUS_TIMER_UNUSE) {
 				timeManager.timerList[i].status = STATUS_TIMER_USING;
 				timeManager.timerList[i].timeout = timeout;
-				timeManager.timerList[i].queue = queue;			
+				timeManager.timerList[i].queue = queue;
+				timeManager.timerList[i].data = data;	
 				if (timeManager.latest>timeout) {
 					timeManager.latest=timeout;
 				}

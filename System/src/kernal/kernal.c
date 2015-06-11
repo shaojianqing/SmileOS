@@ -5,6 +5,7 @@
 #include "inOutput/inOutput.h"
 #include "memory/memory.c"
 #include "sheet/sheet.c"
+#include "include/globalData.c"
 #include "include/timing.c"
 #include "include/mouse.c"
 #include "include/harddisk.c"
@@ -18,10 +19,6 @@
 #include "window/window.c"
 #include "desktop/desktop.c"
 #include "background/background.c"
-
-u8 timeQueueBuffer1[8], timeQueueBuffer2[8], timeQueueBuffer3[8], timeQueueBuffer4[8];
-
-QueueBuffer timeQueue1, timeQueue2, timeQueue3, timeQueue4;
 
 int mx, my;
 
@@ -57,15 +54,10 @@ void initSystem(void)
     prepareMouseSheet(mouse);
     loadSheet(mouse, 2);
 
-	initQueueBuffer(&timeQueue1, 8, timeQueueBuffer1);
-	initQueueBuffer(&timeQueue2, 8, timeQueueBuffer2);
-	initQueueBuffer(&timeQueue3, 8, timeQueueBuffer3);
-	initQueueBuffer(&timeQueue4, 8, timeQueueBuffer4);
-
-	Timer* time1 = requestTimer(1000, &timeQueue1);
-	Timer* time2 = requestTimer(1500, &timeQueue2);
-	Timer* time3 = requestTimer(5000, &timeQueue3);
-	Timer* time4 = requestTimer(8000, &timeQueue4);
+	Timer* time1 = requestTimer(1000, 1, &systemBuffer);
+	Timer* time2 = requestTimer(1500, 2, &systemBuffer);
+	Timer* time3 = requestTimer(5000, 3, &systemBuffer);
+	Timer* time4 = requestTimer(8000, 4, &systemBuffer);
 	
 
     mx = 640;
@@ -75,35 +67,25 @@ void initSystem(void)
 
     while(TRUE) {
         clearInterrupt();
-		if (queueBufferStatus(&keyBuffer) + queueBufferStatus(&mouseBuffer) + queueBufferStatus(&timeQueue1) +
-			queueBufferStatus(&timeQueue2) + queueBufferStatus(&timeQueue3) + queueBufferStatus(&timeQueue4) == 0) {
+		if (queueBufferStatus(&systemBuffer) == 0) {
 			setupInterrupt();
 		} else {
-			if (queueBufferStatus(&keyBuffer) != 0) {
-				processKeyData(&keyData, window);
-			}
-			if (queueBufferStatus(&mouseBuffer) != 0) {
-				processMouseData(&mouseData, mouse, &mx, &my);
-			}
-			if (queueBufferStatus(&timeQueue1) != 0) {
-				u8 data = getQueueBuffer(&timeQueue1);
-				showInfo(window, 100, 100, 66);
+			u32 data = getQueueBuffer(&systemBuffer);
+			if (data<1024) {
+				if (data == 1) {
+					showInfo(window, 100, 100, 11);			
+				} else if (data == 2) {
+					showInfo(window, 100, 160, 22);			
+				} else if (data == 3) {
+					showInfo(window, 100, 220, 33);			
+				} else if (data == 4) {
+					showInfo(window, 100, 280, 55);			
+				}		
 				setupInterrupt();
-			}
-			if (queueBufferStatus(&timeQueue2) != 0) {
-				u8 data = getQueueBuffer(&timeQueue2);
-				showInfo(window, 100, 160, 77);
-				setupInterrupt();
-			}
-			if (queueBufferStatus(&timeQueue3) != 0) {
-				u8 data = getQueueBuffer(&timeQueue3);
-				showInfo(window, 100, 220, 88);
-				setupInterrupt();
-			}
-			if (queueBufferStatus(&timeQueue4) != 0) {
-				u8 data = getQueueBuffer(&timeQueue4);
-				showInfo(window, 100, 280, 99);
-				setupInterrupt();
+			} else if (data>=1024 && data<2048) {
+				processKeyData(&keyData, data, window);			
+			} else if (data>=2048) {
+				processMouseData(&mouseData, data, mouse, &mx, &my);
 			}
 		}
     }

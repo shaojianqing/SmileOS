@@ -50,8 +50,7 @@
 
 #define FLAGS_OVERRUN			0x0001
 
-#define KEY_BUFFER_SIZE			1024
-#define MOUSE_BUFFER_SIZE		1024
+#define SYSTEM_BUFFER_SIZE		1024
 
 #define MOUSE_WIDTH 			12
 #define MOUSE_HEIGHT			22

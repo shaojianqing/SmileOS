@@ -1,4 +1,3 @@
-char keyDataBuffer[KEY_BUFFER_SIZE], mouseDataBuffer[MOUSE_BUFFER_SIZE];
 
 void waitKBCReady()
 {
@@ -45,7 +44,6 @@ void initPeripheralStatus()
 
 void initQueueBufferData()
 {
-	initQueueBuffer(&keyBuffer, KEY_BUFFER_SIZE, keyDataBuffer);
-	initQueueBuffer(&mouseBuffer, MOUSE_BUFFER_SIZE, mouseDataBuffer);
+	initQueueBuffer(&systemBuffer, SYSTEM_BUFFER_SIZE, systemDataBuffer);
 }
 
