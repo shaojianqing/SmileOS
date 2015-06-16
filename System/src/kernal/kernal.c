@@ -56,14 +56,15 @@ void initSystem(void)
 
 	Timer* time1 = requestTimer(1000, 1, &systemBuffer);
 	Timer* time2 = requestTimer(1500, 2, &systemBuffer);
-	Timer* time3 = requestTimer(5000, 3, &systemBuffer);
-	Timer* time4 = requestTimer(8000, 4, &systemBuffer);
+	Timer* time3 = requestTimer(3000, 3, &systemBuffer);
+	Timer* time4 = requestTimer(5000, 4, &systemBuffer);
+	Timer* time5 = requestTimer(8000, 5, &systemBuffer);
 	
 
     mx = 640;
     my = 512;
 
-	//showBufferInfo(window, (u8 *)0xe0000000);
+	showBufferInfo(window, (u8 *)0xe0000000);
 
     while(TRUE) {
         clearInterrupt();
@@ -79,7 +80,9 @@ void initSystem(void)
 				} else if (data == 3) {
 					showInfo(window, 100, 220, 33);			
 				} else if (data == 4) {
-					showInfo(window, 100, 280, 55);			
+					showInfo(window, 100, 280, 44);			
+				} else if (data == 5) {
+					showInfo(window, 100, 340, 55);			
 				}		
 				setupInterrupt();
 			} else if (data>=1024 && data<2048) {
