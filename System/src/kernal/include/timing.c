@@ -32,10 +32,8 @@ void intHandler20()
 	if (timeManager.latest<timeManager.time) {
 		timeManager.latest=0xffffffff;
 		Timer *timer = timeManager.currentTimer;
-		if (timer != null) {
-			if ((*timer).timeout<timeManager.time) {
-				putQueueBuffer((*(timer)).queue, (*(timer)).data);			
-			}
+		if (timer != null && (*timer).timeout<timeManager.time) {
+			putQueueBuffer((*(timer)).queue, (*(timer)).data);
 			(*timer).status = STATUS_TIMER_UNUSE;
 			if ((*timer).next != null) {
 				timer = (*timer).next;
@@ -43,7 +41,7 @@ void intHandler20()
 				timeManager.latest = (*timer).timeout;
 			} else {
 				timeManager.currentTimer = null;
-			}
+			}				
 		}		
 	}
 }
