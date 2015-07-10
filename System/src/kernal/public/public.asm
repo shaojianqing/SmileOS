@@ -1,11 +1,13 @@
 %include "src/kernal/const/const.inc"	
 
 global inByte
+global loadTr
 global outByte
 global loadGdtr
 global loadIdtr
 global readPort
 global readHardDisk
+global switchProcess
 global clearInterrupt
 global setupInterrupt
 global setupInterruptHlt
@@ -24,6 +26,10 @@ loadIdtr:
 	lidt [esp+6]
 	ret
 
+loadTr:
+	ltr [esp+4]
+	ret
+
 clearInterrupt:
 	cli
 	ret
@@ -35,6 +41,10 @@ setupInterrupt:
 setupInterruptHlt:
 	sti
 	hlt
+	ret
+
+switchProcess:
+	jmp far [esp+4]
 	ret
 
 outByte:

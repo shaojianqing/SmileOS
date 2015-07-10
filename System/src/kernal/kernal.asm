@@ -1,8 +1,5 @@
 extern initPic
-extern initMouse
-extern initTiming
 extern initSystem
-extern initKeyboard
 
 [section .text]
 
@@ -24,5 +21,5 @@ _start:
 
 	call initPic
 	call initSystem
-
+	
 	jmp $

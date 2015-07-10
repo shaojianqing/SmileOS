@@ -12,7 +12,7 @@ typedef struct Timer
 } Timer;
 
 typedef struct TimerManager
-{
+{	
 	u64 time;
 
 	u64 latest;
@@ -44,6 +44,7 @@ void intHandler20()
 			}				
 		}		
 	}
+	startSwitchProcess();
 }
 
 void initTimerManagement()

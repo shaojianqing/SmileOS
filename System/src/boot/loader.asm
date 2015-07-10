@@ -1,6 +1,6 @@
 %include "src/boot/structure.inc"	
 
-KERNAL_ADDR            equ               0x00030400
+KERNAL_ADDR            equ               0x00080000
 
 GDT_BASE               equ               0x00007e00
 
@@ -17,7 +17,7 @@ text:      Descriptor 0x00000000, 0x000fffff,  DA_C | DA_32_4K       	;00001_000
 data:      Descriptor 0x00000000, 0x000fffff,  DA_DRW | DA_32_4K   		;00010_000B
 stack:     Descriptor 0x00007e00, 0x00007e00,  DA_DRWA | DA_32      	;00011_000B  
 
-gdt_size:  dw 0x1F
+gdt_size:  dw 0xFF
 gdt_base:  dd GDT_BASE
 
 enter_protect_mode:         
@@ -36,9 +36,9 @@ enter_protect_mode:
 	mov ds, ax
 	mov byte [packageSize], 0x10
 	mov byte [reserveByte], 0x00
-	mov word [blockCount], 0x200
+	mov word [blockCount], 0x70
 	mov word [bufferOffs], 0x00
-	mov word [bufferSegm], 0x3040
+	mov word [bufferSegm], 0x8000
 	mov dword [blockNum], 0x40
 
 	mov ah, 0x42
@@ -64,7 +64,7 @@ enter_protect_mode:
 	mov ax, 0x1860 
 	mov ds, ax
 
-	mov word [ds: gdt_size], 0xffff                                            
+	mov word [ds: gdt_size], 0xFFFF                                            
 	lgdt [ds: gdt_size]
 
 	in al, 0x92                         

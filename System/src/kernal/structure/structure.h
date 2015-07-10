@@ -8,24 +8,6 @@ typedef unsigned int u32;
 
 typedef unsigned long u64;
 
-typedef struct GlobalDescriptor 
-{
-	short limitLow, baseLow;
-
-	char baseMid, accessRight;
-
-	char limitHigh, baseHigh;
-} GlobalDescriptor;
-
-typedef struct GateDescriptor
-{
-	short offsetLow, selector;
-	
-	char dwCount, accessRight;
-
-	short offsetHigh;
-} GateDescriptor;
-
 typedef struct QueueBuffer
 {
 	u32 *buffer;

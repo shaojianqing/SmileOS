@@ -1,20 +1,6 @@
-#define IMAGE_HEADER_SIZE 8
-
-#define READ_BLOCK_SIZE 0x10000
-
-typedef struct Image
-{
-    char *head;
-
-    char *data;
-
-    char *buffer;
-
-    unsigned short width, height;
-
-    unsigned int x, y;
-
-} Image;
+#include "../type/type.h"
+#include "image.h"
+#include "sheet.h"
 
 Image* loadImageFromStorage(u32 sector)
 {
@@ -38,19 +24,4 @@ Image* loadImageFromStorage(u32 sector)
     (*image).head = head;
     (*image).buffer = buffer;
     return image;
-}
-
-void addImage(Sheet* sheet, Image* image)
-{
-    unsigned short height=(*image).height, width=(*image).width;
-    unsigned int sheetWidth = (*sheet).width;
-
-    unsigned int x=0, y=0;
-    for (y=0; y<height; ++y) {
-        for (x=0; x<width; ++x) {
-            *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3) = *((*image).data+(y*80+x)*3);
-            *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3+1) = *((*image).data+(y*80+x)*3+1);
-            *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3+2) = *((*image).data+(y*80+x)*3+2);
-        }
-    }
 }

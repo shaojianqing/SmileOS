@@ -9,13 +9,13 @@ ELFFLAGES = -f elf
 CCFLAGES = -c -m32
 LD = ld
 LDFLAGES = -m elf_i386 -s -Ttext 
-KERNALSTART = 0x30400
+KERNALSTART = 0x80000
 IMAGETOOL = java -jar ImageTool.jar
 CREATEIMAGE = createImage
 COPYBINARY = copyBinary
 CONVERTIMAGE = convertImage
 BUILDCHARSET = buildCharSet
-TRIMELFHEADER = trimElfHeader
+TRIMELFHEADER = objcopy -O binary
 FILLBYTECONTENT = fillByteContent
 CONVERT-VHD-FMT = VBoxManage clonehd
 VDI-FORMAT = --format vdi
@@ -48,8 +48,11 @@ KERNALBIN = tgt/kernal.bin
 
 KERNALOBJS = tgt/ka.o tgt/kc.o
 
-#Gate Test Target#
-GATE_TEST = tgt/gate.bin
+PROCESS = tgt/process.o
+
+SHEET = tgt/sheet.o
+
+IMAGE = tgt/image.o
 
 #Background Resource#
 BGS1 = tgt/bg1.image
@@ -97,24 +100,30 @@ tgt/interrupt.o : src/kernal/include/interrupt.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
 #---------------------------------------------------------------#
+tgt/process.o : src/kernal/process/process.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/sheet.o : src/kernal/gui/sheet.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/image.o : src/kernal/gui/image.c
+	$(CC) $(CCFLAGES) $< -o $@
+#---------------------------------------------------------------#
 tgt/ka.o : src/kernal/kernal.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
 tgt/kc.o : src/kernal/kernal.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS)
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) -o $@
+tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PROCESS) $(SHEET) $(IMAGE)
+	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PROCESS) $(SHEET)  $(IMAGE) -o $@
 
 tgt/kernal.sys : $(KERNALBIN)
-	$(IMAGETOOL) $(TRIMELFHEADER) $< $@
+	$(TRIMELFHEADER) $< $@
 
 #---------------------------------------------------------------#
 tgt/charset.bin : res/charset/charset.csr
 	$(IMAGETOOL) $(BUILDCHARSET) $< $@
-
-tgt/gate.bin : src/kernal/gate/gate.asm
-	$(ASM) $< -o $@
 
 #---------------------------------------------------------------#
 tgt/mouse.sys : src/kernal/mouse/mouse.asm
@@ -138,7 +147,7 @@ tgt/app4.image : res/images/app4.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/app1.image tgt/app2.image tgt/app3.image tgt/app4.image tgt/charset.bin tgt/gate.bin	
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/app1.image tgt/app2.image tgt/app3.image tgt/app4.image tgt/charset.bin	
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512

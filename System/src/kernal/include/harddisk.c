@@ -1,4 +1,4 @@
-#define 	ATA_IDENTIFY		0xEC
+#define 	ATA_IDENTIFY	0xEC
 #define 	ATA_READ		0x20
 #define 	ATA_WRITE		0x30
 #define		SECTOR_SIZE		512
@@ -120,7 +120,7 @@ void readHardSector(u32 sector, u8 *buffer, int sectorCount)
 
 void readHardDisk(u32 sector, u8 *buffer, int size)
 {
-	while(size>0) {
+	while (size>0) {
 		int sectorCount = (size/512)>255?255:(size/512+1);
 		readHardSector(sector, buffer, sectorCount);
 		sector += sectorCount;

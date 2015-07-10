@@ -4,20 +4,18 @@
 
 typedef struct MemoryInfo
 {
+    u32 addr;
 
-    unsigned int addr;
-
-    unsigned int size;
+    u32 size;
 } MemoryInfo;
 
 typedef struct MemoryManager
 {
+    u32 num;
 
-    unsigned int num;
+    u32 losts;
 
-    unsigned int losts;
-
-    unsigned int lostSize;
+    u32 lostSize;
 
     MemoryInfo memoryInfos[MEMORY_NUM];
 
@@ -25,8 +23,7 @@ typedef struct MemoryManager
 
 typedef struct SystemInfo
 {
-
-    unsigned int memorySize;
+    u32 memorySize;
 
 } SystemInfo;
 
@@ -45,15 +42,13 @@ void initMemoryManagement()
     (*memoryInfo).size = (*systemInfo).memorySize;
 }
 
-unsigned int memorySize()
+u32 memorySize()
 {
     MemoryManager *memoryManager = (MemoryManager *)0x21800;
-    if ((*memoryManager).num>0)
-    {
-        unsigned int memorySize = 0;
+    if ((*memoryManager).num>0) {
+        u32 memorySize = 0;
         int i=0;
-        for (i=0; i<(*memoryManager).num; ++i)
-        {
+        for (i=0; i<(*memoryManager).num; ++i) {
             MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfos+i);
             memorySize+=(*memoryInfo).size;
         }
@@ -62,20 +57,16 @@ unsigned int memorySize()
     return 0;
 }
 
-unsigned int allocMemory(unsigned int size)
+u32 allocMemory(u32 size)
 {
-    if (size>0)
-    {
-        int address;
+    if (size>0) {
+        u32 address;
         MemoryManager *memoryManager = (MemoryManager *)0x21800;
-        if ((*memoryManager).num>0)
-        {
-            int i=0;
-            for (i=0; i<(*memoryManager).num; ++i)
-            {
+        if ((*memoryManager).num>0) {
+            u32 i=0;
+            for (i=0; i<(*memoryManager).num; ++i) {
                 MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfos+i);
-                if ((*memoryInfo).size>=size)
-                {
+                if ((*memoryInfo).size>=size) {
                     address = (*memoryInfo).addr;
                     (*memoryInfo).addr+=size;
                     (*memoryInfo).size-=size;
@@ -87,20 +78,18 @@ unsigned int allocMemory(unsigned int size)
     return 0;
 }
 
-unsigned int allocMemoryInPage(unsigned int size)
+u32 allocMemoryInPage(u32 size)
 {
-    if (size>0)
-    {
+    if (size>0) {
         size = (size+0xfff)&0xfffff000;
         return allocMemory(size);
     }
     return 0;
 }
 
-void freeMemory(unsigned int addr, unsigned int size)
+void freeMemory(u32 addr, u32 size)
 {
-    if (size>0 && addr>=SYS_MEM+VRAM_MAP)
-    {
+    if (size>0 && addr>=SYS_MEM+VRAM_MAP) {
 
         Color color;
         color.red = 255;
@@ -109,32 +98,25 @@ void freeMemory(unsigned int addr, unsigned int size)
 
         MemoryManager *memoryManager = (MemoryManager *)0x21800;
         unsigned int i=0, j=0, index=0;
-        for (i=0; i<(*memoryManager).num; ++i)
-        {
+        for (i=0; i<(*memoryManager).num; ++i) {
             MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfos+i);
-            if ((*memoryInfo).addr>addr)
-            {
+            if ((*memoryInfo).addr>addr) {
                 index = i;
                 break;
             }
         }
 
-        if (index>0)
-        {
+        if (index>0) {
             MemoryInfo *prevInfo = (MemoryInfo *)((*memoryManager).memoryInfos+index-1);
-            if ((*prevInfo).addr+(*prevInfo).size == addr)
-            {
+            if ((*prevInfo).addr+(*prevInfo).size == addr) {
                 (*prevInfo).size+=size;
 
-                if (index<(*memoryManager).num)
-                {
+                if (index<(*memoryManager).num) {
                     MemoryInfo *nextInfo = (MemoryInfo *)((*memoryManager).memoryInfos+index);
-                    if (addr+size==(*nextInfo).addr)
-                    {
+                    if (addr+size==(*nextInfo).addr) {
                         (*prevInfo).size+=(*nextInfo).size;
                         (*memoryManager).num--;
-                        for (i=0; i<(*memoryManager).num; ++i)
-                        {
+                        for (i=0; i<(*memoryManager).num; ++i) {
                             *((*memoryManager).memoryInfos+i) = *((*memoryManager).memoryInfos+i+1);
                         }
                     }
@@ -143,21 +125,17 @@ void freeMemory(unsigned int addr, unsigned int size)
             return;
         }
 
-        if (index<(*memoryManager).num)
-        {
+        if (index<(*memoryManager).num) {
             MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfos+index);
-            if (addr+size==(*memoryInfo).addr)
-            {
+            if (addr+size==(*memoryInfo).addr) {
                 (*memoryInfo).addr = addr;
                 (*memoryInfo).size += size;
             }
             return;
         }
 
-        if ((*memoryManager).num<MEMORY_NUM)
-        {
-            for (j=(*memoryManager).num; j>index; ++j)
-            {
+        if ((*memoryManager).num<MEMORY_NUM) {
+            for (j=(*memoryManager).num; j>index; ++j) {
                 *((*memoryManager).memoryInfos+j) = *((*memoryManager).memoryInfos+j-1);
             }
             (*memoryManager).num++;

@@ -82,6 +82,17 @@ void showInfo(Sheet *sheet, int x, int y, int key)
     refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
 }
 
+void showString(Sheet *sheet, int x, int y, char *string, int size) {
+	Color mainColor;
+    mainColor.red = 30;
+    mainColor.green = 30;
+    mainColor.blue = 30;
+
+	printString(sheet, string, size, x, y, mainColor);	
+	refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0);
+    refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
+}
+
 void showBufferInfo(Sheet *sheet, char *buffer)
 {
 	Color mainColor;

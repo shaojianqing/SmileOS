@@ -6,8 +6,7 @@
 
 Sheet* prepareInfoBarSheet(Sheet *sheet)
 {
-    if (sheet != 0)
-    {
+    if (sheet != 0) {
         (*sheet).x = 0;
         (*sheet).y = 0;
         (*sheet).width = SCREEN_WIDTH;
@@ -30,8 +29,7 @@ Sheet* prepareInfoBarSheet(Sheet *sheet)
 
 Sheet* prepareStartBarSheet(Sheet *sheet)
 {
-    if (sheet != 0)
-    {
+    if (sheet != 0) {
         (*sheet).x = 112;
         (*sheet).y = 640;
         (*sheet).width = START_BAR_WIDTH;
@@ -44,24 +42,24 @@ Sheet* prepareStartBarSheet(Sheet *sheet)
         (*appIcon1).x = 80;
         (*appIcon1).y = 10;
 
-        addImage(sheet, appIcon1);
+        //addImage(sheet, appIcon1);
 
         Image *appIcon2 = loadImageFromStorage(0x882e);
         (*appIcon2).x = 180;
         (*appIcon2).y = 10;
 
-        addImage(sheet, appIcon2);
+        //addImage(sheet, appIcon2);
 
         Image *appIcon3 = loadImageFromStorage(0x8854);
         (*appIcon3).x = 280;
         (*appIcon3).y = 10;
 
-        addImage(sheet, appIcon3);
+        //addImage(sheet, appIcon3);
 
         Image *appIcon4 = loadImageFromStorage(0x887a);
         (*appIcon4).x = 380;
         (*appIcon4).y = 10;
 
-        addImage(sheet, appIcon4);
+        //addImage(sheet, appIcon4);
     }
 }

@@ -50,14 +50,14 @@ void printChar(Sheet *sheet, u8 c, int x, int y, Color color)
     }
 }
 
-/*void printString(char *string, int size, int x, int y, Color color) {
+void printString(Sheet *sheet, char *string, int size, int x, int y, Color color) {
    int i=0;
    for (i=0;i<size;++i) {
       char c = *(string + i);
       int p = x + i*8;
-      printChar(c, p, y, color);
+      printChar(sheet, c, p, y, color);
    }
-}*/
+}
 
 void printInteger(Sheet *sheet, int value, int x, int y, Color color)
 {
