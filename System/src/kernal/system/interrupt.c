@@ -1,10 +1,4 @@
-void asmIntHandler20();
-
-void asmIntHandler21();
-
-void asmIntHandler2c();
-
-void asmIntHandler2e();
+#include "interrupt.h"
 
 void initInterruptHandler()
 {

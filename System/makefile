@@ -8,7 +8,7 @@ ASM = nasm
 ELFFLAGES = -f elf 
 CCFLAGES = -c -m32
 LD = ld
-LDFLAGES = -m elf_i386 -s -Ttext 
+LDFLAGES = -m elf_i386 -s -Ttext
 KERNALSTART = 0x80000
 IMAGETOOL = java -jar ImageTool.jar
 CREATEIMAGE = createImage
@@ -39,7 +39,7 @@ LOADER = tgt/loader.bin
 PUBLICOBJS = tgt/public.o
 
 #Interrupt Object#
-INTERRUPTOBJS = tgt/interrupt.o
+INTERRUPTOBJS = tgt/interrupta.o tgt/interruptc.o 
 
 #Kernal Target#
 KERNAL = tgt/kernal.sys
@@ -48,11 +48,36 @@ KERNALBIN = tgt/kernal.bin
 
 KERNALOBJS = tgt/ka.o tgt/kc.o
 
+#Module Target#
+PERIPHERAL = tgt/peripheral.o
+
+ALGORITHM = tgt/algorithm.o
+
+CHARAPI = tgt/charset.o
+
+DESCRIPTOR = tgt/descriptor.o
+
+KEYBOARD = tgt/keyboard.o
+
+MEMORY = tgt/memory.o
+
 PROCESS = tgt/process.o
+
+TIMING = tgt/timing.o
+
+DESKTOP = tgt/desktop.o
+
+WINDOW = tgt/window.o
 
 SHEET = tgt/sheet.o
 
 IMAGE = tgt/image.o
+
+VIDEO = tgt/video.o
+
+MOUSE = tgt/mouse.o
+
+BACK = tgt/back.o
 
 #Background Resource#
 BGS1 = tgt/bg1.image
@@ -96,17 +121,56 @@ tgt/loader.bin : src/boot/loader.asm src/boot/structure.inc
 tgt/public.o : src/kernal/public/public.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
-tgt/interrupt.o : src/kernal/include/interrupt.asm
+tgt/interrupta.o : src/kernal/system/interrupt.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
 #---------------------------------------------------------------#
+tgt/peripheral.o : src/kernal/include/peripheral.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/algorithm.o : src/kernal/algorithm/algorithm.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/charset.o : src/kernal/gui/charset.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/descriptor.o : src/kernal/system/descriptor.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/interruptc.o : src/kernal/system/interrupt.c
+	$(CC) $(CCFLAGES) $< -o $@
+
 tgt/process.o : src/kernal/process/process.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/desktop.o : src/kernal/gui/desktop.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/memory.o : src/kernal/memory/memory.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/timing.o : src/kernal/include/timing.c
 	$(CC) $(CCFLAGES) $< -o $@
 
 tgt/sheet.o : src/kernal/gui/sheet.c
 	$(CC) $(CCFLAGES) $< -o $@
 
+tgt/window.o : src/kernal/gui/window.c
+	$(CC) $(CCFLAGES) $< -o $@
+
 tgt/image.o : src/kernal/gui/image.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/video.o : src/kernal/gui/video.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/keyboard.o : src/kernal/include/keyboard.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/mouse.o : src/kernal/include/mouse.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/back.o : src/kernal/gui/back.c
 	$(CC) $(CCFLAGES) $< -o $@
 #---------------------------------------------------------------#
 tgt/ka.o : src/kernal/kernal.asm
@@ -115,8 +179,8 @@ tgt/ka.o : src/kernal/kernal.asm
 tgt/kc.o : src/kernal/kernal.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PROCESS) $(SHEET) $(IMAGE)
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PROCESS) $(SHEET)  $(IMAGE) -o $@
+tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(BACK) $(DESKTOP) $(WINDOW)
+	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(BACK) $(DESKTOP) $(WINDOW) -o $@
 
 tgt/kernal.sys : $(KERNALBIN)
 	$(TRIMELFHEADER) $< $@
@@ -131,7 +195,16 @@ tgt/mouse.sys : src/kernal/mouse/mouse.asm
 
 #---------------------------------------------------------------#
 tgt/bg1.image : res/background/bg1.bmp
-	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1280 1024 true
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1024 768 true
+
+tgt/bg2.image : res/background/bg2.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1024 768 true
+
+tgt/bg3.image : res/background/bg3.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1024 768 true
+
+tgt/bg4.image : res/background/bg4.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1024 768 true
 
 #---------------------------------------------------------------#
 tgt/app1.image : res/images/app1.bmp
@@ -147,16 +220,16 @@ tgt/app4.image : res/images/app4.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/app1.image tgt/app2.image tgt/app3.image tgt/app4.image tgt/charset.bin	
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/app1.image tgt/app2.image tgt/app3.image tgt/app4.image tgt/charset.bin	
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512
 	$(IMAGETOOL) $(COPYBINARY) $@ $(CHARSET) 4096
 	$(IMAGETOOL) $(COPYBINARY) $@ $(KERNAL) 32768
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS1) 8388608   #0x4000
-#	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS2) 10748928  #0x5202	
-#	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS3) 13109248  #0x6404	
-#	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS4) 15469568  #0x7606
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS2) 10748928  #0x5202	
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS3) 13109248  #0x6404	
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS4) 15469568  #0x7606
 	$(IMAGETOOL) $(COPYBINARY) $@ $(APP1) 17829888  #0x8808
 	$(IMAGETOOL) $(COPYBINARY) $@ $(APP2) 17849344  #0x882e
 	$(IMAGETOOL) $(COPYBINARY) $@ $(APP3) 17868800  #0x8854

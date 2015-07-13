@@ -1,11 +1,11 @@
-u8 keyTable[0x54];
+#include "../const/const.h"
+#include "../type/type.h"
+#include "../algorithm/algorithm.h"
+#include "../gui/color.h"
+#include "../gui/sheet.h"
+#include "keyboard.h"
 
-int charX;
-
-typedef struct KeyData
-{
-    int key;
-} KeyData;
+extern QueueBuffer systemBuffer;
 
 void intHandler21()
 {

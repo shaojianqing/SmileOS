@@ -1,26 +1,7 @@
-typedef struct Timer
-{	
-	u64 timeout;
-
-	u8 status;
-
-	u8 data;
-
-	struct Timer *next;
-
-	QueueBuffer *queue;
-} Timer;
-
-typedef struct TimerManager
-{	
-	u64 time;
-
-	u64 latest;
-
-	Timer *currentTimer;
-
-	Timer timerList[MAX_TIMER_NUM];
-} TimerManager;
+#include "../const/const.h"
+#include "../type/type.h"
+#include "../algorithm/algorithm.h"
+#include "timing.h"
 
 TimerManager timeManager;
 

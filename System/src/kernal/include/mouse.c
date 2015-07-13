@@ -1,13 +1,10 @@
-typedef struct MouseData
-{
-    signed char buf[3];
+#include "../const/const.h"
+#include "../type/type.h"
+#include "../algorithm/algorithm.h"
+#include "../gui/sheet.h"
+#include "mouse.h"
 
-    unsigned char phase;
-
-    int x, y;
-
-    int btn;
-} MouseData;
+extern QueueBuffer systemBuffer;
 
 void intHandler2c()
 {
@@ -105,11 +102,6 @@ void processMouseData(MouseData *mouseData, u32 data, Sheet *mouse, int *mx, int
         }
 
         (*mouseData).y = 0 - (*mouseData).y;
-
-        Color color;
-        color.red = 0x00;
-        color.green =0x99;
-        color.blue = 0xff;
 
         *mx += (*mouseData).x;
         *my += (*mouseData).y;

@@ -1,6 +1,9 @@
 #include "../type/type.h"
+#include "video.h"
 #include "image.h"
 #include "sheet.h"
+
+extern VideoModeInfo *videoModeInfo;
 
 void initSheetManagement()
 {
@@ -31,7 +34,7 @@ void refreshSheetMap(int x1, int y1, int x2, int y2, int z1)
 {
     if (x2>x1 && y2>y1) {
         SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
-        unsigned short *map = (unsigned short *)MAP_ADDRESS;
+        u16 *map = (u16 *)MAP_ADDRESS;
         char *buffer;
         int x, y, xb1, yb1, xb2, yb2, vx, vy;
         unsigned short i=0, sid=0;
@@ -93,8 +96,8 @@ void refreshSheetSub(int x1, int y1, int x2, int y2, int z1, int z2)
 {
     if (x2>x1 && y2>y1) {
         SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
-        char *vram = (char *)VRAM_ADDRESS;
-        unsigned short *map = (unsigned short *)MAP_ADDRESS;
+        char *vram = (char *)((*videoModeInfo).bufferAddress);
+        u16 *map = (u16 *)MAP_ADDRESS;
         char *buffer;
         int x, y, xb1, yb1, xb2, yb2, vx, vy;
         unsigned short i=0, sid=0;
@@ -194,7 +197,7 @@ void resetSheet(Sheet *sheet)
     }
 }
 
-/*void addImage(Sheet* sheet, Image* image)
+void addImage(Sheet* sheet, Image* image)
 {
     unsigned short height=(*image).height, width=(*image).width;
     unsigned int sheetWidth = (*sheet).width;
@@ -207,4 +210,4 @@ void resetSheet(Sheet *sheet)
             *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3+2) = *((*image).data+(y*80+x)*3+2);
         }
     }
-}*/
+}

@@ -47,9 +47,17 @@ enter_protect_mode:
 	int 0x13
 
 	;------------------------;
-	mov bx, 0x411b
+	mov bx, 0x4118
 	mov ax, 0x4f02
 	int 0x10 
+
+	mov ax, 0x2180
+	mov es, ax
+	xor di, di
+
+	mov cx, 0x118
+	mov ax, 0x4f01
+	int 0x10
 
 	;------------------------;
 	mov ax, 0x2140

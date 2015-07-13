@@ -1,14 +1,15 @@
 #define SHEET_MANAGE_TABLE 0x28800
-#define VRAM_ADDRESS 0xe0000000
 #define MAP_ADDRESS 0x100000
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 1024
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 #define SCREEN_DENSITY 3
 
 #define TRANSPARENT 0x00
 
 #define SHEET_NUM 512
+
+typedef struct Image Image;
 
 typedef struct Sheet
 {
@@ -44,4 +45,4 @@ void releaseSheet(Sheet *sheet);
 
 void resetSheet(Sheet *sheet);
 
-//void addImage(Sheet* sheet, Image* image);
+void addImage(Sheet* sheet, Image* image);

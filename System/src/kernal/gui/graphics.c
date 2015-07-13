@@ -92,7 +92,7 @@ void drawGradualVerticalRect(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, i
     }
 }
 
-void drawGradualVerticalRectAlpha(unsigned char *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Color startColor, Color endColor, int alpha)
+void drawGradualVerticalRectAlpha(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Color startColor, Color endColor, int alpha)
 {
     if (x2>x1 && y2>y1) {
         int x=0,y=0;

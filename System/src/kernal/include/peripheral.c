@@ -1,3 +1,11 @@
+#include "../const/const.h"
+#include "../type/type.h"
+#include "../algorithm/algorithm.h"
+#include "peripheral.h"
+
+extern int systemDataBuffer[1024];
+
+extern QueueBuffer systemBuffer;
 
 void waitKBCReady()
 {

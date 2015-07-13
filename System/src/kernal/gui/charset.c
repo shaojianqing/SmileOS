@@ -1,3 +1,8 @@
+#include "../type/type.h"
+#include "color.h"
+#include "sheet.h"
+#include "charset.h"
+
 void printChar(Sheet *sheet, u8 c, int x, int y, Color color)
 {
     u8 d;

@@ -1,8 +1,8 @@
-#define INFO_BAR_HEIGHT 30
-
-#define START_BAR_WIDTH 1000
-#define START_BAR_HEIGHT 120
-
+#include "../type/type.h"
+#include "sheet.h"
+#include "color.h"
+#include "image.h"
+#include "desktop.h"
 
 Sheet* prepareInfoBarSheet(Sheet *sheet)
 {
@@ -31,7 +31,7 @@ Sheet* prepareStartBarSheet(Sheet *sheet)
 {
     if (sheet != 0) {
         (*sheet).x = 112;
-        (*sheet).y = 640;
+        (*sheet).y = 300;
         (*sheet).width = START_BAR_WIDTH;
         (*sheet).height = START_BAR_HEIGHT;
         (*sheet).buffer = (char *)allocMemoryInPage(START_BAR_WIDTH*START_BAR_HEIGHT*SCREEN_DENSITY);
@@ -42,24 +42,24 @@ Sheet* prepareStartBarSheet(Sheet *sheet)
         (*appIcon1).x = 80;
         (*appIcon1).y = 10;
 
-        //addImage(sheet, appIcon1);
+        addImage(sheet, appIcon1);
 
         Image *appIcon2 = loadImageFromStorage(0x882e);
         (*appIcon2).x = 180;
         (*appIcon2).y = 10;
 
-        //addImage(sheet, appIcon2);
+        addImage(sheet, appIcon2);
 
         Image *appIcon3 = loadImageFromStorage(0x8854);
         (*appIcon3).x = 280;
         (*appIcon3).y = 10;
 
-        //addImage(sheet, appIcon3);
+        addImage(sheet, appIcon3);
 
         Image *appIcon4 = loadImageFromStorage(0x887a);
         (*appIcon4).x = 380;
         (*appIcon4).y = 10;
 
-        //addImage(sheet, appIcon4);
+        addImage(sheet, appIcon4);
     }
 }

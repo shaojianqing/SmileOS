@@ -1,3 +1,9 @@
+#include "../type/type.h"
+#include "sheet.h"
+#include "image.h"
+#include "color.h"
+#include "back.h"
+
 #define START_BAR_BG_HEIGHT 80
 
 Sheet* prepareBackgroundSheet(Sheet *sheet)
@@ -28,8 +34,8 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
 
         drawGradualVerticalRectAlpha((*sheet).buffer, sheet, 0, 0, SCREEN_WIDTH, 24, startColor, endColor, 160);
 
-        drawGradualVerticalTrapezium((*sheet).buffer, sheet, 140, 930, 140 + START_BAR_WIDTH, 930+START_BAR_BG_HEIGHT -5, START_BAR_BG_HEIGHT -5, startColor, endColor, 200);
-        drawRectAlpha((*sheet).buffer, sheet, 140, 930+START_BAR_BG_HEIGHT -5, 140+START_BAR_WIDTH, 930+START_BAR_BG_HEIGHT -4, sepColor, 240);
-        drawRectAlpha((*sheet).buffer, sheet, 140, 930+START_BAR_BG_HEIGHT -4, 140+START_BAR_WIDTH, 930+START_BAR_BG_HEIGHT , endColor, 200);
+        drawGradualVerticalTrapezium((*sheet).buffer, sheet, 62, 680, 62 + START_BAR_WIDTH, 680+START_BAR_BG_HEIGHT -5, START_BAR_BG_HEIGHT -5, startColor, endColor, 200);
+        drawRectAlpha((*sheet).buffer, sheet, 62, 680+START_BAR_BG_HEIGHT -5, 62+START_BAR_WIDTH, 680+START_BAR_BG_HEIGHT -4, sepColor, 240);
+        drawRectAlpha((*sheet).buffer, sheet, 62, 680+START_BAR_BG_HEIGHT -4, 62+START_BAR_WIDTH, 680+START_BAR_BG_HEIGHT , endColor, 200);
     }
 }

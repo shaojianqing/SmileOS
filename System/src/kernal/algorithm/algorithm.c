@@ -1,3 +1,6 @@
+#include "../type/type.h"
+#include "algorithm.h"
+
 void initQueueBuffer(QueueBuffer *queueBuffer, int size, u32 *buffer)
 {
 	(*queueBuffer).size = size;

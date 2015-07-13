@@ -1,31 +1,6 @@
-#define SYS_MEM 1024*1024
-#define VRAM_MAP 1280*1024*2
-#define MEMORY_NUM 2000
-
-typedef struct MemoryInfo
-{
-    u32 addr;
-
-    u32 size;
-} MemoryInfo;
-
-typedef struct MemoryManager
-{
-    u32 num;
-
-    u32 losts;
-
-    u32 lostSize;
-
-    MemoryInfo memoryInfos[MEMORY_NUM];
-
-} MemoryManager;
-
-typedef struct SystemInfo
-{
-    u32 memorySize;
-
-} SystemInfo;
+#include "../const/const.h"
+#include "../type/type.h"
+#include "memory.h"
 
 void initMemoryManagement()
 {
@@ -47,7 +22,7 @@ u32 memorySize()
     MemoryManager *memoryManager = (MemoryManager *)0x21800;
     if ((*memoryManager).num>0) {
         u32 memorySize = 0;
-        int i=0;
+        u32 i=0;
         for (i=0; i<(*memoryManager).num; ++i) {
             MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfos+i);
             memorySize+=(*memoryInfo).size;
@@ -90,14 +65,8 @@ u32 allocMemoryInPage(u32 size)
 void freeMemory(u32 addr, u32 size)
 {
     if (size>0 && addr>=SYS_MEM+VRAM_MAP) {
-
-        Color color;
-        color.red = 255;
-        color.green = 255;
-        color.blue = 255;
-
         MemoryManager *memoryManager = (MemoryManager *)0x21800;
-        unsigned int i=0, j=0, index=0;
+        u32 i=0, j=0, index=0;
         for (i=0; i<(*memoryManager).num; ++i) {
             MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfos+i);
             if ((*memoryInfo).addr>addr) {
@@ -150,7 +119,7 @@ void freeMemory(u32 addr, u32 size)
     return;
 }
 
-void freeMemoryInPage(unsigned int addr, unsigned int size)
+void freeMemoryInPage(u32 addr, u32 size)
 {
     size=(size+0xfff)&0xfffff000;
     freeMemoryInPage(addr, size);

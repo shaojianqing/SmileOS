@@ -1,9 +1,14 @@
+#include "../type/type.h"
+#include "color.h"
+#include "sheet.h"
+#include "corner.h"
+#include "window.h"
 
 Sheet* prepareWindowSheet(Sheet *sheet)
 {
     if (sheet != 0) {
-        (*sheet).x = 340;
-        (*sheet).y = 220;
+        (*sheet).x = 212;
+        (*sheet).y = 100;
         (*sheet).width = 600;
         (*sheet).height = 500;
         (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);

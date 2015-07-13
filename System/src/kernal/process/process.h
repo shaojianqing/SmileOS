@@ -1,3 +1,5 @@
+#define AR_TSS32						0x0089
+
 #define MAX_PROCESS_NUM 				1024
 #define PROCESS_TABLE_ADDRESS			0x30000
 

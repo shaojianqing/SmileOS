@@ -1,0 +1,4 @@
+
+void initPeripheralStatus();
+
+void initQueueBufferData();

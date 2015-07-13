@@ -1,25 +1,28 @@
+#include "type/type.h"
 #include "const/const.h"
-#include "structure/structure.h"
-#include "structure/algorithm.c"
+#include "algorithm/algorithm.h"
 #include "macro/macro.h"
 #include "inOutput/inOutput.h"
-#include "memory/memory.c"
+#include "memory/memory.h"
 #include "process/process.h"
+#include "gui/color.h"
+#include "gui/video.h"
 #include "gui/sheet.h"
+#include "gui/back.h"
 #include "gui/image.h"
-#include "graphics/graphics.c"
-#include "charset/charset.c"
-#include "include/globalData.c"
-#include "include/timing.c"
-#include "include/mouse.c"
+#include "gui/corner.h"
+#include "gui/window.h"
+#include "gui/charset.h"
+#include "gui/desktop.h"
+#include "gui/graphics.c"
+#include "system/globalData.h"
+#include "system/interrupt.h"
+#include "system/descriptor.h"
+#include "include/timing.h"
+#include "include/mouse.h"
 #include "include/harddisk.c"
-#include "include/keyboard.c"
-#include "include/descriptor.c"
-#include "include/interrupt.c"
-#include "include/peripheral.c"
-#include "window/window.c"
-#include "desktop/desktop.c"
-#include "background/background.c"
+#include "include/keyboard.h"
+#include "include/peripheral.h"
 
 int mx, my;
 
@@ -46,8 +49,8 @@ void processA()
 
 	Color mainColor;
     mainColor.red = 240;
-    mainColor.green = 100;
-    mainColor.blue = 100;
+    mainColor.green = 80;
+    mainColor.blue = 240;
 
 	Color color;
     color.red = 240;
@@ -67,7 +70,8 @@ void processA()
 void initSystem(void)
 {
     mouseData.phase = 0;
-
+ 	
+	initVideoModeInfo();
 	initInterruptHandler();	
 	initQueueBufferData();
 	initTimerManagement();
