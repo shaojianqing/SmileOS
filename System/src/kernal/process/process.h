@@ -1,6 +1,6 @@
 #define AR_TSS32						0x0089
 
-#define MAX_PROCESS_NUM 				1024
+#define MAX_PROCESS_NUM 				1000
 #define PROCESS_TABLE_ADDRESS			0x30000
 
 #define STATUS_PROCESS_INIT 			0
@@ -8,6 +8,10 @@
 #define STATUS_PROCESS_RUNNING 			2
 
 #define START_PROCESS_GDT 				4
+
+#define MAX_PROCESS_LEVEL				100
+
+#define MAX_LEVEL_NUMBER				10
 
 typedef struct Tss
 {
@@ -27,17 +31,33 @@ typedef struct Process
 
 	short selector;
 
-	short status;	
+	short status;
+
+	int priority;
+
+	int level;	
 
 } Process;
 
+typedef struct ProcessLevel
+{
+	int running;
+
+	int current;
+
+	Process *processList[MAX_PROCESS_LEVEL];
+
+} ProcessLevel;
+
 typedef struct ProcessManager
 {
-	short running;
+	int currentLevel;
 
-	short current;
+	bool isChangeLevel;
 
-	Process *processList[MAX_PROCESS_NUM];
+	int currentPriority;
+
+	ProcessLevel levelList[MAX_LEVEL_NUMBER];
 
 	Process processArray[MAX_PROCESS_NUM];
 
@@ -47,10 +67,22 @@ ProcessManager *processManager;
 
 void initTssDescriptor(Tss *tss, int eip, int esp);
 
-Process *initProcessManagement();
+void initProcessManagement();
+
+void prepareKernelProcess();
 
 Process *requestProcess();
 
-Process *startRunProcess(Process *process);
+Process *getCurrentProcess();
+
+Process *addProcess(Process *process);
+
+Process *removeProcess(Process *process);
+
+Process *startRunProcess(Process *process, int level, int priority);
+
+void startSleepProcess(Process *process);
+
+void switchProcessLevel();
 
 void startSwitchProcess();

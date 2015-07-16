@@ -4,13 +4,13 @@
 #include "corner.h"
 #include "window.h"
 
-Sheet* prepareWindowSheet(Sheet *sheet)
+Sheet* prepareWindowSheetOne(Sheet *sheet)
 {
     if (sheet != 0) {
-        (*sheet).x = 212;
+        (*sheet).x = 100;
         (*sheet).y = 100;
-        (*sheet).width = 600;
-        (*sheet).height = 500;
+        (*sheet).width = 300;
+        (*sheet).height = 200;
         (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
 
         resetSheet(sheet);
@@ -44,26 +44,165 @@ Sheet* prepareWindowSheet(Sheet *sheet)
 		Color txtBorderColor;
         txtBorderColor.red = 160;
         txtBorderColor.green = 160;
-        txtBorderColor.blue = 160;
-
-		Color txtMainColor;
-        txtMainColor.red = 250;
-        txtMainColor.green = 250;
-        txtMainColor.blue = 250;
-
-		Corner txtCorner;
-        txtCorner.leftTop=2;
-        txtCorner.rightTop=2;
-        txtCorner.leftBtm=2;
-        txtCorner.rightBtm=2;		
+        txtBorderColor.blue = 160;		
 
         drawCornerRect((*sheet).buffer, sheet, 0, 0, (*sheet).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect((*sheet).buffer, sheet, 1, 1, (*sheet).width-1, 21, startColor, endColor, corner);
-        drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 500, mainBgColor);
-        drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-1, 498, mainColor);
+        drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 300, mainBgColor);
+        drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-1, 298, mainColor);
 
-		drawCornerRect((*sheet).buffer, sheet, 200, 200, 400, 236, txtBorderColor, txtCorner);
-		drawCornerRect((*sheet).buffer, sheet, 201, 201, 399, 235, txtMainColor, txtCorner);
+        return sheet;
+    }
+}
+
+Sheet* prepareWindowSheetTwo(Sheet *sheet)
+{
+	if (sheet != 0) {
+        (*sheet).x = 624;
+        (*sheet).y = 100;
+        (*sheet).width = 300;
+        (*sheet).height = 200;
+        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+
+        resetSheet(sheet);
+
+        Color startColor;
+        startColor.red = 250;
+        startColor.green = 250;
+        startColor.blue = 250;
+
+        Color endColor;
+        endColor.red = 220;
+        endColor.green = 220;
+        endColor.blue = 220;
+
+        Corner corner;
+        corner.leftTop=2;
+        corner.rightTop=2;
+        corner.leftBtm=0;
+        corner.rightBtm=0;
+
+        Color mainBgColor;
+        mainBgColor.red = 120;
+        mainBgColor.green = 120;
+        mainBgColor.blue = 120;
+
+        Color mainColor;
+        mainColor.red = 220;
+        mainColor.green = 220;
+        mainColor.blue = 220;
+
+		Color txtBorderColor;
+        txtBorderColor.red = 160;
+        txtBorderColor.green = 160;
+        txtBorderColor.blue = 160;		
+
+        drawCornerRect((*sheet).buffer, sheet, 0, 0, (*sheet).width, 21, mainBgColor, corner);
+        drawGradualVerticalCornerRect((*sheet).buffer, sheet, 1, 1, (*sheet).width-1, 21, startColor, endColor, corner);
+        drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 300, mainBgColor);
+        drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-1, 298, mainColor);
+
+        return sheet;
+    }
+}
+
+Sheet* prepareWindowSheetThree(Sheet *sheet)
+{
+	if (sheet != 0) {
+        (*sheet).x = 100;
+        (*sheet).y = 400;
+        (*sheet).width = 300;
+        (*sheet).height = 200;
+        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+
+        resetSheet(sheet);
+
+        Color startColor;
+        startColor.red = 250;
+        startColor.green = 250;
+        startColor.blue = 250;
+
+        Color endColor;
+        endColor.red = 220;
+        endColor.green = 220;
+        endColor.blue = 220;
+
+        Corner corner;
+        corner.leftTop=2;
+        corner.rightTop=2;
+        corner.leftBtm=0;
+        corner.rightBtm=0;
+
+        Color mainBgColor;
+        mainBgColor.red = 120;
+        mainBgColor.green = 120;
+        mainBgColor.blue = 120;
+
+        Color mainColor;
+        mainColor.red = 220;
+        mainColor.green = 220;
+        mainColor.blue = 220;
+
+		Color txtBorderColor;
+        txtBorderColor.red = 160;
+        txtBorderColor.green = 160;
+        txtBorderColor.blue = 160;		
+
+        drawCornerRect((*sheet).buffer, sheet, 0, 0, (*sheet).width, 21, mainBgColor, corner);
+        drawGradualVerticalCornerRect((*sheet).buffer, sheet, 1, 1, (*sheet).width-1, 21, startColor, endColor, corner);
+        drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 300, mainBgColor);
+        drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-1, 298, mainColor);
+
+        return sheet;
+    }
+}
+
+Sheet* prepareWindowSheetFour(Sheet *sheet)
+{
+	if (sheet != 0) {
+        (*sheet).x = 624;
+        (*sheet).y = 400;
+        (*sheet).width = 300;
+        (*sheet).height = 200;
+        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+
+        resetSheet(sheet);
+
+        Color startColor;
+        startColor.red = 250;
+        startColor.green = 250;
+        startColor.blue = 250;
+
+        Color endColor;
+        endColor.red = 220;
+        endColor.green = 220;
+        endColor.blue = 220;
+
+        Corner corner;
+        corner.leftTop=2;
+        corner.rightTop=2;
+        corner.leftBtm=0;
+        corner.rightBtm=0;
+
+        Color mainBgColor;
+        mainBgColor.red = 120;
+        mainBgColor.green = 120;
+        mainBgColor.blue = 120;
+
+        Color mainColor;
+        mainColor.red = 220;
+        mainColor.green = 220;
+        mainColor.blue = 220;
+
+		Color txtBorderColor;
+        txtBorderColor.red = 160;
+        txtBorderColor.green = 160;
+        txtBorderColor.blue = 160;		
+
+        drawCornerRect((*sheet).buffer, sheet, 0, 0, (*sheet).width, 21, mainBgColor, corner);
+        drawGradualVerticalCornerRect((*sheet).buffer, sheet, 1, 1, (*sheet).width-1, 21, startColor, endColor, corner);
+        drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 300, mainBgColor);
+        drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-1, 298, mainColor);
 
         return sheet;
     }

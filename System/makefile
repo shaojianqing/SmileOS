@@ -61,6 +61,10 @@ KEYBOARD = tgt/keyboard.o
 
 MEMORY = tgt/memory.o
 
+GRAPHICS = tgt/graphics.o
+
+HARDDISK = tgt/harddisk.o
+
 PROCESS = tgt/process.o
 
 TIMING = tgt/timing.o
@@ -149,6 +153,12 @@ tgt/desktop.o : src/kernal/gui/desktop.c
 tgt/memory.o : src/kernal/memory/memory.c
 	$(CC) $(CCFLAGES) $< -o $@
 
+tgt/graphics.o : src/kernal/gui/graphics.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/harddisk.o : src/kernal/include/harddisk.c
+	$(CC) $(CCFLAGES) $< -o $@
+
 tgt/timing.o : src/kernal/include/timing.c
 	$(CC) $(CCFLAGES) $< -o $@
 
@@ -179,8 +189,8 @@ tgt/ka.o : src/kernal/kernal.asm
 tgt/kc.o : src/kernal/kernal.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(BACK) $(DESKTOP) $(WINDOW)
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(BACK) $(DESKTOP) $(WINDOW) -o $@
+tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(BACK) $(DESKTOP) $(WINDOW)
+	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(BACK) $(DESKTOP) $(WINDOW) -o $@
 
 tgt/kernal.sys : $(KERNALBIN)
 	$(TRIMELFHEADER) $< $@

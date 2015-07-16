@@ -42,7 +42,7 @@ void drawMouseMap(char *buffer)
                                               };
 
     int i=0, j=0;
-    for (i=0; i<21; ++i) {
+    for (i=0; i<22; ++i) {
         for (j=0; j<MOUSE_WIDTH; ++j) {
             if (mouseMap[i][j] == '@') {
                 *(buffer + (MOUSE_WIDTH*i + j)*SCREEN_DENSITY) = 20;
@@ -52,7 +52,11 @@ void drawMouseMap(char *buffer)
                 *(buffer + (MOUSE_WIDTH*i + j)*SCREEN_DENSITY) = 255;
                 *(buffer + (MOUSE_WIDTH*i + j)*SCREEN_DENSITY + 1) = 255;
                 *(buffer + (MOUSE_WIDTH*i + j)*SCREEN_DENSITY + 2) = 255;
-            }
+            } else {
+				*(buffer + (MOUSE_WIDTH*i + j)*SCREEN_DENSITY) = 0;
+                *(buffer + (MOUSE_WIDTH*i + j)*SCREEN_DENSITY + 1) = 0;
+                *(buffer + (MOUSE_WIDTH*i + j)*SCREEN_DENSITY + 2) = 0;		
+			}
         }
     }
 }
@@ -61,8 +65,8 @@ Sheet *prepareMouseSheet(Sheet* sheet)
 {
     if (sheet != 0) {
         (*sheet).buffer = (char *)allocMemoryInPage(MOUSE_WIDTH*MOUSE_HEIGHT*SCREEN_DENSITY);
-        (*sheet).x = 640;
-        (*sheet).y = 512;
+        (*sheet).x = 500;
+        (*sheet).y = 380;
         (*sheet).width = MOUSE_WIDTH;
         (*sheet).height = MOUSE_HEIGHT;
         drawMouseMap((*sheet).buffer);

@@ -1,11 +1,8 @@
-Color makeColor(u8 red, u8 green, u8 blue)
-{
-    Color color;
-    color.red = red;
-    color.green = green;
-    color.blue = blue;
-    return color;
-}
+#include "../type/type.h"
+#include "sheet.h"
+#include "color.h"
+#include "corner.h"
+#include "graphics.h"
 
 void drawRect(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Color color)
 {
