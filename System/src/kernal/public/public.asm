@@ -6,6 +6,7 @@ global outByte
 global loadGdtr
 global loadIdtr
 global readPort
+global startHlt
 global readHardDisk
 global switchProcess
 global clearInterrupt
@@ -70,6 +71,10 @@ readPort:
 	shr ecx, 1
 	cld
 	rep insw
+	ret
+
+startHlt:
+	hlt
 	ret
 
 

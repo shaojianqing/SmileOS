@@ -1,5 +1,5 @@
 #define SYS_MEM 1024*1024
-#define VRAM_MAP 1280*1024*2
+#define VRAM_MAP 1024*1024
 #define MEMORY_NUM 2000
 
 typedef struct MemoryInfo

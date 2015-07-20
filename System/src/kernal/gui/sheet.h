@@ -7,7 +7,10 @@
 
 #define TRANSPARENT 0x00
 
-#define SHEET_NUM 512
+#define STATUS_SHEET_UNUSE 0
+#define STATUS_SHEET_USING 1
+
+#define SHEET_NUM 256
 
 typedef struct Image Image;
 
@@ -15,13 +18,17 @@ typedef struct Sheet
 {
     char *buffer;
 
-    int x, y, width, height, z, status;
+    int x, y;
+
+	int width, height;
+
+	int z, status;
 
 } Sheet;
 
 typedef struct SheetManager
 {
-    u16 sheetNum;
+    u8 sheetNum;
 
     Sheet *sheets[SHEET_NUM];
 
@@ -33,9 +40,17 @@ void initSheetManagement();
 
 Sheet* prepareSheet();
 
+void refreshSheetRect(Sheet *sheet, int x, int y, int w, int h);
+
 void refreshSheetMap(int x1, int y1, int x2, int y2, int z1);
 
 void refreshSheetSub(int x1, int y1, int x2, int y2, int z1, int z2);
+
+void initMouseSheet(Sheet *sheet);
+
+void loadWindowSheet(Sheet *sheet);
+
+void initBackgroundSheet(Sheet *sheet);
 
 void loadSheet(Sheet *sheet, int z);
 

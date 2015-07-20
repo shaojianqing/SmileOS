@@ -71,6 +71,8 @@ void initProcessManagement();
 
 void prepareKernelProcess();
 
+void prepareIdleProcess();
+
 Process *requestProcess();
 
 Process *getCurrentProcess();

@@ -4,6 +4,10 @@
 
 extern Process *kernelProcess;
 
+extern Process *idleProcess;
+
+void idle();
+
 void initTssDescriptor(Tss *tss, int eip, int esp) {
 	(*tss).eip = eip;	
 	(*tss).ldtr = 0;
@@ -49,6 +53,24 @@ void prepareKernelProcess()
 	addProcess(kernelProcess);
 	switchProcessLevel();			
 	loadTr((*kernelProcess).selector);
+}
+
+void prepareIdleProcess()
+{
+	idleProcess = requestProcess();
+	(*idleProcess).status = STATUS_PROCESS_RUNNING;
+	(*idleProcess).tss.esp = allocMemory(32*32) + 32*32;
+	(*idleProcess).tss.eip = (int) &idle;
+	(*idleProcess).tss.es = 2 * 8;
+	(*idleProcess).tss.cs = 1 * 8;
+	(*idleProcess).tss.ss = 2 * 8;
+	(*idleProcess).tss.ds = 2 * 8;
+	(*idleProcess).tss.fs = 2 * 8;
+	(*idleProcess).tss.gs = 2 * 8;	
+	(*idleProcess).level = 9;
+	addProcess(idleProcess);
+	switchProcessLevel();
+	startRunProcess(idleProcess, 9, 1);
 }
 
 Process *requestProcess()
@@ -212,4 +234,11 @@ void startSwitchProcess()
 		(*processManager).currentPriority--;
 	}
 	return;
+}
+
+void idle()
+{
+	while(TRUE) {
+		startHlt();
+	}	
 }

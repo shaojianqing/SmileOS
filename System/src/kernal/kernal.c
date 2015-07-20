@@ -30,17 +30,11 @@ MouseData mouseData;
 
 KeyData keyData;
 
-Sheet *windowOne;
-
-Sheet *windowTwo;
-
-Sheet *windowThree;
-
-Sheet *windowFour;
-
 Sheet *mouse;
 
 Process *kernelProcess;
+
+Process *idleProcess;
 
 Process *userProcessOne;
 
@@ -50,30 +44,11 @@ Process *userProcessThree;
 
 Process *userProcessFour;
 
-Sheet *getWindowOne()
-{
-	return windowOne;
-}
-
-Sheet *getWindowTwo()
-{
-	return windowTwo;
-}
-
-Sheet *getWindowThree()
-{
-	return windowThree;
-}
-
-Sheet *getWindowFour()
-{
-	return windowFour;
-}
-
 void processA()
 {
-	Sheet *window = getWindowOne();
-	
+	Sheet *window = prepareSheet();
+    prepareWindowSheetOne(window);
+    loadWindowSheet(window);
 	int count = 0;
 
 	Color mainColor;
@@ -88,11 +63,9 @@ void processA()
 
 	while(TRUE) {
 		count++;
-		drawRect((*window).buffer, window, 20, 70, 120, 100, color);
+		drawRect((*window).buffer, window, 20, 70, 100, 30, color);
 		printInteger(window, count, 100, 80, mainColor);
-
-		refreshSheetMap((*window).x, (*window).y, (*window).x+(*window).width, (*window).y+(*window).height, 0);
-    	refreshSheetSub((*window).x, (*window).y, (*window).x+(*window).width, (*window).y+(*window).height, (*window).z, (*window).z);	
+		refreshSheetRect(window, 20, 70, 100, 30);
 
 		if (count==200) {
 			startSleepProcess(userProcessOne);		
@@ -102,8 +75,9 @@ void processA()
 
 void processB()
 {
-	Sheet *window = getWindowTwo();
-	
+	Sheet *window = prepareSheet();;
+    prepareWindowSheetTwo(window);
+    loadWindowSheet(window);
 	int count = 0;
 
 	Color mainColor;
@@ -118,11 +92,9 @@ void processB()
 
 	while(TRUE) {
 		count++;
-		drawRect((*window).buffer, window, 20, 70, 120, 100, color);
+		drawRect((*window).buffer, window, 20, 70, 100, 30, color);
 		printInteger(window, count, 100, 80, mainColor);
-
-		refreshSheetMap((*window).x, (*window).y, (*window).x+(*window).width, (*window).y+(*window).height, 0);
-    	refreshSheetSub((*window).x, (*window).y, (*window).x+(*window).width, (*window).y+(*window).height, (*window).z, (*window).z);	
+		refreshSheetRect(window, 20, 70, 100, 30);
 
 		if (count==300) {
 			startSleepProcess(userProcessTwo);		
@@ -132,8 +104,9 @@ void processB()
 
 void processC()
 {
-	Sheet *window = getWindowThree();
-	
+	Sheet *window = prepareSheet();;
+    prepareWindowSheetThree(window);
+    loadWindowSheet(window);
 	int count = 0;
 
 	Color mainColor;
@@ -148,11 +121,9 @@ void processC()
 
 	while(TRUE) {
 		count++;
-		drawRect((*window).buffer, window, 20, 70, 120, 100, color);
+		drawRect((*window).buffer, window, 20, 70, 100, 30, color);
 		printInteger(window, count, 100, 80, mainColor);
-
-		refreshSheetMap((*window).x, (*window).y, (*window).x+(*window).width, (*window).y+(*window).height, 0);
-    	refreshSheetSub((*window).x, (*window).y, (*window).x+(*window).width, (*window).y+(*window).height, (*window).z, (*window).z);	
+		refreshSheetRect(window, 20, 70, 100, 30);
 
 		if (count==2000) {
 			startSleepProcess(userProcessThree);		
@@ -162,8 +133,9 @@ void processC()
 
 void processD()
 {
-	Sheet *window = getWindowFour();
-	
+	Sheet *window = prepareSheet();;
+    prepareWindowSheetFour(window);
+    loadWindowSheet(window);
 	int count = 0;
 
 	Color mainColor;
@@ -178,11 +150,9 @@ void processD()
 
 	while(TRUE) {
 		count++;
-		drawRect((*window).buffer, window, 20, 70, 120, 100, color);
+		drawRect((*window).buffer, window, 20, 70, 100, 30, color);
 		printInteger(window, count, 100, 80, mainColor);
-
-		refreshSheetMap((*window).x, (*window).y, (*window).x+(*window).width, (*window).y+(*window).height, 0);
-    	refreshSheetSub((*window).x, (*window).y, (*window).x+(*window).width, (*window).y+(*window).height, (*window).z, (*window).z);	
+		refreshSheetRect(window, 20, 70, 100, 30);
 
 		if (count==2000) {
 			startSleepProcess(userProcessFour);		
@@ -206,36 +176,20 @@ void initSystem(void)
     initSheetManagement();
 	initProcessManagement();
 	prepareKernelProcess();
+	prepareIdleProcess();
 
     Sheet *background = prepareSheet();
-    prepareBackgroundSheet(background);
-    loadSheet(background, 0);
-
-    windowOne = prepareSheet();
-    prepareWindowSheetOne(windowOne);
-    loadSheet(windowOne, 1);
-
-	windowTwo = prepareSheet();
-    prepareWindowSheetTwo(windowTwo);
-    loadSheet(windowTwo, 2);
-
-	windowThree = prepareSheet();
-    prepareWindowSheetThree(windowThree);
-    loadSheet(windowThree, 3);
-
-	windowFour = prepareSheet();
-    prepareWindowSheetFour(windowFour);
-    loadSheet(windowFour, 4);
+    prepareBackgroundSheet(background);	  
+    initBackgroundSheet(background);
 
     mouse = prepareSheet();
     prepareMouseSheet(mouse);
-    loadSheet(mouse, 5);
+	initMouseSheet(mouse);    
 	
     mx = 500;
     my = 380;
 
 	userProcessOne = requestProcess();
-
 	(*userProcessOne).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
 	(*userProcessOne).tss.eip = (int) &processA;
 	(*userProcessOne).tss.es = 2 * 8;
@@ -247,7 +201,6 @@ void initSystem(void)
 	startRunProcess(userProcessOne, 1, 1);
 
 	userProcessTwo = requestProcess();
-
 	(*userProcessTwo).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
 	(*userProcessTwo).tss.eip = (int) &processB;
 	(*userProcessTwo).tss.es = 2 * 8;
@@ -256,10 +209,9 @@ void initSystem(void)
 	(*userProcessTwo).tss.ds = 2 * 8;
 	(*userProcessTwo).tss.fs = 2 * 8;
 	(*userProcessTwo).tss.gs = 2 * 8;
-	startRunProcess(userProcessTwo, 1, 1);
+	startRunProcess(userProcessTwo, 1, 5);
 
 	userProcessThree = requestProcess();
-
 	(*userProcessThree).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
 	(*userProcessThree).tss.eip = (int) &processC;
 	(*userProcessThree).tss.es = 2 * 8;
@@ -268,10 +220,9 @@ void initSystem(void)
 	(*userProcessThree).tss.ds = 2 * 8;
 	(*userProcessThree).tss.fs = 2 * 8;
 	(*userProcessThree).tss.gs = 2 * 8;
-	startRunProcess(userProcessThree, 2, 1);
+	startRunProcess(userProcessThree, 2, 3);
 
 	userProcessFour = requestProcess();
-
 	(*userProcessFour).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
 	(*userProcessFour).tss.eip = (int) &processD;
 	(*userProcessFour).tss.es = 2 * 8;
@@ -280,20 +231,19 @@ void initSystem(void)
 	(*userProcessFour).tss.ds = 2 * 8;
 	(*userProcessFour).tss.fs = 2 * 8;
 	(*userProcessFour).tss.gs = 2 * 8;
-	startRunProcess(userProcessFour, 2, 1);
-
+	startRunProcess(userProcessFour, 2, 8);
 
     while(TRUE) {
         clearInterrupt();
 		if (queueBufferStatus(&systemBuffer) == 0) {
-			startSleepProcess(kernelProcess);
 			setupInterrupt();
+			startSleepProcess(kernelProcess);			
 		} else {
 			u32 data = getQueueBuffer(&systemBuffer);
 			if (data<1024) {
 				setupInterrupt();
 			} else if (data>=1024 && data<2048) {
-				processKeyData(&keyData, data, windowOne);			
+				//processKeyData(&keyData, data, windowOne);			
 			} else if (data>=2048) {
 				processMouseData(&mouseData, data, mouse, &mx, &my);
 			}

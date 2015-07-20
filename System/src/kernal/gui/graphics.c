@@ -1,63 +1,64 @@
+#include "../const/const.h"
 #include "../type/type.h"
 #include "sheet.h"
 #include "color.h"
 #include "corner.h"
 #include "graphics.h"
 
-void drawRect(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Color color)
+void drawRect(u8 *buffer, Sheet *sheet, int x, int y, int w, int h, Color color)
 {
-    if (x2>x1 && y2>y1) {
-        int x=0,y=0;
-        for (y=y1; y<y2; ++y) {
-            for (x=x1; x<x2; ++x) {
-                *(buffer + (y*(*sheet).width+x)*3) = color.blue;
-                *(buffer + (y*(*sheet).width+x)*3 + 1) = color.green;
-                *(buffer + (y*(*sheet).width+x)*3 + 2) = color.red;
+    if (w>0 && h>0) {
+        int i=0,j=0;
+        for (j=y; j<y+h; ++j) {
+            for (i=x; i<x+w; ++i) {
+                *(buffer + (j*(*sheet).width+i)*3) = color.blue;
+                *(buffer + (j*(*sheet).width+i)*3 + 1) = color.green;
+                *(buffer + (j*(*sheet).width+i)*3 + 2) = color.red;
             }
         }
     }
 }
 
-void drawCornerRect(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Color color, Corner corner)
+void drawCornerRect(u8 *buffer, Sheet *sheet, int x, int y, int w, int h, Color color, Corner corner)
 {
-    if (x2>x1 && y2>y1) {
-        unsigned int x=0, y=0;
-        unsigned int leftTop = corner.leftTop, rightTop = corner.rightTop, leftBtm = 0, rightBtm = 0;
-        for (y=y1; y<y2; ++y) {
-            for (x=x1+leftTop+leftBtm; x<x2-rightTop-rightBtm; ++x) {
-                *(buffer + (y*(*sheet).width+x)*3) = color.blue;
-                *(buffer + (y*(*sheet).width+x)*3 + 1) = color.green;
-                *(buffer + (y*(*sheet).width+x)*3 + 2) = color.red;
+    if (w>0 && h>0) {
+        u32 i=0, j=0;
+        u32 leftTop = corner.leftTop, rightTop = corner.rightTop, leftBtm = 0, rightBtm = 0;
+        for (j=y; j<y+h; ++j) {
+            for (i=x+leftTop+leftBtm; i<x+w-rightTop-rightBtm; ++i) {
+                *(buffer + (j*(*sheet).width+i)*3) = color.blue;
+                *(buffer + (j*(*sheet).width+i)*3 + 1) = color.green;
+                *(buffer + (j*(*sheet).width+i)*3 + 2) = color.red;
             }
-            if (y<y1+corner.leftTop) {
+            if (j<y+corner.leftTop) {
                 --leftTop;
             }
-            if (y<y1+corner.rightTop) {
+            if (j<y+corner.rightTop) {
                 --rightTop;
             }
-            if (y>y2-corner.leftBtm-1) {
+            if (j>y+h-corner.leftBtm-1) {
                 ++leftBtm;
             }
-            if (y>y2-corner.rightBtm-1) {
+            if (j>y+h-corner.rightBtm-1) {
                 ++rightBtm;
             }
         }
     }
 }
 
-void drawRectAlpha(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Color color, int alpha)
+void drawRectAlpha(u8 *buffer, Sheet *sheet, int x, int y, int w, int h, Color color, int alpha)
 {
-    if (x2>x1 && y2>y1) {
-        int x=0,y=0;
-        for (y=y1; y<y2; ++y) {
-            for (x=x1; x<x2; ++x) {
+    if (w>0 && h>0) {
+        int i=0,j=0;
+        for (j=y; j<y+h; ++j) {
+            for (i=x; i<x+w; ++i) {
                 u8 red = color.red;
                 u8 green = color.green;
                 u8 blue = color.blue;
 
-                u8 *sourceBlue = buffer + (y*(*sheet).width+x)*3;
-                u8 *sourceGreen = buffer + (y*(*sheet).width+x)*3 + 1;
-                u8 *sourceRed = buffer + (y*(*sheet).width+x)*3 + 2;
+                u8 *sourceBlue = buffer + (j*(*sheet).width+i)*3;
+                u8 *sourceGreen = buffer + (j*(*sheet).width+i)*3 + 1;
+                u8 *sourceRed = buffer + (j*(*sheet).width+i)*3 + 2;
 
                 blue = blue*alpha/256 + (*sourceBlue)*(256-alpha)/256;
                 green = green*alpha/256 + (*sourceGreen)*(256-alpha)/256;
@@ -71,38 +72,38 @@ void drawRectAlpha(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Col
     }
 }
 
-void drawGradualVerticalRect(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Color startColor, Color endColor)
+void drawGradualVerticalRect(u8 *buffer, Sheet *sheet, int x, int y, int w, int h, Color startColor, Color endColor)
 {
-    if (x2>x1 && y2>y1) {
-        int x=0,y=0;
-        int distance = y2-y1;
-        for (y=y1; y<y2; ++y) {
-            for (x=x1; x<x2; ++x) {
-                u8 red = startColor.red + (endColor.red - startColor.red)*(y-y1)/distance;
-                u8 green = startColor.green + (endColor.green - startColor.green)*(y-y1)/distance;
-                u8 blue =  startColor.blue + (endColor.blue - startColor.blue)*(y-y1)/distance;
-                *(buffer + (y*(*sheet).width+x)*3) = blue;
-                *(buffer + (y*(*sheet).width+x)*3 + 1) = green;
-                *(buffer + (y*(*sheet).width+x)*3 + 2) = red;
+    if (w>0 && h>0) {
+        int i=0,j=0;
+        int distance = h;
+        for (j=y; j<y+h; ++j) {
+            for (i=x; i<x+w; ++i) {
+                u8 red = startColor.red + (endColor.red - startColor.red)*(j-y)/distance;
+                u8 green = startColor.green + (endColor.green - startColor.green)*(j-y)/distance;
+                u8 blue =  startColor.blue + (endColor.blue - startColor.blue)*(j-y)/distance;
+                *(buffer + (j*(*sheet).width+i)*3) = blue;
+                *(buffer + (j*(*sheet).width+i)*3 + 1) = green;
+                *(buffer + (j*(*sheet).width+i)*3 + 2) = red;
             }
         }
     }
 }
 
-void drawGradualVerticalRectAlpha(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Color startColor, Color endColor, int alpha)
+void drawGradualVerticalRectAlpha(u8 *buffer, Sheet *sheet, int x, int y, int w, int h, Color startColor, Color endColor, int alpha)
 {
-    if (x2>x1 && y2>y1) {
-        int x=0,y=0;
-        int distance = y2-y1;
-        for (y=y1; y<y2; ++y) {
-            for (x=x1; x<x2; ++x) {
-                u8 red = startColor.red + (endColor.red - startColor.red)*(y-y1)/distance;
-                u8 green = startColor.green + (endColor.green - startColor.green)*(y-y1)/distance;
-                u8 blue =  startColor.blue + (endColor.blue - startColor.blue)*(y-y1)/distance;
+    if (w>0 && h>0) {
+        int i=0,j=0;
+        int distance = h;
+        for (j=y; j<y+h; ++j) {
+            for (i=x; i<x+w; ++i) {
+                u8 red = startColor.red + (endColor.red - startColor.red)*(j-y)/distance;
+                u8 green = startColor.green + (endColor.green - startColor.green)*(j-y)/distance;
+                u8 blue =  startColor.blue + (endColor.blue - startColor.blue)*(j-y)/distance;
 
-                u8 *sourceBlue = buffer + (y*(*sheet).width+x)*3;
-                u8 *sourceGreen = buffer + (y*(*sheet).width+x)*3 + 1;
-                u8 *sourceRed = buffer + (y*(*sheet).width+x)*3 + 2;
+                u8 *sourceBlue = buffer + (j*(*sheet).width+i)*3;
+                u8 *sourceGreen = buffer + (j*(*sheet).width+i)*3 + 1;
+                u8 *sourceRed = buffer + (j*(*sheet).width+i)*3 + 2;
 
                 blue = blue*alpha/256 + (*sourceBlue)*(256-alpha)/256;
                 green = green*alpha/256 + (*sourceGreen)*(256-alpha)/256;
@@ -116,20 +117,20 @@ void drawGradualVerticalRectAlpha(u8 *buffer, Sheet *sheet, int x1, int y1, int 
     }
 }
 
-void drawGradualVerticalTrapezium(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, int r, Color startColor, Color endColor, int alpha)
+void drawGradualVerticalTrapezium(u8 *buffer, Sheet *sheet, int x, int y, int w, int h, int r, Color startColor, Color endColor, int alpha)
 {
-    if (x2>x1+2*r && y2>y1) {
-        int x=0,y=0,i=r;
-        int distance = y2-y1;
-        for (y=y1; y<y2; ++y) {
-            for (x=x1+i; x<x2-i; ++x) {
-                u8 red = startColor.red + (endColor.red - startColor.red)*(y-y1)/distance;
-                u8 green = startColor.green + (endColor.green - startColor.green)*(y-y1)/distance;
-                u8 blue =  startColor.blue + (endColor.blue - startColor.blue)*(y-y1)/distance;
+    if (w>2*r && h>0) {
+        int i=0,j=0,k=r;
+        int distance = h;
+        for (j=y; j<y+h; ++j) {
+            for (i=x+k; i<x+w-k; ++i) {
+                u8 red = startColor.red + (endColor.red - startColor.red)*(j-y)/distance;
+                u8 green = startColor.green + (endColor.green - startColor.green)*(j-y)/distance;
+                u8 blue =  startColor.blue + (endColor.blue - startColor.blue)*(j-y)/distance;
 
-                u8 *sourceBlue = buffer + (y*(*sheet).width+x)*3;
-                u8 *sourceGreen = buffer + (y*(*sheet).width+x)*3 + 1;
-                u8 *sourceRed = buffer + (y*(*sheet).width+x)*3 + 2;
+                u8 *sourceBlue = buffer + (j*(*sheet).width+i)*3;
+                u8 *sourceGreen = buffer + (j*(*sheet).width+i)*3 + 1;
+                u8 *sourceRed = buffer + (j*(*sheet).width+i)*3 + 2;
 
                 blue = blue*alpha/256 + (*sourceBlue)*(256-alpha)/256;
                 green = green*alpha/256 + (*sourceGreen)*(256-alpha)/256;
@@ -139,55 +140,55 @@ void drawGradualVerticalTrapezium(u8 *buffer, Sheet *sheet, int x1, int y1, int 
                 *sourceGreen = green;
                 *sourceRed = red;
             }
-            --i;
+            --k;
         }
     }
 }
 
-void drawGradualVerticalCornerRect(u8 *buffer, Sheet *sheet, int x1, int y1, int x2, int y2, Color startColor, Color endColor, Corner corner)
+void drawGradualVerticalCornerRect(u8 *buffer, Sheet *sheet, int x, int y, int w, int h, Color startColor, Color endColor, Corner corner)
 {
-    if (x2>x1 && y2>y1) {
-        u32 x=0,y=0;
-        u32 distance = y2-y1;
+    if (w>0 && h>0) {
+        u32 i=0,j=0;
+        u32 distance = h;
         u32 leftTop = corner.leftTop, rightTop = corner.rightTop, leftBtm = 0, rightBtm = 0;
-        for (y=y1; y<y2; ++y) {
-            for (x=x1+leftTop+leftBtm; x<x2-rightTop-rightBtm; ++x) {
-                u32 red = startColor.red + (endColor.red - startColor.red)*(y-y1)/distance;
-                u32 green = startColor.green + (endColor.green - startColor.green)*(y-y1)/distance;
-                u32 blue =  startColor.blue + (endColor.blue - startColor.blue)*(y-y1)/distance;
+        for (j=y; j<y+h; ++j) {
+            for (i=x+leftTop+leftBtm; i<x+w-rightTop-rightBtm; ++i) {
+                u32 red = startColor.red + (endColor.red - startColor.red)*(j-y)/distance;
+                u32 green = startColor.green + (endColor.green - startColor.green)*(j-y)/distance;
+                u32 blue =  startColor.blue + (endColor.blue - startColor.blue)*(j-y)/distance;
 
-                *(buffer + (y*(*sheet).width+x)*3) = blue;
-                *(buffer + (y*(*sheet).width+x)*3 + 1) = green;
-                *(buffer + (y*(*sheet).width+x)*3 + 2) = red;
+                *(buffer + (j*(*sheet).width+i)*3) = blue;
+                *(buffer + (j*(*sheet).width+i)*3 + 1) = green;
+                *(buffer + (j*(*sheet).width+i)*3 + 2) = red;
             }
-            if (y<y1+corner.leftTop) {
+            if (j<y+corner.leftTop) {
                 --leftTop;
             }
-            if (y<y1+corner.rightTop) {
+            if (j<y+corner.rightTop) {
                 --rightTop;
             }
-            if (y>=y2-corner.leftBtm-1) {
+            if (j>y+h-corner.leftBtm-1) {
                 ++leftBtm;
             }
-            if (y>=y2-corner.rightBtm-1) {
+            if (j>y+h-corner.rightBtm-1) {
                 ++rightBtm;
             }
         }
     }
 }
 
-void drawCircle(u8 *buffer, Sheet *sheet, int x0, int y0, int radius, Color color)
+void drawCircle(u8 *buffer, Sheet *sheet, int x, int y, int radius, Color color)
 {
-    if (x0>=radius && y0>=radius) {
-        int x1 = x0-radius, y1 = y0-radius;
-        int x2 = x0+radius, y2 = y0+radius;
-        int x=0,y=0;
-        for (y=y1; y<y2; ++y) {
-            for (x=x1; x<x2; ++x) {
-                if ((x-x0)*(x-x0)+(y-y0)*(y-y0)<=radius*radius) {
-                    *(buffer + (y*(*sheet).width+x)*3) = color.blue;
-                	*(buffer + (y*(*sheet).width+x)*3 + 1) = color.green;
-                	*(buffer + (y*(*sheet).width+x)*3 + 2) = color.red;
+    if (x>=radius && y>=radius) {
+        int x1 = x-radius, y1 = y-radius;
+        int x2 = x+radius, y2 = y+radius;
+        int i=0,j=0;
+        for (j=y1; j<y2; ++j) {
+            for (i=x1; i<x2; ++i) {
+                if ((i-x)*(i-x)+(j-y)*(j-y)<=radius*radius) {
+                    *(buffer + (j*(*sheet).width+i)*3) = color.blue;
+                	*(buffer + (j*(*sheet).width+i)*3 + 1) = color.green;
+                	*(buffer + (j*(*sheet).width+i)*3 + 2) = color.red;
                 }
             }
         }

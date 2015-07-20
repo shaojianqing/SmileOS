@@ -34,8 +34,8 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
 
         drawGradualVerticalRectAlpha((*sheet).buffer, sheet, 0, 0, SCREEN_WIDTH, 24, startColor, endColor, 160);
 
-        drawGradualVerticalTrapezium((*sheet).buffer, sheet, 62, 680, 62 + START_BAR_WIDTH, 680+START_BAR_BG_HEIGHT -5, START_BAR_BG_HEIGHT -5, startColor, endColor, 200);
-        drawRectAlpha((*sheet).buffer, sheet, 62, 680+START_BAR_BG_HEIGHT -5, 62+START_BAR_WIDTH, 680+START_BAR_BG_HEIGHT -4, sepColor, 240);
-        drawRectAlpha((*sheet).buffer, sheet, 62, 680+START_BAR_BG_HEIGHT -4, 62+START_BAR_WIDTH, 680+START_BAR_BG_HEIGHT , endColor, 200);
+        drawGradualVerticalTrapezium((*sheet).buffer, sheet, 62, 680, START_BAR_WIDTH, START_BAR_BG_HEIGHT -5, START_BAR_BG_HEIGHT -5, startColor, endColor, 200);
+        drawRectAlpha((*sheet).buffer, sheet, 62, 680+START_BAR_BG_HEIGHT -5, START_BAR_WIDTH, 1, sepColor, 240);
+        drawRectAlpha((*sheet).buffer, sheet, 62, 680+START_BAR_BG_HEIGHT -4, START_BAR_WIDTH, 4, endColor, 200);
     }
 }
