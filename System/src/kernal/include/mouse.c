@@ -2,9 +2,24 @@
 #include "../type/type.h"
 #include "../algorithm/algorithm.h"
 #include "../gui/sheet.h"
+#include "../process/process.h"
 #include "mouse.h"
 
+extern int currentDesktopIndex;
+
 extern QueueBuffer systemBuffer;
+
+extern Sheet *testSheet;
+
+extern Sheet *background;
+
+extern Sheet *startBarSheet;
+
+extern Process *mathematicsProcess;
+
+extern Process *calculatorProcess;
+
+int count =91;
 
 void intHandler2c()
 {
@@ -124,5 +139,14 @@ void processMouseData(MouseData *mouseData, u32 data, Sheet *mouse, int *mx, int
             *my=0;
         }
         slideSheet(mouse, (*mx), (*my));
+
+		if ((*mouseData).btn==MOUSE_DOWN_EVENT) {	
+			Sheet *sheet = getCurrentSheet((*mx), (*my));
+			if (isSheetTop(sheet)==TRUE) {
+				processSheetMouseDownEvent(sheet, (*mx), (*my));		
+			} else {
+				setSheetTop(sheet);
+			}
+		}
     }
 }

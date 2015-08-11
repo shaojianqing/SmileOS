@@ -1,4 +1,5 @@
 #include "../type/type.h"
+#include "../gui/sheet.h"
 #include "../process/process.h"
 #include "algorithm.h"
 

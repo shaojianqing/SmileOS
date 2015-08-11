@@ -4,15 +4,15 @@
 
 typedef struct Image
 {
-    char *head;
+    u8 *head;
 
-    char *data;
+    u8 *data;
 
-    char *buffer;
+    u8 *buffer;
 
-    unsigned short width, height;
-
-    unsigned int x, y;
+    u16 width;
+	
+	u16 height;
 
 } Image;
 

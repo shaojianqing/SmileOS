@@ -13,8 +13,11 @@ void intHandler20()
 	if (timeManager.latest<timeManager.time) {
 		timeManager.latest=0xffffffff;
 		Timer *timer = timeManager.currentTimer;
-		if (timer != null && (*timer).timeout<timeManager.time) {
-			putQueueBuffer((*(timer)).queue, (*(timer)).data);
+		if (timer!=null && (*timer).timeout<timeManager.time) {
+			if ((*timer).onTimer!=null) {
+				(*timer).onTimer();	
+			}
+			(*timer).onTimer = null;
 			(*timer).status = STATUS_TIMER_UNUSE;
 			if ((*timer).next != null) {
 				timer = (*timer).next;
@@ -40,7 +43,7 @@ void initTimerManagement()
 	}
 }
 
-Timer* requestTimer(u64 timeout, u8 data, QueueBuffer *queue)
+Timer* requestTimer(u64 timeout, void (*onTimer)())
 {
 	clearInterrupt();
 	int i=0, j=0;
@@ -49,9 +52,8 @@ Timer* requestTimer(u64 timeout, u8 data, QueueBuffer *queue)
 		if (timeManager.timerList[i].status == STATUS_TIMER_UNUSE) {
 			timeManager.timerList[i].status = STATUS_TIMER_USING;
 			timeManager.timerList[i].timeout = timeout;
-			timeManager.timerList[i].queue = queue;
+			timeManager.timerList[i].onTimer = onTimer;
 			timeManager.timerList[i].next = null;
-			timeManager.timerList[i].data = data;	
 			if (timeManager.latest>timeout) {
 				timeManager.latest=timeout;
 			}
@@ -90,6 +92,14 @@ Timer* requestTimer(u64 timeout, u8 data, QueueBuffer *queue)
 	}
 	setupInterrupt();
 	return null;
+}
+
+Timer* requestCurrentTimer(u64 timeout, void (*onTimer)())
+{
+	clearInterrupt();
+	timeout+=timeManager.time;
+	Timer* timer = requestTimer(timeout, onTimer);
+	setupInterrupt();
 }
 
 void releaseTimer(Timer *timer)

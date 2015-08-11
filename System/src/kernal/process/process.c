@@ -1,5 +1,6 @@
 #include "../const/const.h"
 #include "../type/type.h"
+#include "../gui/sheet.h"
 #include "process.h"
 
 extern Process *kernelProcess;

@@ -12,7 +12,11 @@
 
 #define SHEET_NUM 256
 
+typedef struct View View;
+
 typedef struct Image Image;
+
+typedef struct Process Process;
 
 typedef struct Sheet
 {
@@ -23,6 +27,10 @@ typedef struct Sheet
 	int width, height;
 
 	int z, status;
+
+	View *contentView;
+
+	Process *process;
 
 } Sheet;
 
@@ -40,11 +48,15 @@ void initSheetManagement();
 
 Sheet* prepareSheet();
 
+bool isSheetTop(Sheet *sheet);
+
+void setSheetTop(Sheet *sheet);
+
+Sheet* getCurrentSheet(int x, int y);
+
+void loadContentView(Sheet *sheet, View *view);
+
 void refreshSheetRect(Sheet *sheet, int x, int y, int w, int h);
-
-void refreshSheetMap(int x1, int y1, int x2, int y2, int z1);
-
-void refreshSheetSub(int x1, int y1, int x2, int y2, int z1, int z2);
 
 void initMouseSheet(Sheet *sheet);
 
@@ -52,12 +64,11 @@ void loadWindowSheet(Sheet *sheet);
 
 void initBackgroundSheet(Sheet *sheet);
 
-void loadSheet(Sheet *sheet, int z);
-
 void slideSheet(Sheet *sheet, int x, int y);
+
+void processSheetMouseDownEvent(Sheet *sheet, int x, int y);
 
 void releaseSheet(Sheet *sheet);
 
 void resetSheet(Sheet *sheet);
 
-void addImage(Sheet* sheet, Image* image);

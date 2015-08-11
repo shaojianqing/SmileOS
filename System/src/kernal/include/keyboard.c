@@ -132,33 +132,31 @@ void initKeyTableSetting()
 
 void processKeyData(KeyData *keyData, u32 data, Sheet *sheet) 
 {
-	u32 key = data-1024;
-
+	if (sheet!=null) {
+		u32 key = data-1024;
 		Color txtMainColor;
-        txtMainColor.red = 250;
-        txtMainColor.green = 250;
-        txtMainColor.blue = 250;
+	    txtMainColor.red = 20;
+	    txtMainColor.green = 20;
+	    txtMainColor.blue = 20;
+		if (key<0x54) {
+			u8 ascii = keyTable[key];
+			if (ascii != 0) {
+				Color mainColor;
+				mainColor.red = 240;
+				mainColor.green = 240;
+				mainColor.blue = 240;
+				charX+=8;
+				//drawRect((*sheet).buffer, sheet, 8+charX, 24, 8, 16, txtMainColor);
+				printChar(sheet, ascii, 8+charX, 24, mainColor);
+			}		
+		} 
 
-	if (key<0x54) {
-		u8 ascii = keyTable[key];
-		if (ascii != 0) {
-			Color mainColor;
-			mainColor.red = 160;
-			mainColor.green = 80;
-			mainColor.blue = 30;
-			charX+=8;
-			drawRect((*sheet).buffer, sheet, 204+charX, 210, 8, 16, txtMainColor);
-			printChar(sheet, ascii, 204+charX, 210, mainColor);
-		}		
-	} 
-
-	if (key==0x0e && charX>=8) {		
-		drawRect((*sheet).buffer, sheet, 204+charX, 210, 16, 16, txtMainColor);
-		charX-=8;	
-	}	
-	refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0);
-	refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
-	
+		if (key==0x0e && charX>=8) {		
+			//drawRect((*sheet).buffer, sheet, 8+charX, 24, 16, 16, txtMainColor);
+			charX-=8;	
+		}	
+		refreshSheetRect(sheet, 8+charX, 24, 16, 16);
+	}
 	setupInterrupt();
 }
 
@@ -169,7 +167,7 @@ void showCursor(Sheet *sheet)
     cursorColor.green = 30;
     cursorColor.blue = 30;
 
-	drawRect((*sheet).buffer, sheet, 204+charX+8, 210, 16, 16, cursorColor);
+	//drawRect((*sheet).buffer, sheet, 204+charX+8, 210, 16, 16, cursorColor);
 	refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0);
 	refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
 }
@@ -181,7 +179,7 @@ void hideCursor(Sheet *sheet)
     cursorColor.green = 250;
     cursorColor.blue = 250;
 
-	drawRect((*sheet).buffer, sheet, 204+charX+8, 210, 16, 16, cursorColor);
+	//drawRect((*sheet).buffer, sheet, 204+charX+8, 210, 16, 16, cursorColor);
 	refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0);
 	refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
 }

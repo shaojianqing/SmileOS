@@ -4,18 +4,18 @@
 #define STATUS_TIMER_ALLOC		1
 #define STATUS_TIMER_USING		2
 
-typedef struct Timer
+typedef struct Timer Timer;
+
+struct Timer
 {	
 	u64 timeout;
 
 	u8 status;
 
-	u8 data;
+	Timer *next;
 
-	struct Timer *next;
-
-	QueueBuffer *queue;
-} Timer;
+	void (*onTimer)();
+};
 
 typedef struct TimerManager
 {	
@@ -32,7 +32,9 @@ void intHandler20();
 
 void initTimerManagement();
 
-Timer* requestTimer(u64 timeout, u8 data, QueueBuffer *queue);
+Timer* requestTimer(u64 timeout, void (*onTimer)());
+
+Timer* requestCurrentTimer(u64 timeout, void (*onTimer)());
 
 void releaseTimer(Timer *timer);
 

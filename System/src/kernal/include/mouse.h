@@ -1,6 +1,8 @@
 #define MOUSE_WIDTH 			12
 #define MOUSE_HEIGHT			22
 
+#define MOUSE_DOWN_EVENT		0x01
+
 typedef struct MouseData
 {
     signed char buf[3];

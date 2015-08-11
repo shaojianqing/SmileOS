@@ -1,10 +1,28 @@
 #include "../const/const.h"
 #include "../type/type.h"
+#include "view/event.h"
+#include "view/view.h"
 #include "video.h"
 #include "image.h"
 #include "sheet.h"
 
 extern VideoModeInfo *videoModeInfo;
+
+extern int currentDesktopIndex;
+
+extern Sheet *mouse;
+
+extern Sheet *startBarSheet;
+
+extern Sheet *background;
+
+extern Sheet *infoBarSheet;
+
+MouseEvent mouseEvent;
+
+void refreshSheetMap(int x1, int y1, int x2, int y2, int z1);
+
+void refreshSheetSub(int x1, int y1, int x2, int y2, int z1, int z2);
 
 void initSheetManagement()
 {
@@ -31,17 +49,40 @@ Sheet* prepareSheet()
     return null;
 }
 
-void initMouseSheet(Sheet *sheet)
+Sheet* getCurrentSheet(int x, int y)
 {
-	if (sheet!=null) {
-		SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
-		if ((*sheetManager).sheetNum<SHEET_NUM) {
-			*((*sheetManager).sheets+(*sheetManager).sheetNum) = sheet;
-			(*sheet).z = (*sheetManager).sheetNum;	
-			(*sheetManager).sheetNum++;
-			refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z);
-			refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0, (*sheet).z);
+	SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
+	int i=currentDesktopIndex+1;
+	for (; i>=0;--i) {
+	    Sheet *sheet = (Sheet *)((*sheetManager).sheets[i]);
+		if (sheet!=null) {	
+			if ((x>=(*sheet).x && x<=(*sheet).x+(*sheet).width) &&
+				(y>=(*sheet).y && y<=(*sheet).y+(*sheet).height)) {	
+				return sheet;
+			}
 		}
+	}
+    return null;
+}
+
+void loadContentView(Sheet *sheet, View *view)
+{
+	if (sheet!=null && view!=null) {
+		(*sheet).contentView = view;
+		(*view).sheet = sheet;
+		u32 width = (*view).width;
+		u32 height = (*view).height;
+		u32 sheetWidth = (*sheet).width;
+		u32 i = 0,j = 0;
+		for (j=0;j<height;++j) {
+			for (i=0;i<width;++i) {
+				*((*sheet).buffer+((j+(*view).y)*sheetWidth+i+(*view).x)*3) = *((*view).buffer+(j*80+i)*3);
+		        *((*sheet).buffer+((j+(*view).y)*sheetWidth+i+(*view).x)*3+1) = *((*view).buffer+(j*80+i)*3+1);
+		        *((*sheet).buffer+((j+(*view).y)*sheetWidth+i+(*view).x)*3+2) = *((*view).buffer+(j*80+i)*3+2);		
+			}		
+		}
+		fillViewToSheetRect(view);
+		refreshSheetRect(sheet, (*sheet).x, (*sheet).y, (*sheet).width, (*sheet).height);	
 	}
 }
 
@@ -49,40 +90,51 @@ void loadWindowSheet(Sheet *sheet)
 {
 	if (sheet!=null) {
 		SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
-		int sheetNum = (*sheetManager).sheetNum;
-		if (sheetNum>=2 && sheetNum<SHEET_NUM) {			
-			(*sheet).z = sheetNum-1;
-			Sheet *topSheet = *((*sheetManager).sheets + sheetNum - 1);	
-			(*topSheet).z = sheetNum;				
-			*((*sheetManager).sheets + sheetNum) = topSheet;			
-			*((*sheetManager).sheets + sheetNum - 1) = sheet;
-			(*sheetManager).sheetNum++;
+		if (currentDesktopIndex<SHEET_NUM) {							
+			(*sheet).z = currentDesktopIndex;
+			(*sheetManager).sheets[currentDesktopIndex] = sheet;
+			currentDesktopIndex++;
+			reArrangeDesktopSheet();
 			refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z);
-    		refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0, (*sheet).z);
+   		    refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0, (*sheet).z);
 		}
 	}
 }
 
-void initBackgroundSheet(Sheet *sheet)
+void setSheetTop(Sheet *sheet)
 {
-	if (sheet!=null) {
+	if (sheet!=null) {	
 		SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
-		(*sheet).z = 0;
-		*((*sheetManager).sheets) = sheet;
-		(*sheetManager).sheetNum++;
-		refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z);
-    	refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0, (*sheet).z);
+		if (currentDesktopIndex<SHEET_NUM) {
+			if ((*sheet).z<currentDesktopIndex-1) {
+				int i=0;
+				for (i=(*sheet).z;i<currentDesktopIndex-1;++i) {
+					Sheet *sheetItem = (*sheetManager).sheets[i+1];
+					(*sheetManager).sheets[i] = sheetItem;
+					(*sheetItem).z=i;				
+				}
+				(*sheetManager).sheets[currentDesktopIndex-1] = sheet;
+				(*sheet).z = currentDesktopIndex-1;	
+			}
+			refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z);
+   		    refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0, (*sheet).z);
+		}
 	}
 }
 
-void loadSheet(Sheet *sheet, int z)
+bool isSheetTop(Sheet *sheet) 
 {
-    SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
-    (*sheet).z = z;
-    *((*sheetManager).sheets + z) = sheet;
-    (*sheetManager).sheetNum++;
-    refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z);
-    refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, 0, (*sheet).z);
+	if (sheet!=null) {
+		SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
+		if (currentDesktopIndex<SHEET_NUM) {						
+			if ((*sheet).z>=currentDesktopIndex-1) {	
+				return TRUE;			
+			} else {
+				return FALSE;
+			}
+		}
+	}
+	return FALSE;
 }
 
 void slideSheet(Sheet *sheet, int x, int y)
@@ -113,6 +165,18 @@ void resetSheet(Sheet *sheet)
             *((*sheet).buffer+i) = 0x00;
         }
     }
+}
+
+void processSheetMouseDownEvent(Sheet *sheet, int x, int y)
+{
+	if (sheet!=null && (*sheet).contentView!=null) {
+		View *contentView=(*sheet).contentView;
+		mouseEvent.x=x-(*sheet).x;
+		mouseEvent.y=y-(*sheet).y;
+		if ((*contentView).processMouseDownEvent!=null) {
+			(*contentView).processMouseDownEvent(contentView, &mouseEvent);
+		}		
+	}
 }
 
 void refreshSheetRect(Sheet *sheet, int x, int y, int w, int h)
@@ -243,21 +307,6 @@ void refreshSheetSub(int x1, int y1, int x2, int y2, int z1, int z2)
                     }
                 }
             }
-        }
-    }
-}
-
-void addImage(Sheet* sheet, Image* image)
-{
-    unsigned short height=(*image).height, width=(*image).width;
-    unsigned int sheetWidth = (*sheet).width;
-
-    unsigned int x=0, y=0;
-    for (y=0; y<height; ++y) {
-        for (x=0; x<width; ++x) {
-            *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3) = *((*image).data+(y*80+x)*3);
-            *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3+1) = *((*image).data+(y*80+x)*3+1);
-            *((*sheet).buffer+((y+(*image).y)*sheetWidth+x+(*image).x)*3+2) = *((*image).data+(y*80+x)*3+2);
         }
     }
 }

@@ -81,7 +81,19 @@ VIDEO = tgt/video.o
 
 MOUSE = tgt/mouse.o
 
-BACK = tgt/back.o
+FACTORY = tgt/factory.o
+
+VIEW = tgt/view.o
+
+TEST = tgt/test.o
+
+STARTBUTTON = tgt/startButton.o
+
+COORPANEL = tgt/coorPanel.o
+
+BUTTON = tgt/button.o
+
+STYLE = tgt/style.o
 
 #Background Resource#
 BGS1 = tgt/bg1.image
@@ -93,13 +105,22 @@ BGS3 = tgt/bg3.image
 BGS4 = tgt/bg4.image
 
 #Image Resourcee#
-APP1 = tgt/app1.image
+APP1 = tgt/ico_app_sys.image
 
-APP2 = tgt/app2.image
+APP2 = tgt/ico_app_cmd.image
 
-APP3 = tgt/app3.image
+APP3 = tgt/ico_app_img.image
 
-APP4 = tgt/app4.image
+APP4 = tgt/ico_app_cal.image
+
+#Application Resourcee#
+COMMAND = tgt/command.o
+
+SYSINFO = tgt/sysInfo.o
+
+CALCU = tgt/calculator.o
+
+MATHE = tgt/mathematics.o
 
 #Charset Resource#
 CHARSET = tgt/charset.bin
@@ -180,7 +201,26 @@ tgt/keyboard.o : src/kernal/include/keyboard.c
 tgt/mouse.o : src/kernal/include/mouse.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/back.o : src/kernal/gui/back.c
+#---------------------------------------------------------------#
+tgt/view.o : src/kernal/gui/view/view.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/test.o : src/kernal/gui/test.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/startButton.o : src/kernal/gui/view/startButton.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/coorPanel.o : src/kernal/gui/view/coorPanel.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/button.o : src/kernal/gui/view/button.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/style.o : src/kernal/gui/view/style.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/factory.o : src/kernal/gui/factory/factory.c
 	$(CC) $(CCFLAGES) $< -o $@
 #---------------------------------------------------------------#
 tgt/ka.o : src/kernal/kernal.asm
@@ -189,8 +229,8 @@ tgt/ka.o : src/kernal/kernal.asm
 tgt/kc.o : src/kernal/kernal.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(BACK) $(DESKTOP) $(WINDOW)
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(BACK) $(DESKTOP) $(WINDOW) -o $@
+tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(STARTBUTTON) $(COORPANEL) $(STYLE) $(BUTTON)  $(TEST) $(FACTORY)
+	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(STARTBUTTON) $(COORPANEL) $(STYLE) $(BUTTON) $(TEST) $(FACTORY) -o $@
 
 tgt/kernal.sys : $(KERNALBIN)
 	$(TRIMELFHEADER) $< $@
@@ -203,6 +243,18 @@ tgt/charset.bin : res/charset/charset.csr
 tgt/mouse.sys : src/kernal/mouse/mouse.asm
 	$(ASM) $< -o $@
 
+#---------------------------------------------------------------#
+tgt/command.o : src/kernal/application/command.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/sysInfo.o : src/kernal/application/systemInfo.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/mathematics.o : src/kernal/application/mathematics.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/calculator.o : src/kernal/application/calculator.c
+	$(CC) $(CCFLAGES) $< -o $@
 #---------------------------------------------------------------#
 tgt/bg1.image : res/background/bg1.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1024 768 true
@@ -217,20 +269,20 @@ tgt/bg4.image : res/background/bg4.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1024 768 true
 
 #---------------------------------------------------------------#
-tgt/app1.image : res/images/app1.bmp
+tgt/ico_app_sys.image : res/images/ico_app_sys.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
-tgt/app2.image : res/images/app2.bmp
+tgt/ico_app_cmd.image : res/images/ico_app_cmd.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
-tgt/app3.image : res/images/app3.bmp
+tgt/ico_app_img.image : res/images/ico_app_img.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
-tgt/app4.image : res/images/app4.bmp
+tgt/ico_app_cal.image : res/images/ico_app_cal.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/app1.image tgt/app2.image tgt/app3.image tgt/app4.image tgt/charset.bin	
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/charset.bin	
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512

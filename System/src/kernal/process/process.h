@@ -35,7 +35,9 @@ typedef struct Process
 
 	int priority;
 
-	int level;	
+	int level;
+
+	Sheet *mainWindow;
 
 } Process;
 

@@ -1,10 +1,10 @@
 
-void printChar(Sheet *sheet, u8 c, int x, int y, Color color);
+void printChar(View *view, u8 c, int x, int y, Color color);
 
-void printString(Sheet *sheet, char *string, int size, int x, int y, Color color);
+void printString(View *view, char *string, int size, int x, int y, Color color);
 
-void printInteger(Sheet *sheet, int value, int x, int y, Color color);
+void printInteger(View *view, int value, int x, int y, Color color);
 
-void printHexInteger(Sheet *sheet, int value, int x, int y, Color color);
+void printHexInteger(View *view, int value, int x, int y, Color color);
 
-void printHexByte(Sheet *sheet, u8 value, int x, int y, Color color);
+void printHexByte(View *view, u8 value, int x, int y, Color color);

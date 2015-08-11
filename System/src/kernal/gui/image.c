@@ -8,7 +8,6 @@ Image* loadImageFromStorage(u32 sector)
     readHardDisk(sector, head, IMAGE_HEADER_SIZE);
     u16 *width = (u16 *)(head+4);
     u16 *height = (u16 *)(head+6);
-    freeMemory((u32)head, IMAGE_HEADER_SIZE);
 
     u32 size = (*width)*(*height)*SCREEN_DENSITY;
    	u8 *buffer = (u8 *)allocMemory(size);
@@ -16,10 +15,8 @@ Image* loadImageFromStorage(u32 sector)
 	readHardDisk(sector, buffer, size);
 
     Image *image = (Image*)allocMemoryInPage(sizeof(Image));
-    (*image).width = 1024;
-    (*image).height = 768;
-    (*image).x = 0;
-    (*image).y = 0;
+    (*image).width = *width;
+    (*image).height = *height;
     (*image).data = buffer+8;
     (*image).head = head;
     (*image).buffer = buffer;
