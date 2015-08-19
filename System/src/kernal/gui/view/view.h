@@ -36,6 +36,8 @@ typedef struct View
 
 	bool (*removeSubView)(View *this, View *view);
 
+	void (*clearView)(View *this);
+
 	void (*deleteView)(View *this);
 
 	void (*releaseView)(View *this);

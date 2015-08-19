@@ -5,6 +5,9 @@
 #define DIRECTION_UP 1
 #define DIRECTION_DOWN 2
 
+void drawPoint(View *view, int x, int y, Color color);
+
+void drawBoldPoint(View *view, int x, int y, Color color);
 
 void drawLine(View *view, int x1, int y1, int x2, int y2, Color color, int style);
 
@@ -23,6 +26,8 @@ void drawGradualVerticalRectAlpha(View *view, int x, int y, int w, int h, Color 
 void drawGradualVerticalTrapezium(View *view, int x, int y, int w, int h, int r, Color startColor, Color endColor, int alpha);
 
 void drawGradualVerticalCornerRect(View *view, int x, int y, int w, int h, Color startColor, Color endColor, Corner corner, int direction);
+
+void drawGradualHorizontalCornerRect(View *view, int x, int y, int w, int h, Color startColor, Color endColor, Corner corner, int direction);
 
 void drawCircle(View *view, int x, int y, int radius, Color color);
 

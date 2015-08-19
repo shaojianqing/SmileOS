@@ -5,6 +5,23 @@
 #include "timing.h"
 #include "harddisk.h"
 
+typedef struct HdCommand
+{
+    u8 features;
+	
+	u8 count;
+
+	u8 lbaLow;
+
+	u8 lbaMid;
+
+	u8 lbaHigh;
+
+	u8 device;
+
+	u8 command;
+} HdCommand;
+
 HdCommand command;
 
 bool isHardDiskReady = FALSE;
@@ -86,7 +103,7 @@ void readHardDisk(u32 sector, u8 *buffer, int size)
 		readHardSector(sector, buffer, sectorCount);
 		sector += sectorCount;
 		buffer += sectorCount*512;
-		size -=  sectorCount*512;
+		size -= sectorCount*512;
 	}
 }
 

@@ -33,8 +33,6 @@ Sheet *testSheet;
 
 Process *kernelProcess;
 
-Process *idleProcess;
-
 Process *commandProcess;
 
 Process *sysInfoProcess;
@@ -69,7 +67,6 @@ void initSystem(void)
     initSheetManagement();
 	initProcessManagement();
 	prepareKernelProcess();
-	prepareIdleProcess();
 	initDesktopInfoSheet();
 
 	testSheet = prepareSheet();
@@ -79,8 +76,7 @@ void initSystem(void)
     while(TRUE) {
         clearInterrupt();
 		if (queueBufferStatus(&systemBuffer) == 0) {
-			setupInterrupt();
-			startSleepProcess(kernelProcess);			
+			setupInterrupt();		
 		} else {
 			u32 data = getQueueBuffer(&systemBuffer);
 			if (data<1024) {

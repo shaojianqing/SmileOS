@@ -27,23 +27,6 @@
 #define		STATUS_IDX		0x02
 #define		STATUS_ERR		0x01
 
-typedef struct HdCommand
-{
-    u8 features;
-	
-	u8 count;
-
-	u8 lbaLow;
-
-	u8 lbaMid;
-
-	u8 lbaHigh;
-
-	u8 device;
-
-	u8 command;
-} HdCommand;
-
-void readHardDisk(u32 sector, u8 *buffer, int size);
+//void readHardDisk(u32 sector, u8 *buffer, int size);
 
 

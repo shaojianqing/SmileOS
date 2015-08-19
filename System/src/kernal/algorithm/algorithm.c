@@ -28,11 +28,6 @@ int putQueueBuffer(QueueBuffer *queueBuffer, int data)
 		(*queueBuffer).p = 0;
 	}
 	(*queueBuffer).free--;
-
-	if ((*kernelProcess).status == STATUS_PROCESS_USING) {
-		startRunProcess(kernelProcess, 0, 10);	
-	}
-
 	return 0;
 }
 

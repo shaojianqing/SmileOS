@@ -82,7 +82,7 @@ void startCalculatorApplication()
 		(*calculatorProcess).tss.ds = 2 * 8;
 		(*calculatorProcess).tss.fs = 2 * 8;
 		(*calculatorProcess).tss.gs = 2 * 8;
-		startRunProcess(calculatorProcess, 1, 4);
+		startRunProcess(calculatorProcess, 4);
 	}
 }
 
@@ -276,7 +276,11 @@ void prepareWindowSheetCal(Sheet *sheet)
 void numBtnClick(Button *button, MouseEvent *event)
 {
 	if (button==num1Btn) {
-		showIntegerValue(1, 100, 50);
+		int a=-100;
+		int b=a+133;
+		
+
+		showIntegerValue(b, 100, 50);
 	} else if (button==num2Btn) {
 		showIntegerValue(2, 100, 50);
 	} else if (button==num3Btn) {

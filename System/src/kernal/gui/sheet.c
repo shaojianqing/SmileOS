@@ -106,7 +106,7 @@ void setSheetTop(Sheet *sheet)
 	if (sheet!=null) {	
 		SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
 		if (currentDesktopIndex<SHEET_NUM) {
-			if ((*sheet).z<currentDesktopIndex-1) {
+			if ((*sheet).z<currentDesktopIndex-1 && (*sheet).z>0) {
 				int i=0;
 				for (i=(*sheet).z;i<currentDesktopIndex-1;++i) {
 					Sheet *sheetItem = (*sheetManager).sheets[i+1];
@@ -236,7 +236,7 @@ void refreshSheetMap(int x1, int y1, int x2, int y2, int z1)
                         char blue = *((*sheet).buffer + (y*(*sheet).width + x)*3);
                         char green = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 1);
                         char red = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 2);
-                        if (blue != TRANSPARENT || green != TRANSPARENT || red != TRANSPARENT) {
+                        if (blue!=TRANSPARENT || green!=TRANSPARENT || red!=TRANSPARENT) {
                             *(map+vy*SCREEN_WIDTH + vx) = sid;
                         }
                     }
@@ -298,10 +298,17 @@ void refreshSheetSub(int x1, int y1, int x2, int y2, int z1, int z2)
 							char blue = *((*sheet).buffer + (y*(*sheet).width + x)*3);
 		                    char green = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 1);
 		                    char red = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 2);
-		                    if (blue != TRANSPARENT || green != TRANSPARENT || red != TRANSPARENT) {					
-                                *(vram + (vy*SCREEN_WIDTH + vx)*3) = blue;
-                                *(vram + (vy*SCREEN_WIDTH + vx)*3 + 1) = green;
-                                *(vram + (vy*SCREEN_WIDTH + vx)*3 + 2) = red;
+		                    if (blue != TRANSPARENT || green != TRANSPARENT || red != TRANSPARENT) {
+								#if REAL						
+		                            *(vram + (vy*SCREEN_WIDTH + vx)*4) = blue;
+		                            *(vram + (vy*SCREEN_WIDTH + vx)*4 + 1) = green;
+		                            *(vram + (vy*SCREEN_WIDTH + vx)*4 + 2) = red;
+									*(vram + (vy*SCREEN_WIDTH + vx)*4 + 3) = 0xff;
+								#else
+									*(vram + (vy*SCREEN_WIDTH + vx)*3) = blue;
+		                            *(vram + (vy*SCREEN_WIDTH + vx)*3 + 1) = green;
+		                            *(vram + (vy*SCREEN_WIDTH + vx)*3 + 2) = red;
+								#endif
                             }
                         }
                     }

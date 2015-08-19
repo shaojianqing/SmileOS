@@ -7,6 +7,35 @@
 #include "corner.h"
 #include "graphics.h"
 
+void drawPoint(View *view, int x, int y, Color color)
+{
+	if (view!=null && (*view).buffer!=null) {
+		if (x>0 && y>0) {
+			u8 *buffer = (*view).buffer;
+			*(buffer + (y*(*view).width+x)*3) = color.blue;
+            *(buffer + (y*(*view).width+x)*3 + 1) = color.green;
+            *(buffer + (y*(*view).width+x)*3 + 2) = color.red;
+		}	
+	}
+}
+
+void drawBoldPoint(View *view, int x, int y, Color color)
+{
+	if (view!=null && (*view).buffer!=null) {
+		if (x>0 && y>0) {
+			u8 *buffer = (*view).buffer;
+			int i=0,j=0;
+			for (j=y;j<y+2;++j) {
+				for (i=x;i<x+1;++i) {
+					*(buffer + (j*(*view).width+i)*3) = color.blue;
+				    *(buffer + (j*(*view).width+i)*3 + 1) = color.green;
+				    *(buffer + (j*(*view).width+i)*3 + 2) = color.red;			
+				}			
+			}
+		}	
+	}
+}
+
 void drawLine(View *view, int x1, int y1, int x2, int y2, Color color, int style)
 {
 	if (view!=null && (*view).buffer!=null) {
@@ -224,6 +253,43 @@ void drawGradualVerticalCornerRect(View *view, int x, int y, int w, int h, Color
 				*(buffer + (k*(*view).width+i)*3) = blue;
                 *(buffer + (k*(*view).width+i)*3 + 1) = green;
                 *(buffer + (k*(*view).width+i)*3 + 2) = red;
+            }
+            if (j<y+corner.leftTop) {
+                --leftTop;
+            }
+            if (j<y+corner.rightTop) {
+                --rightTop;
+            }
+            if (j>y+h-corner.leftBtm-1) {
+                ++leftBtm;
+            }
+            if (j>y+h-corner.rightBtm-1) {
+                ++rightBtm;
+            }
+        }
+    }
+}
+
+void drawGradualHorizontalCornerRect(View *view, int x, int y, int w, int h, Color startColor, Color endColor, Corner corner, int direction)
+{
+	if (w>0 && h>0) {
+        u32 i=0,j=0,k=0;
+        u32 distance = w;
+		u8 *buffer = (*view).buffer;
+        u32 leftTop = corner.leftTop, rightTop = corner.rightTop, leftBtm = 0, rightBtm = 0;
+        for (j=y; j<y+h; ++j) {
+            for (i=x+leftTop+leftBtm; i<x+w-rightTop-rightBtm; ++i) {
+                u32 red = startColor.red + (endColor.red - startColor.red)*(i-x)/distance;
+                u32 green = startColor.green + (endColor.green - startColor.green)*(i-x)/distance;
+                u32 blue =  startColor.blue + (endColor.blue - startColor.blue)*(i-x)/distance;
+				if(direction==DIRECTION_UP) {
+                	k=i;
+				} else if (direction==DIRECTION_DOWN) {
+					k=x+x+w-j-1;
+				}
+				*(buffer + (j*(*view).width+k)*3) = blue;
+                *(buffer + (j*(*view).width+k)*3 + 1) = green;
+                *(buffer + (j*(*view).width+k)*3 + 2) = red;
             }
             if (j<y+corner.leftTop) {
                 --leftTop;

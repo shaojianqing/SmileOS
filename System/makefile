@@ -91,6 +91,8 @@ STARTBUTTON = tgt/startButton.o
 
 COORPANEL = tgt/coorPanel.o
 
+GRAPHPANEL = tgt/graphPanel.o
+
 BUTTON = tgt/button.o
 
 STYLE = tgt/style.o
@@ -113,6 +115,8 @@ APP3 = tgt/ico_app_img.image
 
 APP4 = tgt/ico_app_cal.image
 
+APP5 = tgt/ico_app_grh.image
+
 #Application Resourcee#
 COMMAND = tgt/command.o
 
@@ -121,6 +125,8 @@ SYSINFO = tgt/sysInfo.o
 CALCU = tgt/calculator.o
 
 MATHE = tgt/mathematics.o
+
+GRAPH = tgt/dataGraph.o
 
 #Charset Resource#
 CHARSET = tgt/charset.bin
@@ -214,6 +220,9 @@ tgt/startButton.o : src/kernal/gui/view/startButton.c
 tgt/coorPanel.o : src/kernal/gui/view/coorPanel.c
 	$(CC) $(CCFLAGES) $< -o $@
 
+tgt/graphPanel.o : src/kernal/gui/view/graphPanel.c
+	$(CC) $(CCFLAGES) $< -o $@
+
 tgt/button.o : src/kernal/gui/view/button.c
 	$(CC) $(CCFLAGES) $< -o $@
 
@@ -229,8 +238,8 @@ tgt/ka.o : src/kernal/kernal.asm
 tgt/kc.o : src/kernal/kernal.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(STARTBUTTON) $(COORPANEL) $(STYLE) $(BUTTON)  $(TEST) $(FACTORY)
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(STARTBUTTON) $(COORPANEL) $(STYLE) $(BUTTON) $(TEST) $(FACTORY) -o $@
+tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON)  $(TEST) $(FACTORY)
+	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(TEST) $(FACTORY) -o $@
 
 tgt/kernal.sys : $(KERNALBIN)
 	$(TRIMELFHEADER) $< $@
@@ -254,6 +263,9 @@ tgt/mathematics.o : src/kernal/application/mathematics.c
 	$(CC) $(CCFLAGES) $< -o $@
 
 tgt/calculator.o : src/kernal/application/calculator.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/dataGraph.o : src/kernal/application/dataGraph.c
 	$(CC) $(CCFLAGES) $< -o $@
 #---------------------------------------------------------------#
 tgt/bg1.image : res/background/bg1.bmp
@@ -281,8 +293,11 @@ tgt/ico_app_img.image : res/images/ico_app_img.bmp
 tgt/ico_app_cal.image : res/images/ico_app_cal.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
+tgt/ico_app_grh.image : res/images/ico_app_grh.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
+
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/charset.bin	
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/ico_app_grh.image tgt/charset.bin	
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512
@@ -296,5 +311,6 @@ System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/bg2.im
 	$(IMAGETOOL) $(COPYBINARY) $@ $(APP2) 17849344  #0x882e
 	$(IMAGETOOL) $(COPYBINARY) $@ $(APP3) 17868800  #0x8854
 	$(IMAGETOOL) $(COPYBINARY) $@ $(APP4) 17888256  #0x887a
+	$(IMAGETOOL) $(COPYBINARY) $@ $(APP5) 17907712  #0x88a0
 	$(RUN-SYSTEM)
 	

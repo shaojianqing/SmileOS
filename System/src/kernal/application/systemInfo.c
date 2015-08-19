@@ -24,7 +24,7 @@ void startSysInfoApplication()
 		(*sysInfoProcess).tss.ds = 2 * 8;
 		(*sysInfoProcess).tss.fs = 2 * 8;
 		(*sysInfoProcess).tss.gs = 2 * 8;
-		startRunProcess(sysInfoProcess, 1, 4);
+		startRunProcess(sysInfoProcess, 4);
 	}
 }
 

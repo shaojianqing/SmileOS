@@ -41,6 +41,8 @@ void imgInfoBtnOnMouseDown(View *this, MouseEvent *event);
 
 void calculatorBtnOnMouseDown(View *this, MouseEvent *event);
 
+void dataGraphBtnOnMouseDown(View *this, MouseEvent *event);
+
 void reArrangeDesktopSheet()
 {
 	initBackgroundSheet(background);
@@ -133,7 +135,7 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
         (*sheet).height = SCREEN_HEIGHT;
 		(*sheet).z = 0;
         u32 size = SCREEN_WIDTH*SCREEN_HEIGHT*SCREEN_DENSITY+8;
-        Image *bgImage = loadImageFromStorage(0x4000);        
+        Image *bgImage = loadImageFromStorage(0x4000);
         (*sheet).buffer = (*bgImage).data;
 
         Color startColor;
@@ -208,19 +210,23 @@ Sheet* prepareStartBarSheet(Sheet *sheet)
 		(*startBarConatiner).addSubView(startBarConatiner, (View *)calculatorBtn);
 		(*calculatorBtn).view.onMouseDown = calculatorBtnOnMouseDown;
 
+		StartButton *graphDataBtn = createStartButton(340, 10, 80, 80, 0x88a0);
+		(*startBarConatiner).addSubView(startBarConatiner, (View *)graphDataBtn);
+		(*graphDataBtn).view.onMouseDown = dataGraphBtnOnMouseDown;
+
 		loadContentView(sheet, startBarConatiner);	
     }
 }
 
 void sysInfoBtnOnMouseDown(View *this, MouseEvent *event)
 {	
-	//showIntegerValue(88, 100, 100);
+	showIntegerValue(88, 100, 100);
 	//startSysInfoApplication();
 }
 
 void commandBtnOnMouseDown(View *this, MouseEvent *event)
 {
-	//showIntegerValue(66, 100, 100);
+	showIntegerValue(66, 100, 100);
 	//startCommandApplication();
 }
 
@@ -231,6 +237,12 @@ void imgInfoBtnOnMouseDown(View *this, MouseEvent *event)
 
 void calculatorBtnOnMouseDown(View *this, MouseEvent *event)
 {
+	showIntegerValue(88, 100, 100);
 	startCalculatorApplication();
-	//startMathematicsApplication();
+}
+
+void dataGraphBtnOnMouseDown(View *this, MouseEvent *event)
+{
+	showIntegerValue(33, 100, 100);
+	startDataGraphApplication();
 }

@@ -7,28 +7,29 @@
 #include "../graphics.h"
 #include "coorPanel.h"
 
-void drawBackground(CoorPanel *this, int width, int height);
+static void drawBackground(CoorPanel *this, int width, int height);
 
-void drawGridView(CoorPanel *this, int width, int height);
+static void drawGridView(CoorPanel *this, int width, int height);
 
-void drawCoorindate(CoorPanel *this, int width, int height);
+static void drawCoorindate(CoorPanel *this, int width, int height);
 
-void drawBorder(CoorPanel *this, int width, int height);
+static void drawBorder(CoorPanel *this, int width, int height);
 
-void aaonMouseDown(View *this, MouseEvent *event);
+static void onMouseDown(View *this, MouseEvent *event);
 
 CoorPanel *createCoorPanel(int x, int y, int w, int h)
 {
 	CoorPanel *coorPanel = (CoorPanel *)allocMemory(sizeof(CoorPanel));
-	coorPanel = (CoorPanel*)initWithViewFunction((View*)coorPanel, x, y, w, h);
-	(*coorPanel).initPanel = initPanel;
-	(*coorPanel).initPanel(coorPanel);
-	(*coorPanel).view.onMouseDown = aaonMouseDown;
+	coorPanel = (CoorPanel *)initWithViewFunction((View*)coorPanel, x, y, w, h);
+	(*coorPanel).canvas = createView(x, y, w, h);	
+	(*coorPanel).initPanel = initCoorPanel;
+	(*coorPanel).initPanel(coorPanel);	
+	(*coorPanel).view.onMouseDown = onMouseDown;
 	
 	return coorPanel;
 }
 
-void initPanel(CoorPanel *this)
+void initCoorPanel(CoorPanel *this)
 {
 	if (this!=null) {		
 		int width = (*this).view.width;
@@ -75,9 +76,6 @@ void drawCoorindate(CoorPanel *this, int width, int height)
     color.green = 90;
     color.blue = 90;
 
-	drawLine((View *)this, 10, 240, width-10, 240, color, LINE_BOLD);
-	drawLine((View *)this, 390, 10, 390, height-10, color, LINE_BOLD);
-
 	int i=0;
 	for (i=1;i<=48;++i) {
 		drawLine((View *)this, 390, i*10, 394, i*10, color, LINE_THIN);	
@@ -86,6 +84,9 @@ void drawCoorindate(CoorPanel *this, int width, int height)
 	for (i=1;i<=78;++i) {
 		drawLine((View *)this, i*10, 236, i*10, 240, color, LINE_THIN);	
 	}
+	
+	drawLine((View *)this, 10, 240, width-10, 240, color, LINE_BOLD);
+	drawLine((View *)this, 390, 10, 390, height-10, color, LINE_BOLD);
 }
 
 void drawBorder(CoorPanel *this, int width, int height)
@@ -101,7 +102,24 @@ void drawBorder(CoorPanel *this, int width, int height)
 	drawLine((View *)this, width-1, 0, width-1, height, color, LINE_THIN);
 }
 
-void aaonMouseDown(View *this, MouseEvent *event)
+void drawFirstLine(CoorPanel *this)
+{
+	Color color;
+	color.red = 160;
+    color.green = 160;
+    color.blue = 240;
+	
+	drawLine((*this).canvas, 10, 10, 300, 400, color, LINE_BOLD);
+
+	drawLine((*this).canvas, 10, 10, 700, 200, color, LINE_BOLD);
+
+	printString((*this).canvas, "y=2*x-8", 7, 600, 160, color);
+
+	View *canvas = (*this).canvas;
+	(*canvas).refreshRectView(canvas);
+}
+
+void onMouseDown(View *this, MouseEvent *event)
 {
 	showIntegerValue(898, 100, 50);
 }

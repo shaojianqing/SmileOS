@@ -11,19 +11,38 @@
 #include "../gui/view/button.h"
 #include "../gui/view/coorPanel.h"
 #include "../process/process.h"
-#include "command.h"
 
 extern Process *mathematicsProcess;
 
-Button *lineBtn;
+Button *linearBtn;
+
+Button *quadraticBtn;
 
 Button *circleBtn;
 
+Button *ellipseBtn;
+
+CoorPanel *coorPanel;
+
 Factory mathematicsFactory;
 
-void onLineBtnClick(Button *this, MouseEvent *event);
+void drawCoorPoint(View *view, int x, int y, Color color);
+
+void onLinearBtnClick(Button *this, MouseEvent *event);
+
+void onQuadraticBtnClick(Button *this, MouseEvent *event);
 
 void onCircleBtnClick(Button *this, MouseEvent *event);
+
+void onEllipseBtnClick(Button *this, MouseEvent *event);
+
+void drawCircleFunction(CoorPanel *coorPanel);
+
+void drawLinearFunction(CoorPanel *coorPanel);
+
+void drawQuadraticFunction(CoorPanel *coorPanel);
+
+void drawEillpseFunction(CoorPanel *coorPanel);
 
 void mathematicsApplicationMain();
 
@@ -46,7 +65,7 @@ void startMathematicsApplication()
 		(*mathematicsProcess).tss.ds = 2 * 8;
 		(*mathematicsProcess).tss.fs = 2 * 8;
 		(*mathematicsProcess).tss.gs = 2 * 8;
-		startRunProcess(mathematicsProcess, 1, 4);
+		startRunProcess(mathematicsProcess, 4);
 	}
 }
 
@@ -113,34 +132,349 @@ void prepareWindowSheetMath(Sheet *sheet)
 
 		printString(mainView, "Mathematics", 12, 350, 4, textColor);
 
-		CoorPanel *coorPanel = createCoorPanel(5, 60, 790, 494);
+		coorPanel = createCoorPanel(5, 60, 790, 494);
 		(*mainView).addSubView(mainView, (View *)coorPanel);
+		(*mainView).addSubView(mainView, (*coorPanel).canvas);
 
-		lineBtn = createButton(5, 24, 100, 32, &mathematicsFactory);
-		(*lineBtn).initButton(lineBtn, "Line", 4, ButtonStyleLightGray);
-		(*lineBtn).onMouseClick = onLineBtnClick;
-		(*mainView).addSubView(mainView, (View *)lineBtn);
+		linearBtn = createButton(5, 24, 120, 32, &mathematicsFactory);
+		(*linearBtn).initButton(linearBtn, "Linear", 6, ButtonStyleLightGray);
+		(*linearBtn).onMouseClick = onLinearBtnClick;
+		(*mainView).addSubView(mainView, (View *)linearBtn);
 
-		circleBtn = createButton(110, 24, 100, 32, &mathematicsFactory);
+		quadraticBtn = createButton(130, 24, 120, 32, &mathematicsFactory);
+		(*quadraticBtn).initButton(quadraticBtn, "Quadratic", 9, ButtonStyleLightGray);
+		(*quadraticBtn).onMouseClick = onQuadraticBtnClick;
+		(*mainView).addSubView(mainView, (View *)quadraticBtn);
+
+		circleBtn = createButton(255, 24, 120, 32, &mathematicsFactory);
 		(*circleBtn).initButton(circleBtn, "Circle", 6, ButtonStyleLightGray);
 		(*circleBtn).onMouseClick = onCircleBtnClick;
 		(*mainView).addSubView(mainView, (View *)circleBtn);
+
+		ellipseBtn = createButton(380, 24, 120, 32, &mathematicsFactory);
+		(*ellipseBtn).initButton(ellipseBtn, "Ellipse", 7, ButtonStyleLightGray);
+		(*ellipseBtn).onMouseClick = onEllipseBtnClick;
+		(*mainView).addSubView(mainView, (View *)ellipseBtn);
 
 		loadContentView(sheet, mainView);	
     }
 }
 
-void onLineBtnClick(Button *this, MouseEvent *event)
+void drawCoorPoint(View *view, int x, int y, Color color)
 {
-	int a = -89;
-	int b = 100;
-	int c = a+b;
-	showIntegerValue(c, 100, 50);
+	int xb=ORIGIN_X+x;
+	int yb=ORIGIN_Y-y;
+
+	int width=(*view).width;
+	int height=(*view).height;
+
+	if (xb<width && yb<height && xb>0 && yb>0) {
+		drawBoldPoint(view, xb, yb, color);
+	}
+}
+
+void drawLinearFunction(CoorPanel *coorPanel)
+{
+	if (coorPanel!=null && (*coorPanel).canvas!=null) {		
+		View *canvas = (*coorPanel).canvas;
+		(*canvas).clearView(canvas);
+		
+		Color linearColor;
+        linearColor.red = 120;
+        linearColor.green = 180;
+        linearColor.blue = 250;
+
+		int x=0, y=0;		
+		for (x=-400;x<=400;++x) {
+			y=x-80;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "y=x-80", 6, 560, 160, linearColor);
+
+		linearColor.red = 150;
+        linearColor.green = 10;
+        linearColor.blue = 150;
+		
+		for (x=-400;x<=400;++x) {
+			y=x;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "y=x", 3, 470, 160, linearColor);
+
+        linearColor.red = 180;
+        linearColor.green = 160;
+        linearColor.blue = 80;
+	
+		for (x=-400;x<=400;++x) {
+			y=100;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "y=100", 6, 200, 160, linearColor);
+
+		linearColor.red = 240;
+        linearColor.green = 100;
+        linearColor.blue = 20;
+	
+		for (y=-300;y<=300;++y) {
+			x=-100;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "x=-100", 6, 300, 440, linearColor);
+
+		linearColor.red = 60;
+        linearColor.green = 200;
+        linearColor.blue = 20;
+	
+		for (x=-400;x<=400;++x) {
+			y=80-x;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "y=80-x", 6, 550, 300, linearColor);
+
+		linearColor.red = 255;
+        linearColor.green = 10;
+        linearColor.blue = 220;
+	
+		for (x=-400;x<=400;++x) {
+			y=-x;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "y=-x", 4, 470, 300, linearColor);
+
+		View *view = (View *)coorPanel;
+		(*view).refreshRectView(view);
+		(*canvas).refreshRectView(canvas);
+	}
+}
+
+void drawQuadraticFunction(CoorPanel *coorPanel)
+{
+	if (coorPanel!=null && (*coorPanel).canvas!=null) {		
+		View *canvas = (*coorPanel).canvas;
+		(*canvas).clearView(canvas);
+		
+		Color linearColor;
+        linearColor.red = 120;
+        linearColor.green = 180;
+        linearColor.blue = 250;
+
+		int x=0, y=0;		
+		for (x=-400;x<=400;++x) {
+			y=x*x/200+x-100;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "y=x*x/200+x-100", 15, 60, 100, linearColor);
+
+		linearColor.red = 20;
+        linearColor.green = 180;
+        linearColor.blue = 180;
+		
+		for (x=-400;x<=400;++x) {
+			y=x*x/200-x-100;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "y=x*x/200-x-100", 15, 570, 360, linearColor);
+
+		linearColor.red = 250;
+        linearColor.green = 120;
+        linearColor.blue = 100;
+		
+		for (x=-400;x<=400;++x) {
+			y=100-x*x/200+x;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "y=100-x*x/200+x", 15, 570, 100, linearColor);
+		
+		linearColor.red = 255;
+        linearColor.green = 20;
+        linearColor.blue = 220;
+		
+		for (x=-400;x<=400;++x) {
+			y=100-x*x/200-x;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "y=100-x*x/200-x", 15, 60, 380, linearColor);
+		
+		linearColor.red = 255;
+        linearColor.green = 80;
+        linearColor.blue = 0;
+	
+		for (y=-400;y<=400;++y) {
+			x=-100;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "x=-100", 6, 300, 300, linearColor);
+
+		linearColor.red = 150;
+        linearColor.green = 0;
+        linearColor.blue = 150;
+	
+		for (y=-400;y<=400;++y) {
+			x=100;
+			drawCoorPoint(canvas, x, y, linearColor);	
+		}
+		printString(canvas, "x=100", 5, 500, 300, linearColor);
+
+		View *view = (View *)coorPanel;
+		(*view).refreshRectView(view);
+		(*canvas).refreshRectView(canvas);
+	}
+}
+
+void drawCircleFunction(CoorPanel *coorPanel)
+{
+	if (coorPanel!=null && (*coorPanel).canvas!=null) {		
+		View *canvas = (*coorPanel).canvas;
+		(*canvas).clearView(canvas);
+		
+		Color linearColor;
+        linearColor.red = 255;
+        linearColor.green = 10;
+        linearColor.blue = 200;
+
+		int x=0, y=0;		
+		for (x=-160;x<=160;++x) {
+			for (y=-160;y<=160;++y) {
+				if ((x*x+y*y<160*160) && (x*x+y*y>158*158)) {
+					drawCoorPoint(canvas, x, y, linearColor);
+				}				
+			}			
+		}
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 160, linearColor);
+
+		linearColor.red = 20;
+        linearColor.green = 220;
+        linearColor.blue = 180;
+	
+		for (x=0;x<=160;++x) {
+			for (y=0;y<=160;++y) {
+				if (((x-80)*(x-80)+(y-80)*(y-80)<80*80) && ((x-80)*(x-80)+(y-80)*(y-80)>78*78)) {
+					drawCoorPoint(canvas, x, y, linearColor);
+				}				
+			}			
+		}
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+
+		linearColor.red = 20;
+        linearColor.green = 220;
+        linearColor.blue = 180;
+	
+		for (x=-160;x<=0;++x) {
+			for (y=0;y<=160;++y) {
+				if (((x+80)*(x+80)+(y-80)*(y-80)<80*80) && ((x+80)*(x+80)+(y-80)*(y-80)>78*78)) {
+					drawCoorPoint(canvas, x, y, linearColor);
+				}				
+			}			
+		}
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+
+		linearColor.red = 20;
+        linearColor.green = 220;
+        linearColor.blue = 180;
+	
+		for (x=0;x<=160;++x) {
+			for (y=-160;y<=0;++y) {
+				if (((x-80)*(x-80)+(y+80)*(y+80)<80*80) && ((x-80)*(x-80)+(y+80)*(y+80)>78*78)) {
+					drawCoorPoint(canvas, x, y, linearColor);
+				}				
+			}			
+		}
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+
+		linearColor.red = 20;
+        linearColor.green = 220;
+        linearColor.blue = 180;
+	
+		for (x=-160;x<=0;++x) {
+			for (y=-160;y<=0;++y) {
+				if (((x+80)*(x+80)+(y+80)*(y+80)<80*80) && ((x+80)*(x+80)+(y+80)*(y+80)>78*78)) {
+					drawCoorPoint(canvas, x, y, linearColor);
+				}				
+			}			
+		}
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+
+		linearColor.red = 20;
+        linearColor.green = 80;
+        linearColor.blue = 220;
+	
+		for (x=-80;x<=80;++x) {
+			for (y=-80;y<=80;++y) {
+				if ((x*x+y*y<80*80) && (x*x+y*y>78*78)) {
+					drawCoorPoint(canvas, x, y, linearColor);
+				}				
+			}			
+		}
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+
+		View *view = (View *)coorPanel;
+		(*view).refreshRectView(view);
+		(*canvas).refreshRectView(canvas);
+	}
+}
+
+void drawEillpseFunction(CoorPanel *coorPanel)
+{
+	if (coorPanel!=null && (*coorPanel).canvas!=null) {		
+		View *canvas = (*coorPanel).canvas;
+		(*canvas).clearView(canvas);
+		
+		Color linearColor;
+        linearColor.red = 255;
+        linearColor.green = 10;
+        linearColor.blue = 200;
+
+		int x=0, y=0;		
+		for (x=-300;x<=300;++x) {
+			for (y=-300;y<=300;++y) {
+				if (x*x+y*y*4<40000 && x*x+y*y*4>39204) {
+					drawCoorPoint(canvas, x, y, linearColor);
+				}				
+			}			
+		}
+		//printString(canvas, "x^2+y^2=160^160", 15, 540, 160, linearColor);
+
+		linearColor.red = 20;
+        linearColor.green = 220;
+        linearColor.blue = 180;
+	
+		for (x=-100;x<=100;++x) {
+			for (y=-100;y<=100;++y) {
+				if (x*x+y*y<10000 && x*x+y*y>98*98) {
+					drawCoorPoint(canvas, x, y, linearColor);
+				}				
+			}			
+		}
+		
+		//printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+
+		View *view = (View *)coorPanel;
+		(*view).refreshRectView(view);
+		(*canvas).refreshRectView(canvas);
+	}
+}
+
+void onLinearBtnClick(Button *this, MouseEvent *event)
+{
+	(*coorPanel).drawFuncation = drawLinearFunction;
+	(*coorPanel).drawFuncation(coorPanel);
+}
+
+void onQuadraticBtnClick(Button *this, MouseEvent *event)
+{
+	(*coorPanel).drawFuncation = drawQuadraticFunction;
+	(*coorPanel).drawFuncation(coorPanel);
 }
 
 void onCircleBtnClick(Button *this, MouseEvent *event)
 {
-	showIntegerValue(3663, 100, 50);
+	(*coorPanel).drawFuncation = drawCircleFunction;
+	(*coorPanel).drawFuncation(coorPanel);
 }
 
+void onEllipseBtnClick(Button *this, MouseEvent *event)
+{
+	(*coorPanel).drawFuncation = drawEillpseFunction;
+	(*coorPanel).drawFuncation(coorPanel);
+}
 

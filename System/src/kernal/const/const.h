@@ -1,3 +1,10 @@
+#define TRUE 					1
+#define FALSE 					0
+
+#define null					0
+
+#define REAL 					FALSE
+
 #define PIC0_OCW2 				0x0020
 
 #define PIC0_ICW1				0x0020
@@ -27,9 +34,6 @@
 
 #define SYSTEM_BUFFER_SIZE		1024
 
-#define TRUE 1
-#define FALSE 0
 
-#define null					0
 
 

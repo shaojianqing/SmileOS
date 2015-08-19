@@ -5,11 +5,8 @@
 
 extern Process *kernelProcess;
 
-extern Process *idleProcess;
-
-void idle();
-
-void initTssDescriptor(Tss *tss, int eip, int esp) {
+void initTssDescriptor(Tss *tss, int eip, int esp) 
+{
 	(*tss).eip = eip;	
 	(*tss).ldtr = 0;
 	(*tss).iomap = 0x40000000;
@@ -34,44 +31,20 @@ void initProcessManagement()
 {
 	int i=0;
 	processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
+	(*processManager).current = 0;
+	(*processManager).running = 1;
 	for (i=0;i<MAX_PROCESS_NUM;++i) {
 		(*processManager).processArray[i].status = STATUS_PROCESS_INIT;
 		(*processManager).processArray[i].selector = (START_PROCESS_GDT+i)*8;
 		setGlobalDescriptor(START_PROCESS_GDT+i, 103, (int)&((*processManager).processArray[i].tss), AR_TSS32);
-	}
-	
-	for (i=0;i<MAX_LEVEL_NUMBER;++i) {
-		(*processManager).levelList[i].running = 0;
-		(*processManager).levelList[i].current = 0;
 	}
 }
 
 void prepareKernelProcess() 
 {
 	kernelProcess = requestProcess();
-	(*kernelProcess).status = STATUS_PROCESS_RUNNING;
-	(*kernelProcess).level = 0;
-	addProcess(kernelProcess);
-	switchProcessLevel();			
 	loadTr((*kernelProcess).selector);
-}
-
-void prepareIdleProcess()
-{
-	idleProcess = requestProcess();
-	(*idleProcess).status = STATUS_PROCESS_RUNNING;
-	(*idleProcess).tss.esp = allocMemory(32*32) + 32*32;
-	(*idleProcess).tss.eip = (int) &idle;
-	(*idleProcess).tss.es = 2 * 8;
-	(*idleProcess).tss.cs = 1 * 8;
-	(*idleProcess).tss.ss = 2 * 8;
-	(*idleProcess).tss.ds = 2 * 8;
-	(*idleProcess).tss.fs = 2 * 8;
-	(*idleProcess).tss.gs = 2 * 8;	
-	(*idleProcess).level = 9;
-	addProcess(idleProcess);
-	switchProcessLevel();
-	startRunProcess(idleProcess, 9, 1);
+	registerKernelProcess();	
 }
 
 Process *requestProcess()
@@ -110,21 +83,25 @@ Process *requestProcess()
 
 Process *getCurrentProcess()
 {
-	ProcessLevel *processLevel = &((*processManager).levelList[(*processManager).currentLevel]);
-	if (processLevel != null) {
-		return (*processLevel).processList[(*processLevel).current];	
-	}
-	return null;
+	ProcessManager *processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
+	return (*processManager).processList[(*processManager).current];
+}
+
+void registerKernelProcess()
+{
+	(*kernelProcess).priority = 4;
+	(*processManager).processList[(*processManager).current] = kernelProcess;
+	(*kernelProcess).status = STATUS_PROCESS_RUNNING;	
 }
 
 Process *addProcess(Process *process)
 {	
 	if (process != null) {
-		ProcessLevel *processLevel = &((*processManager).levelList[(*process).level]);
-		if ((*processLevel).running<MAX_PROCESS_LEVEL) {
-			(*processLevel).processList[(*processLevel).running] = process;
-			(*processLevel).running++;
+		ProcessManager *processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
+		if ((*processManager).running<MAX_PROCESS_NUM) {			
+			(*processManager).processList[(*processManager).running] = process;
 			(*process).status = STATUS_PROCESS_RUNNING;
+			(*processManager).running++;
 		}		
 	}
 	return process;
@@ -133,62 +110,35 @@ Process *addProcess(Process *process)
 Process *removeProcess(Process *process)
 {
 	if (process != null) {
+		ProcessManager *processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
 		int i=0;
-		ProcessLevel *processLevel = &((*processManager).levelList[(*process).level]);
-		for(i=0;i<(*processLevel).running;++i) {
-			if ((*processLevel).processList[i]==process) {
+		for(i=0;i<(*processManager).running;++i) {
+			if ((*processManager).processList[i]==process) {
 				break;			
 			}		
 		}
-		(*processLevel).running--;
-		if (i<(*processLevel).current) {
-			(*processLevel).current--;		
+		(*processManager).running--;
+		if (i<(*processManager).current) {
+			(*processManager).current--;		
 		}
-
-		if ((*processLevel).current>=(*processLevel).running) {
-			(*processLevel).current = 0;		
+		if ((*processManager).current>=(*processManager).running) {
+			(*processManager).current = 0;		
 		}
-		
 		(*process).status = STATUS_PROCESS_USING;
-		for (;i<(*processLevel).running;++i) {
-			(*processLevel).processList[i] = (*processLevel).processList[i + 1];
-		}		
+		for (;i<(*processManager).running;++i) {
+			(*processManager).processList[i] = (*processManager).processList[i + 1];
+		}
 	}
 	return process;
 }
 
-void switchProcessLevel() 
-{
-	int i=0;
-	for (i=0;i<MAX_LEVEL_NUMBER;++i) {
-		if ((*processManager).levelList[i].running>0) {
-			break;		
-		}
-	}
-	(*processManager).currentLevel = i;
-	(*processManager).isChangeLevel = FALSE;
-}
-
-Process *startRunProcess(Process *process, int level, int priority)
+Process *startRunProcess(Process *process, int priority)
 {
 	if (process!=null && (*process).status == STATUS_PROCESS_USING) {
-		if (level<0) {
-			level = (*process).level;	
-		}
-
 		if (priority>0) {
 			(*process).priority = priority;	
 		}
-
-		if ((*process).status == STATUS_PROCESS_RUNNING && (*process).level != level) {
-			removeProcess(process);
-		}
-
-		if ((*process).status == STATUS_PROCESS_USING) {
-			(*process).level = level;
-			addProcess(process);
-		}
-		(*processManager).isChangeLevel = TRUE;
+		addProcess(process);
 	}
 	return process;
 }
@@ -197,9 +147,8 @@ Process *startRunProcess(Process *process, int level, int priority)
 {
 	if (process!=null && (*process).status == STATUS_PROCESS_RUNNING) {
 		Process *currentProcess = getCurrentProcess();
-		removeProcess(currentProcess);
+		removeProcess(process);
 		if (process == currentProcess) {
-			switchProcessLevel();
 			currentProcess = getCurrentProcess();
 			short currentProcessNum = (*currentProcess).selector;
 			switchProcess(0, currentProcessNum);
@@ -211,20 +160,14 @@ Process *startRunProcess(Process *process, int level, int priority)
 void startSwitchProcess()
 {
 	if ((*processManager).currentPriority==0) {
-		ProcessLevel *processLevel = &((*processManager).levelList[(*processManager).currentLevel]);
-		Process *newProcess, *currentProcess = (*processLevel).processList[(*processLevel).current];
+		Process *newProcess, *currentProcess = (*processManager).processList[(*processManager).current];
 
-		(*processLevel).current++;
-		if ((*processLevel).current == (*processLevel).running) {
-			(*processLevel).current = 0;
+		(*processManager).current++;
+		if ((*processManager).current == (*processManager).running) {
+			(*processManager).current = 0;
 		}
 
-		if ((*processManager).isChangeLevel == TRUE) {
-			switchProcessLevel();
-			processLevel = &((*processManager).levelList[(*processManager).currentLevel]);
-		}
-
-		newProcess = (*processLevel).processList[(*processLevel).current];
+		newProcess = (*processManager).processList[(*processManager).current];
 		if (newProcess != currentProcess) {
 			currentProcess = newProcess;
 			(*processManager).currentPriority = (*currentProcess).priority;
@@ -235,11 +178,4 @@ void startSwitchProcess()
 		(*processManager).currentPriority--;
 	}
 	return;
-}
-
-void idle()
-{
-	while(TRUE) {
-		startHlt();
-	}	
 }

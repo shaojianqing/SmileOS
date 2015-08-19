@@ -9,6 +9,8 @@ bool addSubView(View *this, View *view);
 
 bool removeSubView(View *this, View *view);
 
+void clearView(View *this);
+
 void releaseView(View *this);
 
 void retainView(View *this);
@@ -42,6 +44,7 @@ View *initWithViewFunction(View *view, int x, int y, int width, int height)
 	(*view).x = x;
 	(*view).y = y;
 
+	(*view).clearView = clearView;
 	(*view).addSubView = addSubView;
 	(*view).removeSubView = removeSubView;
 	(*view).processMouseDownEvent = processMouseDownEvent;
@@ -104,6 +107,19 @@ bool removeSubView(View *this, View *view)
 			(*this).subViewNum--;
 			(*view).releaseView(view);
 			refreshViewRect(this, (*view).x, (*view).y, (*view).width, (*view).height, (*view).z);
+		}
+	}
+}
+
+void clearView(View *this)
+{
+	if (this!=null && (*this).buffer!=null) {
+		int width=(*this).width;
+		int height=(*this).height;
+
+		int i=0;
+		for (i=0;i<width*height*SCREEN_DENSITY;++i) {
+			*((*this).buffer+i)=0x00;
 		}
 	}
 }

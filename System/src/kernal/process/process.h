@@ -9,8 +9,6 @@
 
 #define START_PROCESS_GDT 				4
 
-#define MAX_PROCESS_LEVEL				100
-
 #define MAX_LEVEL_NUMBER				10
 
 typedef struct Tss
@@ -35,31 +33,19 @@ typedef struct Process
 
 	int priority;
 
-	int level;
-
 	Sheet *mainWindow;
 
 } Process;
 
-typedef struct ProcessLevel
+typedef struct ProcessManager
 {
 	int running;
 
 	int current;
 
-	Process *processList[MAX_PROCESS_LEVEL];
-
-} ProcessLevel;
-
-typedef struct ProcessManager
-{
-	int currentLevel;
-
-	bool isChangeLevel;
-
 	int currentPriority;
 
-	ProcessLevel levelList[MAX_LEVEL_NUMBER];
+	Process *processList[MAX_PROCESS_NUM];
 
 	Process processArray[MAX_PROCESS_NUM];
 
@@ -73,7 +59,7 @@ void initProcessManagement();
 
 void prepareKernelProcess();
 
-void prepareIdleProcess();
+void registerKernelProcess();
 
 Process *requestProcess();
 
@@ -83,10 +69,8 @@ Process *addProcess(Process *process);
 
 Process *removeProcess(Process *process);
 
-Process *startRunProcess(Process *process, int level, int priority);
+Process *startRunProcess(Process *process, int priority);
 
 void startSleepProcess(Process *process);
-
-void switchProcessLevel();
 
 void startSwitchProcess();

@@ -24,7 +24,7 @@ void startCommandApplication()
 		(*commandProcess).tss.ds = 2 * 8;
 		(*commandProcess).tss.fs = 2 * 8;
 		(*commandProcess).tss.gs = 2 * 8;
-		startRunProcess(commandProcess, 1, 4);
+		startRunProcess(commandProcess, 4);
 	}
 }
 
