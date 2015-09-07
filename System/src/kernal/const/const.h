@@ -32,6 +32,17 @@
 #define KEYCMD_SENDTO_MOUSE		0x00d4
 #define MOUSECMD_ENABLE			0x00f4
 
+#define DA_32					0x04000	
+#define DA_32_4K       			0x0C000
+
+#define DA_DR					0x0090	
+#define DA_DRW					0x0092	
+#define DA_DRWA					0x0093	
+#define DA_C					0x0098	
+#define DA_CR					0x009A	
+#define DA_CCO					0x009C	
+#define DA_CCOR					0x009E
+
 #define SYSTEM_BUFFER_SIZE		1024
 
 

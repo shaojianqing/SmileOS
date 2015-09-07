@@ -26,3 +26,30 @@ void setInterruptDescriptor(int intNumber, int offset, int selector, int ar)
 	(*(idtBase+intNumber)).accessRight = ar & 0xFF;
 	(*(idtBase+intNumber)).offsetHigh = (offset>>16) & 0xFFFF;
 }
+
+void setLocalDescriptor(int address, int descNumber, u32 limit, int base, int ar)
+{
+	if (limit>0xFFFFF) {
+		ar |= 0x8000;
+		limit/=0x1000;	
+	}
+
+	LocalDescriptor *ldtBase = (LocalDescriptor *)address;
+	(*(ldtBase+descNumber)).limitLow = limit & 0xFFFF;
+	(*(ldtBase+descNumber)).baseLow = base & 0xFFFF;
+	(*(ldtBase+descNumber)).baseMid = (base>>16) & 0xFF;
+	(*(ldtBase+descNumber)).accessRight = ar & 0xFF;
+	(*(ldtBase+descNumber)).limitHigh = ((limit>>16) & 0x0F) | ((ar>>8) & 0xF0);
+	(*(ldtBase+descNumber)).baseHigh = (base>>24) & 0xFF;
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,5 @@
 #define AR_TSS32						0x0089
+#define AR_LDT							0x0082
 
 #define MAX_PROCESS_NUM 				1000
 #define PROCESS_TABLE_ADDRESS			0x30000
@@ -9,7 +10,9 @@
 
 #define START_PROCESS_GDT 				4
 
-#define MAX_LEVEL_NUMBER				10
+#define MAX_LDT_NUM						8
+
+
 
 typedef struct Tss
 {
@@ -23,11 +26,21 @@ typedef struct Tss
 	
 } Tss;
 
+typedef struct Ldt
+{
+	LocalDescriptor descriptor[MAX_LDT_NUM];
+	
+} Ldt;
+
 typedef struct Process
 {
 	Tss tss;
 
-	short selector;
+	Ldt ldt;
+
+	short tssSelector;
+
+	short ldtSelector;
 
 	short status;
 

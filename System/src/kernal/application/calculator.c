@@ -10,6 +10,7 @@
 #include "../gui/factory/factory.h"
 #include "../gui/view/button.h"
 #include "../gui/view/coorPanel.h"
+#include "../system/descriptor.h"
 #include "../process/process.h"
 #include "calculator.h"
 
@@ -61,6 +62,8 @@ void numBtnClick(Button *this, MouseEvent *event);
 
 void operBtnClick(Button *button, MouseEvent *event);
 
+void prepareProcessLdt(Process *process);
+
 void calculatorApplicationMain();
 
 void prepareWindowSheetCal(Sheet *sheet);
@@ -74,15 +77,26 @@ void startCalculatorApplication()
 {
 	if (calculatorProcess==null) {
 		calculatorProcess = requestProcess();
+		prepareProcessLdt(calculatorProcess);
 		(*calculatorProcess).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
-		(*calculatorProcess).tss.eip = (int) &calculatorApplicationMain;
-		(*calculatorProcess).tss.es = 2 * 8;
-		(*calculatorProcess).tss.cs = 1 * 8;
-		(*calculatorProcess).tss.ss = 2 * 8;
-		(*calculatorProcess).tss.ds = 2 * 8;
-		(*calculatorProcess).tss.fs = 2 * 8;
-		(*calculatorProcess).tss.gs = 2 * 8;
+		(*calculatorProcess).tss.eip = (int) &calculatorApplicationMain;		
+		(*calculatorProcess).tss.cs = 0 * 8 + 4;		
+		(*calculatorProcess).tss.ds = 1 * 8 + 4;
+		(*calculatorProcess).tss.es = 1 * 8 + 4;
+		(*calculatorProcess).tss.fs = 1 * 8 + 4;
+		(*calculatorProcess).tss.gs = 1 * 8 + 4;
+		(*calculatorProcess).tss.ss = 2 * 8 + 4;
+				
 		startRunProcess(calculatorProcess, 4);
+	}
+}
+
+void prepareProcessLdt(Process *process)
+{
+	if (process != null) {
+		setLocalDescriptor((int)&(*process).ldt, 0, 0xFFFFF, 0x00000000, DA_C|DA_32_4K);
+		setLocalDescriptor((int)&(*process).ldt, 1, 0xFFFFF, 0x00000000, DA_DRW|DA_32_4K);
+		setLocalDescriptor((int)&(*process).ldt, 2, 0xFFFFF, 0x00000000, DA_DRWA|DA_32_4K);
 	}
 }
 
@@ -172,7 +186,7 @@ void prepareWindowSheetCal(Sheet *sheet)
 		drawCornerRect(mainView, 10, 30, (*mainView).width-20, 80, inputBgColor, inputBgCorner);
 		drawCornerRect(mainView, 12, 32, (*mainView).width-24, 76, inputColor, inputCorner);
 
-		printString(mainView, "Calculator", 10, 160, 4, textColor);
+		printString(mainView, "Calculator-LDT", 14, 160, 4, textColor);
 
 		clearBtn = createButton(10, 150, 80, 60, &calculatorFactory);
 		(*clearBtn).initButton(clearBtn, "C", 1, ButtonStyleDarkOrange);
@@ -278,7 +292,6 @@ void numBtnClick(Button *button, MouseEvent *event)
 	if (button==num1Btn) {
 		int a=-100;
 		int b=a+133;
-		
 
 		showIntegerValue(b, 100, 50);
 	} else if (button==num2Btn) {

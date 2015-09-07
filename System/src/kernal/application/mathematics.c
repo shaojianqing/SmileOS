@@ -10,6 +10,7 @@
 #include "../gui/factory/factory.h"
 #include "../gui/view/button.h"
 #include "../gui/view/coorPanel.h"
+#include "../system/descriptor.h"
 #include "../process/process.h"
 
 extern Process *mathematicsProcess;

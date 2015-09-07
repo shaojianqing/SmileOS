@@ -3,6 +3,7 @@
 #include "../gui/color.h"
 #include "../gui/corner.h"
 #include "../gui/sheet.h"
+#include "../system/descriptor.h"
 #include "../process/process.h"
 #include "command.h"
 

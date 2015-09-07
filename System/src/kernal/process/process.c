@@ -1,31 +1,10 @@
 #include "../const/const.h"
 #include "../type/type.h"
 #include "../gui/sheet.h"
+#include "../system/descriptor.h"
 #include "process.h"
 
 extern Process *kernelProcess;
-
-void initTssDescriptor(Tss *tss, int eip, int esp) 
-{
-	(*tss).eip = eip;	
-	(*tss).ldtr = 0;
-	(*tss).iomap = 0x40000000;
-	(*tss).eflags = 0x00000202;
-	(*tss).eax = 0;
-	(*tss).ecx = 0;
-	(*tss).edx = 0;
-	(*tss).ebx = 0;
-	(*tss).esp = esp;
-	(*tss).ebp = 0;
-	(*tss).esi = 0;
-	(*tss).edi = 0;
-	(*tss).es = 2*8;
-	(*tss).cs = 1*8;
-	(*tss).ss = 2*8;
-	(*tss).ds = 2*8;
-	(*tss).fs = 2*8;
-	(*tss).gs = 2*8;
-}
 
 void initProcessManagement()
 {
@@ -33,17 +12,19 @@ void initProcessManagement()
 	processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
 	(*processManager).current = 0;
 	(*processManager).running = 1;
-	for (i=0;i<MAX_PROCESS_NUM;++i) {
+	for (i=0;i<MAX_PROCESS_NUM;i++) {
 		(*processManager).processArray[i].status = STATUS_PROCESS_INIT;
-		(*processManager).processArray[i].selector = (START_PROCESS_GDT+i)*8;
+		(*processManager).processArray[i].tssSelector = (START_PROCESS_GDT+i)*8;
+		(*processManager).processArray[i].ldtSelector = (START_PROCESS_GDT+i+MAX_PROCESS_NUM)*8;
 		setGlobalDescriptor(START_PROCESS_GDT+i, 103, (int)&((*processManager).processArray[i].tss), AR_TSS32);
+		setGlobalDescriptor(START_PROCESS_GDT+i+MAX_PROCESS_NUM, 63, (int)&((*processManager).processArray[i].ldt), AR_LDT);
 	}
 }
 
 void prepareKernelProcess() 
 {
 	kernelProcess = requestProcess();
-	loadTr((*kernelProcess).selector);
+	loadTr((*kernelProcess).tssSelector);
 	registerKernelProcess();	
 }
 
@@ -55,9 +36,9 @@ Process *requestProcess()
 		if ((*processManager).processArray[i].status == STATUS_PROCESS_INIT) {
 			process = &((*processManager).processArray[i]);
 			(*process).status = STATUS_PROCESS_USING;
-			
-			(*process).tss.eip = 0;	
-			(*process).tss.ldtr = 0;
+			(*process).tss.ldtr = (*process).ldtSelector;
+
+			(*process).tss.eip = 0;
 			(*process).tss.iomap = 0x40000000;
 			(*process).tss.eflags = 0x00000202;
 			(*process).tss.eax = 0;
@@ -150,7 +131,7 @@ Process *startRunProcess(Process *process, int priority)
 		removeProcess(process);
 		if (process == currentProcess) {
 			currentProcess = getCurrentProcess();
-			short currentProcessNum = (*currentProcess).selector;
+			short currentProcessNum = (*currentProcess).tssSelector;
 			switchProcess(0, currentProcessNum);
 		}
 	}
@@ -171,7 +152,7 @@ void startSwitchProcess()
 		if (newProcess != currentProcess) {
 			currentProcess = newProcess;
 			(*processManager).currentPriority = (*currentProcess).priority;
-			short currentProcessNum = (*currentProcess).selector;
+			short currentProcessNum = (*currentProcess).tssSelector;
 			switchProcess(0, currentProcessNum);
 		}
 	} else {

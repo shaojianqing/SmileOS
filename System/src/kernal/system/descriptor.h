@@ -9,7 +9,18 @@ typedef struct GlobalDescriptor
 	char baseMid, accessRight;
 
 	char limitHigh, baseHigh;
+
 } GlobalDescriptor;
+
+typedef struct LocalDescriptor 
+{
+	short limitLow, baseLow;
+
+	char baseMid, accessRight;
+
+	char limitHigh, baseHigh;
+
+} LocalDescriptor;
 
 typedef struct GateDescriptor
 {
@@ -18,6 +29,7 @@ typedef struct GateDescriptor
 	char dwCount, accessRight;
 
 	short offsetHigh;
+
 } GateDescriptor;
 
 void loadGdtr(int limit, int addr);
@@ -27,3 +39,5 @@ void loadIdtr(int limit, int addr);
 void setGlobalDescriptor(int descNumber, u32 limit, int base, int ar);
 
 void setInterruptDescriptor(int intNumber, int offset, int selector, int ar);
+
+void setLocalDescriptor(int address, int descNumber, u32 limit, int base, int ar);
