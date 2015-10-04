@@ -3,6 +3,7 @@
 #include "../gui/color.h"
 #include "../gui/corner.h"
 #include "../gui/sheet.h"
+#include "../execute/execute.h"
 #include "../system/descriptor.h"
 #include "../process/process.h"
 #include "command.h"
@@ -25,6 +26,8 @@ void startCommandApplication()
 		(*commandProcess).tss.ds = 2 * 8;
 		(*commandProcess).tss.fs = 2 * 8;
 		(*commandProcess).tss.gs = 2 * 8;
+		(*commandProcess).tss.cr3 = 0x60000;
+
 		startRunProcess(commandProcess, 4);
 	}
 }

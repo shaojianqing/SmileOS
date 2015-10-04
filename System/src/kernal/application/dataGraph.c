@@ -3,6 +3,7 @@
 #include "../gui/color.h"
 #include "../gui/corner.h"
 #include "../gui/sheet.h"
+#include "../execute/execute.h"
 #include "../system/descriptor.h"
 #include "../process/process.h"
 #include "../gui/graphics.h"
@@ -51,6 +52,8 @@ void startDataGraphApplication()
 		(*dataGraphProcess).tss.ds = 2 * 8;
 		(*dataGraphProcess).tss.fs = 2 * 8;
 		(*dataGraphProcess).tss.gs = 2 * 8;
+		(*dataGraphProcess).tss.cr3 = 0x60000;
+
 		startRunProcess(dataGraphProcess, 4);
 	}
 }

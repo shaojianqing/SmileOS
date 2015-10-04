@@ -11,6 +11,7 @@
 #include "../gui/view/button.h"
 #include "../gui/view/coorPanel.h"
 #include "../system/descriptor.h"
+#include "../execute/execute.h"
 #include "../process/process.h"
 #include "calculator.h"
 
@@ -86,6 +87,7 @@ void startCalculatorApplication()
 		(*calculatorProcess).tss.fs = 1 * 8 + 4;
 		(*calculatorProcess).tss.gs = 1 * 8 + 4;
 		(*calculatorProcess).tss.ss = 2 * 8 + 4;
+		(*calculatorProcess).tss.cr3 = 0x60000;
 				
 		startRunProcess(calculatorProcess, 4);
 	}

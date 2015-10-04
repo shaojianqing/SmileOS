@@ -1,6 +1,7 @@
 #include "../const/const.h"
 #include "../type/type.h"
 #include "../gui/sheet.h"
+#include "../execute/execute.h"
 #include "../system/descriptor.h"
 #include "process.h"
 
@@ -71,8 +72,17 @@ Process *getCurrentProcess()
 void registerKernelProcess()
 {
 	(*kernelProcess).priority = 4;
+	(*kernelProcess).tss.cr3 = 0x60000;
 	(*processManager).processList[(*processManager).current] = kernelProcess;
 	(*kernelProcess).status = STATUS_PROCESS_RUNNING;	
+}
+
+Process *createProcess(ExecutableFile *file)
+{
+	if (file != null) {
+		return null;	
+	}
+	return null;
 }
 
 Process *addProcess(Process *process)

@@ -14,6 +14,7 @@
 #include "gui/desktop.h"
 #include "gui/graphics.h"
 #include "system/descriptor.h"
+#include "execute/execute.h"
 #include "process/process.h"
 #include "system/globalData.h"
 #include "system/interrupt.h"

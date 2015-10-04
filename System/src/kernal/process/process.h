@@ -12,8 +12,6 @@
 
 #define MAX_LDT_NUM						8
 
-
-
 typedef struct Tss
 {
 	int backlink, esp0, ss0, esp1, ss1, esp2, ss2, cr3;
@@ -73,6 +71,8 @@ void initProcessManagement();
 void prepareKernelProcess();
 
 void registerKernelProcess();
+
+Process *createProcess(ExecutableFile *file);
 
 Process *requestProcess();
 

@@ -3,6 +3,7 @@
 #include "../gui/color.h"
 #include "../gui/corner.h"
 #include "../gui/sheet.h"
+#include "../execute/execute.h"
 #include "../system/descriptor.h"
 #include "../process/process.h"
 #include "systemInfo.h"
@@ -25,6 +26,8 @@ void startSysInfoApplication()
 		(*sysInfoProcess).tss.ds = 2 * 8;
 		(*sysInfoProcess).tss.fs = 2 * 8;
 		(*sysInfoProcess).tss.gs = 2 * 8;
+		(*sysInfoProcess).tss.cr3 = 0x60000;
+
 		startRunProcess(sysInfoProcess, 4);
 	}
 }

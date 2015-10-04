@@ -4,11 +4,11 @@
 
 void initMemoryManagement()
 {
-    SystemInfo *systemInfo = (SystemInfo *)0x21400;
+    SystemInfo *systemInfo = (SystemInfo *)SYS_INFO_BASE;
     (*systemInfo).memorySize*=1024;
     (*systemInfo).memorySize-=(SYS_MEM+VRAM_MAP);
 
-    MemoryManager *memoryManager = (MemoryManager *)0x21800;
+    MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
     (*memoryManager).num = 1;
     (*memoryManager).losts = 0;
     (*memoryManager).lostSize = 0;
@@ -19,7 +19,7 @@ void initMemoryManagement()
 
 u32 memorySize()
 {
-    MemoryManager *memoryManager = (MemoryManager *)0x21800;
+    MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
     if ((*memoryManager).num>0) {
         u32 memorySize = 0;
         u32 i=0;
@@ -36,7 +36,7 @@ u32 allocMemory(u32 size)
 {
     if (size>0) {
         u32 address;
-        MemoryManager *memoryManager = (MemoryManager *)0x21800;
+        MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
         if ((*memoryManager).num>0) {
             u32 i=0;
             for (i=0; i<(*memoryManager).num; ++i) {

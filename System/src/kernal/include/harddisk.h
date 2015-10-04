@@ -27,6 +27,6 @@
 #define		STATUS_IDX		0x02
 #define		STATUS_ERR		0x01
 
-//void readHardDisk(u32 sector, u8 *buffer, int size);
+void readHardDisk(u32 sector, u8 *buffer, int size);
 
 

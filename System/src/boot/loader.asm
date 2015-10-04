@@ -66,7 +66,61 @@ enter_protect_mode:
 	mov ah, 0x88
 	int 0x15
 	mov [ds:bx], ax	           
-	   
+
+	;------------------------;
+	mov ax, 0x6000
+	mov ds, ax
+
+	mov edx, 0x61003
+	mov si, 0x0000
+	mov cx, 0x10
+
+pdbt:
+	mov [ds:si], edx
+	add edx, 0x1000
+	add si, 0x04
+	loop pdbt
+
+	mov edx, 0x71003
+	mov si, 0x0e00
+	mov [ds:si], edx
+
+	;=========================;	
+
+	mov cx, 0x10
+	mov ax, 0x6100
+	mov edx, 0x0003
+
+outer:
+	mov ds, ax
+	mov si, 0x0000
+
+inner:		
+	mov [ds:si], edx
+	add edx, 0x1000
+	add si, 0x04
+	cmp si, 0x1000
+	jl inner
+
+	add ax, 0x100
+	loop outer
+
+	mov ax, 0x7100
+	mov ds, ax
+	mov si, 0x00
+	mov edx, 0xe0000003
+	mov cx, 0x400
+
+vram:
+	mov [ds:si], edx
+	add edx, 0x1000
+	add si, 0x04
+	loop vram
+
+	mov eax, 0x60000
+	mov cr3, eax
+	;------------------------;	
+ 
 	cli
 
 	mov ax, 0x1860 
@@ -80,7 +134,7 @@ enter_protect_mode:
 	out 0x92, al                                                
 		                           
 	mov eax, cr0
-	or eax, 1
+	or eax, 0x80000001
 	mov cr0, eax
 
 	jmp dword SYS_SELECTOR : KERNAL_ADDR 

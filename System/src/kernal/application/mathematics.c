@@ -11,6 +11,7 @@
 #include "../gui/view/button.h"
 #include "../gui/view/coorPanel.h"
 #include "../system/descriptor.h"
+#include "../execute/execute.h"
 #include "../process/process.h"
 
 extern Process *mathematicsProcess;
@@ -66,6 +67,8 @@ void startMathematicsApplication()
 		(*mathematicsProcess).tss.ds = 2 * 8;
 		(*mathematicsProcess).tss.fs = 2 * 8;
 		(*mathematicsProcess).tss.gs = 2 * 8;
+		(*mathematicsProcess).tss.cr3 = 0x60000;
+
 		startRunProcess(mathematicsProcess, 4);
 	}
 }
