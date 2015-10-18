@@ -1,14 +1,22 @@
-#define AR_TSS32						0x0089
+#define AR_TSS						    0x0089
 #define AR_LDT							0x0082
 
-#define MAX_PROCESS_NUM 				1000
+#define DPL_0							0x00
+#define DPL_3							0x60
+
+#define RPL_0							0x00
+#define RPL_3							0x03
+
+#define TOTAL_PROCESS_NUM				1000
+#define USER_PROCESS_NUM 				TOTAL_PROCESS_NUM-1
 #define PROCESS_TABLE_ADDRESS			0x30000
 
 #define STATUS_PROCESS_INIT 			0
 #define STATUS_PROCESS_USING 			1
 #define STATUS_PROCESS_RUNNING 			2
 
-#define START_PROCESS_GDT 				4
+#define KERNEL_PROCESS_GDT 				1024
+#define START_PROCESS_GDT 				KERNEL_PROCESS_GDT+1
 
 #define MAX_LDT_NUM						8
 
@@ -56,9 +64,11 @@ typedef struct ProcessManager
 
 	int currentPriority;
 
-	Process *processList[MAX_PROCESS_NUM];
+	Process coreProcess;
 
-	Process processArray[MAX_PROCESS_NUM];
+	Process *processList[TOTAL_PROCESS_NUM];
+
+	Process processArray[USER_PROCESS_NUM];
 
 } ProcessManager;
 

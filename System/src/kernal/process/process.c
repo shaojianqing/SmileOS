@@ -13,18 +13,24 @@ void initProcessManagement()
 	processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
 	(*processManager).current = 0;
 	(*processManager).running = 1;
-	for (i=0;i<MAX_PROCESS_NUM;i++) {
+
+	(*processManager).coreProcess.status = STATUS_PROCESS_INIT;
+	(*processManager).coreProcess.tssSelector = KERNEL_PROCESS_GDT*8+RPL_0;
+	(*processManager).coreProcess.ldtSelector = 0;
+	setGlobalDescriptor(KERNEL_PROCESS_GDT, 103, (int)&((*processManager).coreProcess.tss), AR_TSS+DPL_0);	
+
+	for (i=0;i<USER_PROCESS_NUM;i++) {
 		(*processManager).processArray[i].status = STATUS_PROCESS_INIT;
-		(*processManager).processArray[i].tssSelector = (START_PROCESS_GDT+i)*8;
-		(*processManager).processArray[i].ldtSelector = (START_PROCESS_GDT+i+MAX_PROCESS_NUM)*8;
-		setGlobalDescriptor(START_PROCESS_GDT+i, 103, (int)&((*processManager).processArray[i].tss), AR_TSS32);
-		setGlobalDescriptor(START_PROCESS_GDT+i+MAX_PROCESS_NUM, 63, (int)&((*processManager).processArray[i].ldt), AR_LDT);
+		(*processManager).processArray[i].tssSelector = (START_PROCESS_GDT+i)*8+RPL_3;
+		(*processManager).processArray[i].ldtSelector = (START_PROCESS_GDT+i+TOTAL_PROCESS_NUM)*8;
+		setGlobalDescriptor(START_PROCESS_GDT+i, 103, (int)&((*processManager).processArray[i].tss), AR_TSS+DPL_3);
+		setGlobalDescriptor(START_PROCESS_GDT+i+TOTAL_PROCESS_NUM, 63, (int)&((*processManager).processArray[i].ldt), AR_LDT);
 	}
 }
 
-void prepareKernelProcess() 
+void prepareKernelProcess()
 {
-	kernelProcess = requestProcess();
+	kernelProcess = &((*processManager).coreProcess);
 	loadTr((*kernelProcess).tssSelector);
 	registerKernelProcess();	
 }
@@ -33,7 +39,7 @@ Process *requestProcess()
 {	
 	int i=0;
 	Process *process=null;
-	for (i=0;i<MAX_PROCESS_NUM;++i) {
+	for (i=0;i<USER_PROCESS_NUM;++i) {
 		if ((*processManager).processArray[i].status == STATUS_PROCESS_INIT) {
 			process = &((*processManager).processArray[i]);
 			(*process).status = STATUS_PROCESS_USING;
@@ -73,8 +79,8 @@ void registerKernelProcess()
 {
 	(*kernelProcess).priority = 4;
 	(*kernelProcess).tss.cr3 = 0x60000;
-	(*processManager).processList[(*processManager).current] = kernelProcess;
-	(*kernelProcess).status = STATUS_PROCESS_RUNNING;	
+	(*kernelProcess).status = STATUS_PROCESS_RUNNING;
+	(*processManager).processList[(*processManager).current] = kernelProcess;		
 }
 
 Process *createProcess(ExecutableFile *file)
@@ -89,7 +95,7 @@ Process *addProcess(Process *process)
 {	
 	if (process != null) {
 		ProcessManager *processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
-		if ((*processManager).running<MAX_PROCESS_NUM) {			
+		if ((*processManager).running<TOTAL_PROCESS_NUM) {			
 			(*processManager).processList[(*processManager).running] = process;
 			(*process).status = STATUS_PROCESS_RUNNING;
 			(*processManager).running++;

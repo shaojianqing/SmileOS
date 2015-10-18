@@ -43,13 +43,12 @@ void setLocalDescriptor(int address, int descNumber, u32 limit, int base, int ar
 	(*(ldtBase+descNumber)).baseHigh = (base>>24) & 0xFF;
 }
 
-
-
-
-
-
-
-
-
-
-
+void setCallGateDescriptor(int intNumber, int offset, int selector, int count, int ar)
+{
+	GateDescriptor *gdtBase = (GateDescriptor *)ADDRESS_GDT;
+	(*(gdtBase+intNumber)).offsetLow = offset & 0xFFFF;
+	(*(gdtBase+intNumber)).selector = selector<<3;
+	(*(gdtBase+intNumber)).dwCount = count & 0x1F;
+	(*(gdtBase+intNumber)).accessRight = ar & 0xFF;
+	(*(gdtBase+intNumber)).offsetHigh = (offset>>16) & 0xFFFF;
+}

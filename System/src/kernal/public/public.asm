@@ -13,6 +13,11 @@ global clearInterrupt
 global setupInterrupt
 global setupInterruptHlt
 
+global testGateEntry
+global testGate
+
+extern testCallGate
+
 [bits 32]
 
 loadGdtr:
@@ -77,4 +82,25 @@ startHlt:
 	hlt
 	ret
 
+testGateEntry:
+	push ebp
+	mov ebp, esp
+	sub esp, 4
+	mov edx, [ebp+12]
+	mov [esp], edx
+	call testCallGate
+	mov esp, ebp
+	pop ebp
+	retf
+
+testGate:
+	push ebp
+	mov ebp, esp
+	sub esp, 4
+	mov edx, [ebp+8]
+	mov [esp], edx
+	call 0x20:0x00 
+	mov esp, ebp
+	pop ebp
+	ret
 

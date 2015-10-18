@@ -23,6 +23,7 @@
 #include "include/harddisk.h"
 #include "include/keyboard.h"
 #include "include/peripheral.h"
+#include "interface/interface.h"
 
 int mx=500, my=380;
 
@@ -52,12 +53,25 @@ extern Sheet *infoBarSheet;
 
 extern Sheet *startBarSheet;
 
+int testCallGate(int color)
+{
+	u8 *buffer = (u8*)0xe0000000;
+	int i=0;
+	for (i=0;i<1024*100*3;i+=3) {
+		*(buffer+i) = (color & 0xFF);
+		*(buffer+i+1) = (color>>8 & 0xFF);	
+		*(buffer+i+2) = (color>>16 & 0xFF);	
+	}
+	return color+8;
+}
+
 void initSystem(void)
 {
     mouseData.phase = 0;
  	
 	initVideoModeInfo();
-	initInterruptHandler();	
+	initInterfaceTable();
+	initInterruptHandler();
 	initQueueBufferData();
 	initTimerManagement();
 	initPeripheralStatus();

@@ -306,8 +306,9 @@ void numBtnClick(Button *button, MouseEvent *event)
 void operBtnClick(Button *button, MouseEvent *event)
 {
 	if (button==equalityBtn) {
-		showIntegerValue(sign, 100, 50);
-		sign++;
+		int result = testGate(0xFF8822);		
+		showIntegerValue(result, 100, 50);
+		//sign++;
 	}	
 }
 

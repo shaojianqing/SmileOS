@@ -2,12 +2,12 @@
 # Makefile for Shaojianqing OS #
 ################################
 
-CC = gcc
 CP = cp
+LD = ld
+CC = gcc
 ASM = nasm
 ELFFLAGES = -f elf 
 CCFLAGES = -c -m32
-LD = ld
 LDFLAGES = -m elf_i386 -s -Ttext
 KERNALSTART = 0x80000
 IMAGETOOL = java -jar ImageTool.jar
@@ -56,6 +56,8 @@ ALGORITHM = tgt/algorithm.o
 CHARAPI = tgt/charset.o
 
 DESCRIPTOR = tgt/descriptor.o
+
+INTERFACE = tgt/interface.o
 
 KEYBOARD = tgt/keyboard.o
 
@@ -168,6 +170,9 @@ tgt/charset.o : src/kernal/gui/charset.c
 tgt/descriptor.o : src/kernal/system/descriptor.c
 	$(CC) $(CCFLAGES) $< -o $@
 
+tgt/interface.o : src/kernal/interface/interface.c
+	$(CC) $(CCFLAGES) $< -o $@
+
 tgt/interruptc.o : src/kernal/system/interrupt.c
 	$(CC) $(CCFLAGES) $< -o $@
 
@@ -238,8 +243,8 @@ tgt/ka.o : src/kernal/kernal.asm
 tgt/kc.o : src/kernal/kernal.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON)  $(TEST) $(FACTORY)
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(TEST) $(FACTORY) -o $@
+tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON)  $(TEST) $(FACTORY)
+	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(TEST) $(FACTORY) -o $@
 
 tgt/kernal.sys : $(KERNALBIN)
 	$(TRIMELFHEADER) $< $@

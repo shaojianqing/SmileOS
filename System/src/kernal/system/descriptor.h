@@ -41,3 +41,5 @@ void setGlobalDescriptor(int descNumber, u32 limit, int base, int ar);
 void setInterruptDescriptor(int intNumber, int offset, int selector, int ar);
 
 void setLocalDescriptor(int address, int descNumber, u32 limit, int base, int ar);
+
+void setCallGateDescriptor(int intNumber, int offset, int selector, int count, int ar);

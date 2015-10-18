@@ -43,6 +43,11 @@
 #define DA_CCO					0x009C	
 #define DA_CCOR					0x009E
 
+#define DA_DPL0				  	0x00	
+#define DA_DPL1					0x20	
+#define DA_DPL2					0x40	
+#define DA_DPL3					0x60
+
 #define SYSTEM_BUFFER_SIZE		1024
 
 
