@@ -50,6 +50,8 @@
 
 #define SYSTEM_BUFFER_SIZE		1024
 
+#define SECTOR_SIZE				512
+
 
 
 

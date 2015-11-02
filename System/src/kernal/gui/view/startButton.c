@@ -10,7 +10,7 @@
 
 StartButton *createStartButton(int x, int y, int w, int h, u32 sector)
 {
-	StartButton *startButton = (StartButton *)allocMemory(sizeof(StartButton));
+	StartButton *startButton = (StartButton *)alloc(sizeof(StartButton));
 	startButton = (StartButton*)initWithViewFunction((View*)startButton, x, y, w, h);
 	(*startButton).initWithImage = initWithImage;
 	Image *image = loadImageFromStorage(sector);

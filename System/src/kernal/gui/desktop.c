@@ -5,7 +5,10 @@
 #include "color.h"
 #include "image.h"
 #include "view/startButton.h"
+#include "../execute/execute.h"
+#include "../execute/application.h"
 #include "desktop.h"
+#include "test.h"
 
 int currentDesktopIndex;
 
@@ -43,6 +46,8 @@ void calculatorBtnOnMouseDown(View *this, MouseEvent *event);
 
 void dataGraphBtnOnMouseDown(View *this, MouseEvent *event);
 
+void startLoadExecuteFile();
+
 void reArrangeDesktopSheet()
 {
 	initBackgroundSheet(background);
@@ -56,7 +61,7 @@ void reArrangeDesktopSheet()
 
 void initDesktopInfoSheet()
 {
-	currentDesktopIndex = 1;	
+	currentDesktopIndex = 1;
 	
 	background = prepareSheet();
 	(*background).process = kernelProcess;
@@ -136,7 +141,7 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
 		(*sheet).z = 0;
         u32 size = SCREEN_WIDTH*SCREEN_HEIGHT*SCREEN_DENSITY+8;
         Image *bgImage = loadImageFromStorage(0x4000);
-        (*sheet).buffer = (*bgImage).data;
+		(*sheet).buffer = (*bgImage).data; 
 
         Color startColor;
         startColor.red = 250;
@@ -190,7 +195,7 @@ Sheet* prepareStartBarSheet(Sheet *sheet)
         (*sheet).y = 640;
         (*sheet).width = START_BAR_WIDTH;
         (*sheet).height = START_BAR_HEIGHT;
-        (*sheet).buffer = (char *)allocMemoryInPage(START_BAR_WIDTH*START_BAR_HEIGHT*SCREEN_DENSITY);
+        (*sheet).buffer = (char *)allocPage(START_BAR_WIDTH*START_BAR_HEIGHT*SCREEN_DENSITY);
 
 		View *startBarConatiner = createView(0, 0, START_BAR_WIDTH, START_BAR_HEIGHT);
 
@@ -220,13 +225,14 @@ Sheet* prepareStartBarSheet(Sheet *sheet)
 
 void sysInfoBtnOnMouseDown(View *this, MouseEvent *event)
 {	
-	showIntegerValue(88, 100, 100);
+	//showIntegerValue(88, 100, 100);
+	startLoadExecuteFile();
 	//startSysInfoApplication();
 }
 
 void commandBtnOnMouseDown(View *this, MouseEvent *event)
 {
-	showIntegerValue(66, 100, 100);
+	showIntegerValue(111, 100, 100);
 	//startCommandApplication();
 }
 
@@ -245,4 +251,18 @@ void dataGraphBtnOnMouseDown(View *this, MouseEvent *event)
 {
 	showIntegerValue(33, 100, 100);
 	startDataGraphApplication();
+}
+
+void startLoadExecuteFile()
+{
+	ExecutableFile *executeFile = loadExecuteFromStorage(0x1000);
+	Application *application = createApplication(executeFile);
+	if (application!=null) {
+		startApplication(application);
+	}
+
+	showBufferData((*executeFile).executeBuffer+0x1110);
+	ElfFileHeader *header = (*executeFile).header;
+	ElfProgramHeader *programHeader = (*executeFile).dataHeader;
+	showIntegerValue((*executeFile).executeSize, 100, 300);
 }

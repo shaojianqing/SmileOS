@@ -10,6 +10,7 @@ ELFFLAGES = -f elf
 CCFLAGES = -c -m32
 LDFLAGES = -m elf_i386 -s -Ttext
 KERNALSTART = 0x80000
+APPLICATIONSTART = 0x0000
 IMAGETOOL = java -jar ImageTool.jar
 CREATEIMAGE = createImage
 COPYBINARY = copyBinary
@@ -59,6 +60,8 @@ DESCRIPTOR = tgt/descriptor.o
 
 INTERFACE = tgt/interface.o
 
+APPLICATION = tgt/application.o
+
 KEYBOARD = tgt/keyboard.o
 
 MEMORY = tgt/memory.o
@@ -82,6 +85,8 @@ IMAGE = tgt/image.o
 VIDEO = tgt/video.o
 
 MOUSE = tgt/mouse.o
+
+EXECUTE = tgt/execute.o
 
 FACTORY = tgt/factory.o
 
@@ -129,6 +134,13 @@ CALCU = tgt/calculator.o
 MATHE = tgt/mathematics.o
 
 GRAPH = tgt/dataGraph.o
+
+#ElfApp Resource#
+RUNNABLE = tgt/runnable.o
+
+BROWSEROBJ = tgt/browser.o
+
+BROWSER = tgt/browser.elf
 
 #Charset Resource#
 CHARSET = tgt/charset.bin
@@ -191,6 +203,9 @@ tgt/graphics.o : src/kernal/gui/graphics.c
 tgt/harddisk.o : src/kernal/include/harddisk.c
 	$(CC) $(CCFLAGES) $< -o $@
 
+tgt/application.o : src/kernal/execute/application.c
+	$(CC) $(CCFLAGES) $< -o $@
+
 tgt/timing.o : src/kernal/include/timing.c
 	$(CC) $(CCFLAGES) $< -o $@
 
@@ -236,6 +251,9 @@ tgt/style.o : src/kernal/gui/view/style.c
 
 tgt/factory.o : src/kernal/gui/factory/factory.c
 	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/execute.o : src/kernal/execute/execute.c
+	$(CC) $(CCFLAGES) $< -o $@
 #---------------------------------------------------------------#
 tgt/ka.o : src/kernal/kernal.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
@@ -243,8 +261,8 @@ tgt/ka.o : src/kernal/kernal.asm
 tgt/kc.o : src/kernal/kernal.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON)  $(TEST) $(FACTORY)
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(TEST) $(FACTORY) -o $@
+tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON)  $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION)
+	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(STARTBUTTON) $(COORPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION) -o $@
 
 tgt/kernal.sys : $(KERNALBIN)
 	$(TRIMELFHEADER) $< $@
@@ -272,6 +290,15 @@ tgt/calculator.o : src/kernal/application/calculator.c
 
 tgt/dataGraph.o : src/kernal/application/dataGraph.c
 	$(CC) $(CCFLAGES) $< -o $@
+#---------------------------------------------------------------#
+tgt/runnable.o :src/kernal/execute/runnable.asm
+	$(ASM) $(ELFFLAGES) $< -o $@
+
+tgt/browser.o : src/kernal/application/browser.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/browser.elf : tgt/runnable.o tgt/browser.o
+	$(LD) $(LDFLAGES) $(APPLICATIONSTART) $(RUNNABLE) $(BROWSEROBJ) -o $@
 #---------------------------------------------------------------#
 tgt/bg1.image : res/background/bg1.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1024 768 true
@@ -302,12 +329,13 @@ tgt/ico_app_grh.image : res/images/ico_app_grh.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/ico_app_grh.image tgt/charset.bin	
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/browser.elf tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/ico_app_grh.image tgt/charset.bin
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512
 	$(IMAGETOOL) $(COPYBINARY) $@ $(CHARSET) 4096
 	$(IMAGETOOL) $(COPYBINARY) $@ $(KERNAL) 32768
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BROWSER) 2097152   #0x1000
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS1) 8388608   #0x4000
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS2) 10748928  #0x5202	
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS3) 13109248  #0x6404	

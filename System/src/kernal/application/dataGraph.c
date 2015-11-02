@@ -44,7 +44,7 @@ void startDataGraphApplication()
 {
 	if (dataGraphProcess==null) {
 		dataGraphProcess = requestProcess();
-		(*dataGraphProcess).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
+		(*dataGraphProcess).tss.esp = allocPage(64 * 1024) + 64 * 1024;
 		(*dataGraphProcess).tss.eip = (int) &dataGraphApplicationMain;
 		(*dataGraphProcess).tss.es = 2 * 8;
 		(*dataGraphProcess).tss.cs = 1 * 8;
@@ -80,7 +80,7 @@ void prepareWindowSheetGraph(Sheet *sheet)
         (*sheet).y = 60;
         (*sheet).width = 800;
         (*sheet).height = 560;
-        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+        (*sheet).buffer = (char *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
 		View *mainView = createView(0, 0, 800, 560);
 
         resetSheet(sheet);

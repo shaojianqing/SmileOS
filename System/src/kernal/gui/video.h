@@ -1,3 +1,5 @@
+
+
 typedef struct VideoModeInfo
 {
 	u16 modeAttribute;

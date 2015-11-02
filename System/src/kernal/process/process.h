@@ -18,7 +18,9 @@
 #define KERNEL_PROCESS_GDT 				1024
 #define START_PROCESS_GDT 				KERNEL_PROCESS_GDT+1
 
-#define MAX_LDT_NUM						8
+#define MAX_LDT_NUM						4
+
+#define PROCESS_NAME_LENGTH				32
 
 typedef struct Tss
 {
@@ -54,6 +56,8 @@ typedef struct Process
 
 	Sheet *mainWindow;
 
+	char name[PROCESS_NAME_LENGTH];
+
 } Process;
 
 typedef struct ProcessManager
@@ -81,8 +85,6 @@ void initProcessManagement();
 void prepareKernelProcess();
 
 void registerKernelProcess();
-
-Process *createProcess(ExecutableFile *file);
 
 Process *requestProcess();
 

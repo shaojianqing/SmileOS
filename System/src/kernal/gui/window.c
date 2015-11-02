@@ -33,6 +33,16 @@ void showString(Sheet *sheet, int x, int y, char *string, int size) {
     refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x+(*sheet).width, (*sheet).y+(*sheet).height, (*sheet).z, (*sheet).z);
 }
 
+void showHexIntegerTest(u8 *buffer, int x, int y, int key)
+{
+	Color mainColor;
+    mainColor.red = 0xFF;
+    mainColor.green = 0xFF;
+    mainColor.blue = 0xFF;
+
+    printHexIntegerTest(buffer, key, x, y, mainColor);
+}
+
 void showBufferInfo(Sheet *sheet, char *buffer)
 {
 	Color mainColor;

@@ -27,14 +27,14 @@ void refreshViewRect(View *this, int x, int y, int w, int h, int z);
 
 View *createView(int x, int y, int width, int height)
 {
-	View *view = (View *)allocMemory(sizeof(View));	
+	View *view = (View *)alloc(sizeof(View));	
 	view = initWithViewFunction(view, x, y, width, height);
 	return view;
 }
 
 View *initWithViewFunction(View *view, int x, int y, int width, int height) 
 {
-	(*view).buffer = (u8 *)allocMemory(width*height*SCREEN_DENSITY);
+	(*view).buffer = (u8 *)allocPage(width*height*SCREEN_DENSITY);
 	(*view).parentView = null;
 	(*view).reference = 1;
 	(*view).subViewNum = 0;	
@@ -237,7 +237,7 @@ void deleteView(View *this)
 	if (this!=null) {
 		if ((*this).buffer!=null) {
 			u32 size = (*this).width*(*this).height*SCREEN_DENSITY;
-			freeMemory((u32)(*this).buffer, size);
+			releasePage((u32)(*this).buffer, size);
 			int i=0;
 			View *currentView;
 			for (i=0;i<(*this).subViewNum;++i) {

@@ -18,7 +18,7 @@ void startSysInfoApplication()
 {
 	if (sysInfoProcess==null) {
 		sysInfoProcess = requestProcess();
-		(*sysInfoProcess).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
+		(*sysInfoProcess).tss.esp = allocPage(64 * 1024) + 64 * 1024;
 		(*sysInfoProcess).tss.eip = (int) &sysInfoApplicationMain;
 		(*sysInfoProcess).tss.es = 2 * 8;
 		(*sysInfoProcess).tss.cs = 1 * 8;
@@ -52,7 +52,7 @@ void prepareWindowSheetSys(Sheet *sheet)
         (*sheet).y = 80;
         (*sheet).width = 800;
         (*sheet).height = 560;
-        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+        (*sheet).buffer = (char *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
 
         resetSheet(sheet);
 

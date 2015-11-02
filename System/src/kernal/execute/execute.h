@@ -1,5 +1,9 @@
 
-#define ELF_IDENT_SIZE 16
+#define ELF_IDENT_SIZE 			16
+
+#define FLAG_ELF_CODE 			0x05
+#define FLAG_ELF_DATA 			0x06
+#define FLAG_ELF_STACK 			0x07
 
 typedef struct ElfFileHeader
 {
@@ -63,9 +67,13 @@ typedef struct ExecutableFile
 
 	ElfProgramHeader *stackHeader;
 
+	u32 executeSize;
+
 	u8 *executeBuffer;
 	
 } ExecutableFile;
+
+ExecutableFile* loadExecuteFromStorage(u32 sector);
 
 
 

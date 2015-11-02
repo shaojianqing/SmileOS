@@ -69,19 +69,17 @@ void initSystem(void)
 {
     mouseData.phase = 0;
  	
-	initVideoModeInfo();
-	initInterfaceTable();
-	initInterruptHandler();
-	initQueueBufferData();
-	initTimerManagement();
-	initPeripheralStatus();
-
-	initKeyTableSetting();
-
-    initMemoryManagement();
-    initSheetManagement();
-	initProcessManagement();
-	prepareKernelProcess();
+	initVideoModeInfo();				
+	initInterfaceTable();				
+	initInterruptHandler();				
+	initQueueBufferData();				
+	initTimerManagement();				
+	initPeripheralStatus();				
+	initKeyTableSetting();				
+    initMemoryManagement();				
+    initSheetManagement();				
+	initProcessManagement();			
+	prepareKernelProcess();				
 	initDesktopInfoSheet();
 
 	testSheet = prepareSheet();
@@ -98,11 +96,11 @@ void initSystem(void)
 				setupInterrupt();
 			} else if (data>=1024 && data<2048) {
 				Sheet *commandWindow = (*commandProcess).mainWindow;
-				processKeyData(&keyData, data, commandWindow);			
+				//processKeyData(&keyData, data, commandWindow);			
 			} else if (data>=2048) {
 				processMouseData(&mouseData, data, mouse, &mx, &my);
 			}
 		}
-    }	
+    }
 }
 

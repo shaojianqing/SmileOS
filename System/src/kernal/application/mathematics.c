@@ -59,7 +59,7 @@ void startMathematicsApplication()
 {
 	if (mathematicsProcess==null) {
 		mathematicsProcess = requestProcess();
-		(*mathematicsProcess).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
+		(*mathematicsProcess).tss.esp = allocPage(64 * 1024) + 64 * 1024;
 		(*mathematicsProcess).tss.eip = (int) &mathematicsApplicationMain;
 		(*mathematicsProcess).tss.es = 2 * 8;
 		(*mathematicsProcess).tss.cs = 1 * 8;
@@ -95,7 +95,7 @@ void prepareWindowSheetMath(Sheet *sheet)
         (*sheet).y = 80;
         (*sheet).width = 800;
         (*sheet).height = 560;
-        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+        (*sheet).buffer = (char *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
 		View *mainView = createView(0, 0, 800, 560);
 
         Color startColor;

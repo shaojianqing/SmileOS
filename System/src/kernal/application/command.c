@@ -18,7 +18,7 @@ void startCommandApplication()
 {
 	if (commandProcess==null) {
 		commandProcess = requestProcess();
-		(*commandProcess).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
+		(*commandProcess).tss.esp = allocPage(64 * 1024) + 64 * 1024;
 		(*commandProcess).tss.eip = (int) &commandApplicationMain;
 		(*commandProcess).tss.es = 2 * 8;
 		(*commandProcess).tss.cs = 1 * 8;
@@ -52,7 +52,7 @@ void prepareWindowSheetCmd(Sheet *sheet)
         (*sheet).y = 80;
         (*sheet).width = 800;
         (*sheet).height = 560;
-        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+        (*sheet).buffer = (char *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
 
         resetSheet(sheet);
 

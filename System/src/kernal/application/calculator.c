@@ -63,7 +63,7 @@ void numBtnClick(Button *this, MouseEvent *event);
 
 void operBtnClick(Button *button, MouseEvent *event);
 
-void prepareProcessLdt(Process *process);
+void prepareProcessLdtLocal(Process *process);
 
 void calculatorApplicationMain();
 
@@ -78,8 +78,8 @@ void startCalculatorApplication()
 {
 	if (calculatorProcess==null) {
 		calculatorProcess = requestProcess();
-		prepareProcessLdt(calculatorProcess);
-		(*calculatorProcess).tss.esp = allocMemory(64 * 1024) + 64 * 1024;
+		prepareProcessLdtLocal(calculatorProcess);
+		(*calculatorProcess).tss.esp = allocPage(64 * 1024) + 64 * 1024;
 		(*calculatorProcess).tss.eip = (int) &calculatorApplicationMain;		
 		(*calculatorProcess).tss.cs = 0 * 8 + 4;		
 		(*calculatorProcess).tss.ds = 1 * 8 + 4;
@@ -93,7 +93,7 @@ void startCalculatorApplication()
 	}
 }
 
-void prepareProcessLdt(Process *process)
+void prepareProcessLdtLocal(Process *process)
 {
 	if (process != null) {
 		setLocalDescriptor((int)&(*process).ldt, 0, 0xFFFFF, 0x00000000, DA_C|DA_32_4K);
@@ -124,7 +124,7 @@ void prepareWindowSheetCal(Sheet *sheet)
         (*sheet).y = 80;
         (*sheet).width = 400;
         (*sheet).height = 500;
-        (*sheet).buffer = (char *)allocMemoryInPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+        (*sheet).buffer = (char *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
 		View *mainView = createView(0, 0,400, 500);
 
         Color startColor;

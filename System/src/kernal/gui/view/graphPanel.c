@@ -19,7 +19,7 @@ static void onMouseDown(View *this, MouseEvent *event);
 
 GraphPanel *createGraphPanel(int x, int y, int w, int h)
 {
-	GraphPanel *graphPanel = (GraphPanel *)allocMemory(sizeof(GraphPanel));
+	GraphPanel *graphPanel = (GraphPanel *)alloc(sizeof(GraphPanel));
 	graphPanel = (GraphPanel*)initWithViewFunction((View*)graphPanel, x, y, w, h);
 	(*graphPanel).canvas = createView(x, y, w, h);	
 	(*graphPanel).initPanel = initGraphPanel;

@@ -83,14 +83,6 @@ void registerKernelProcess()
 	(*processManager).processList[(*processManager).current] = kernelProcess;		
 }
 
-Process *createProcess(ExecutableFile *file)
-{
-	if (file != null) {
-		return null;	
-	}
-	return null;
-}
-
 Process *addProcess(Process *process)
 {	
 	if (process != null) {

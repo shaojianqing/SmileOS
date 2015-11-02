@@ -26,7 +26,7 @@ void drawButtonText(Button *this, char *string, int length, int width, int heigh
 
 Button *createButton(int x, int y, int w, int h, Factory *factory)
 {
-	Button *button = (Button *)allocMemory(sizeof(Button));
+	Button *button = (Button *)alloc(sizeof(Button));
 	button = (Button *)initWithViewFunction((View*)button, x, y, w, h);
 	(*button).factory = factory;
 	(*button).initButton = initButton;
