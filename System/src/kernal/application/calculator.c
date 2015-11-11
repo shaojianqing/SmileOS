@@ -120,7 +120,7 @@ void calculatorApplicationMain()
 void prepareWindowSheetCal(Sheet *sheet)
 {
     if (sheet != null) {
-        (*sheet).x = 560;
+        (*sheet).x = 40;
         (*sheet).y = 80;
         (*sheet).width = 400;
         (*sheet).height = 500;

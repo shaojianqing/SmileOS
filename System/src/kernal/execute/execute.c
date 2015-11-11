@@ -8,14 +8,14 @@
 ExecutableFile* loadExecuteFromStorage(u32 sector)
 {
 	ExecutableFile *executeFile = null;
-	u8 *headBuffer = (u8 *)alloc(SECTOR_SIZE);
+	u8 *headBuffer = (u8 *)allocPage(SECTOR_SIZE);
 	if (headBuffer!=null) {
     	readHardDisk(sector, headBuffer, SECTOR_SIZE);
     	ElfFileHeader *header = (ElfFileHeader *)headBuffer;
 		u32 bufferSize = (*header).shOffset+(*header).shentSize*(*header).shNum;
-		release((int)headBuffer, SECTOR_SIZE);		
+		//release((int)headBuffer, SECTOR_SIZE);		
 	
-		executeFile = (ExecutableFile *)alloc(sizeof(ExecutableFile));
+		executeFile = (ExecutableFile *)allocPage(sizeof(ExecutableFile));
 		if (executeFile!=null) {
 			(*executeFile).executeSize = bufferSize;
 			(*executeFile).executeBuffer = (u8 *)allocPage(bufferSize);

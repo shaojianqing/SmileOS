@@ -1,35 +1,127 @@
 #include "../const/const.h"
 #include "../type/type.h"
+#include "../algorithm/algorithm.h"
 #include "memory.h"
 
 void initMemoryManagement()
 {
     MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
-    (*memoryManager).num = 1;
-    (*memoryManager).losts = 0;
-    (*memoryManager).lostSize = 0;
-    MemoryInfo *memoryInfo = (MemoryInfo *)(*memoryManager).memoryInfo;
+    MemoryInfo *memoryInfo = (MemoryInfo *)(*memoryManager).memoryInfoList;
+	(*memoryManager).firstMemoryInfo = memoryInfo;
+	(*memoryManager).lastMemoryInfo = memoryInfo;
+	(*memoryManager).totalNum = 0;
+	(*memoryInfo).status = STATUS_UNALLOC;
     (*memoryInfo).addr = SYS_HEAP_BASE;
     (*memoryInfo).size = SYS_HEAP_SIZE;
+	(*memoryInfo).next = null;
+	(*memoryInfo).prev = null;
+}
+
+MemoryInfo* getOriginMemoryInfo()
+{
+	MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
+	int i=0;
+	for (i=0;i<MEM_INFO_NUM;++i) {
+		MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfoList+i);
+		if ((*memoryInfo).status==STATUS_UNDEFIN) {
+			return memoryInfo;
+		}	
+	}
+	return null;
+}
+
+bool isAddrLargeThan(Object *object1, Object *object2) 
+{
+	MemoryInfo *memoryInfo1 = (MemoryInfo *)object1;
+	MemoryInfo *memoryInfo2 = (MemoryInfo *)object2;
+	if (memoryInfo1!=null && memoryInfo2!=null) {
+		if ((*memoryInfo1).status>(*memoryInfo2).status) {
+			return TRUE;		
+		} else if ((*memoryInfo1).status==(*memoryInfo2).status){
+			if ((*memoryInfo1).addr>(*memoryInfo2).addr) {
+				return TRUE;			
+			}		
+		}
+	}
+	return FALSE;
+}
+
+bool isSizeLargeThan(Object *object1, Object *object2) 
+{
+	MemoryInfo *memoryInfo1 = (MemoryInfo *)object1;
+	MemoryInfo *memoryInfo2 = (MemoryInfo *)object2;
+	if (memoryInfo1!=null && memoryInfo2!=null) {
+		if ((*memoryInfo1).status>(*memoryInfo2).status) {
+			return TRUE;		
+		} else if ((*memoryInfo1).status==(*memoryInfo2).status){
+			if ((*memoryInfo1).size>(*memoryInfo2).size) {
+				return TRUE;			
+			}		
+		}
+	}
+	return FALSE;
 }
 
 u32 alloc(u32 size)
 {
     if (size>0) {
-        u32 address;
+		size = ((size+0xf)&0xfffffff0);
         MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
-        if ((*memoryManager).num>0) {
-            u32 i=0;
-            for (i=0; i<(*memoryManager).num; ++i) {
-                MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfo+i);
-                if ((*memoryInfo).size>=size) {
-                    address = (*memoryInfo).addr;
-                    (*memoryInfo).addr+=size;
-                    (*memoryInfo).size-=size;
-                    return address;
-                }
-            }
-        }
+		MemoryInfo *currentMemoryInfo = (*memoryManager).firstMemoryInfo;
+		MemoryInfo *allocedMemoryInfo = null;
+	
+		u32 i=0;
+		while(currentMemoryInfo!=null) {
+			(*memoryManager).memoryInfos[i] = currentMemoryInfo;
+			currentMemoryInfo = (*currentMemoryInfo).next;
+			++i;
+		}
+		(*memoryManager).totalNum = i;
+		u32 totalNum = (*memoryManager).totalNum;
+		for (i=0;i<totalNum;++i) {
+			MemoryInfo *memoryInfo = (*memoryManager).memoryInfos[i];
+			if ((*memoryInfo).status == STATUS_UNALLOC) {
+				if ((*memoryInfo).size>=size) {
+					if ((*memoryInfo).size==size) {
+						(*memoryInfo).status = STATUS_ALLOCED;
+						allocedMemoryInfo = memoryInfo;
+					} else if ((*memoryInfo).size>size) {
+						if (totalNum<MEM_INFO_NUM) {
+							allocedMemoryInfo = getOriginMemoryInfo();
+							(*allocedMemoryInfo).size = size;
+							(*allocedMemoryInfo).addr = (*memoryInfo).addr;
+							(*allocedMemoryInfo).status = STATUS_ALLOCED;
+							(*memoryManager).memoryInfos[totalNum] = allocedMemoryInfo;
+							(*memoryInfo).size-=size;
+							(*memoryInfo).addr+=size;
+							totalNum++;
+						}					
+					}
+					break;				
+				}			
+			}		
+		}
+		(*memoryManager).totalNum = totalNum;
+		sort((Object **)(*memoryManager).memoryInfos, totalNum, isSizeLargeThan);
+		if (totalNum>=1) {
+			for (i=0;i<totalNum;++i) {
+				MemoryInfo *memoryInfo = (*memoryManager).memoryInfos[i];
+				(*memoryInfo).prev = null;
+				(*memoryInfo).next = null;						
+			}
+
+			for (i=0;i<totalNum-1;++i) {
+				MemoryInfo *memoryInfo1 = (*memoryManager).memoryInfos[i];
+				MemoryInfo *memoryInfo2 = (*memoryManager).memoryInfos[i+1];
+				if (memoryInfo1!=memoryInfo2) {
+					(*memoryInfo1).next = memoryInfo2;
+					(*memoryInfo2).prev = memoryInfo1;	
+				}
+			}
+			(*memoryManager).firstMemoryInfo = (*memoryManager).memoryInfos[0];
+			(*memoryManager).lastMemoryInfo = (*memoryManager).memoryInfos[totalNum-1];
+		}
+		return (*allocedMemoryInfo).addr;
     }
     return null;
 }
@@ -66,60 +158,78 @@ u32 allocPage(u32 size)
 	return null;
 }
 
-void release(u32 addr, u32 size)
+void release(u32 addr)
 {
-    if (size>0 && addr>=SYS_HEAP_BASE) {
-        MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
-        u32 i=0, j=0, index=0;
-        for (i=0; i<(*memoryManager).num; ++i) {
-            MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfo+i);
-            if ((*memoryInfo).addr>addr) {
-                index = i;
-                break;
-            }
-        }
-
-        if (index>0) {
-            MemoryInfo *prevInfo = (MemoryInfo *)((*memoryManager).memoryInfo+index-1);
-            if ((*prevInfo).addr+(*prevInfo).size == addr) {
-                (*prevInfo).size+=size;
-
-                if (index<(*memoryManager).num) {
-                    MemoryInfo *nextInfo = (MemoryInfo *)((*memoryManager).memoryInfo+index);
-                    if (addr+size==(*nextInfo).addr) {
-                        (*prevInfo).size+=(*nextInfo).size;
-                        (*memoryManager).num--;
-                        for (i=0; i<(*memoryManager).num; ++i) {
-                            *((*memoryManager).memoryInfo+i) = *((*memoryManager).memoryInfo+i+1);
-                        }
-                    }
-                }
-            }
-            return;
-        }
-
-        if (index<(*memoryManager).num) {
-            MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfo+index);
-            if (addr+size==(*memoryInfo).addr) {
-                (*memoryInfo).addr = addr;
-                (*memoryInfo).size += size;
-            }
-            return;
-        }
-
-        if ((*memoryManager).num<MEMORY_NUM) {
-            for (j=(*memoryManager).num; j>index; ++j) {
-                *((*memoryManager).memoryInfo+j) = *((*memoryManager).memoryInfo+j-1);
-            }
-            (*memoryManager).num++;
-            MemoryInfo *memoryInfo = (MemoryInfo *)((*memoryManager).memoryInfo+index);
-            (*memoryInfo).addr = addr;
-            (*memoryInfo).size = size;
-            return;
-        }
-        (*memoryManager).losts++;
-        (*memoryManager).lostSize+=size;
-    }
+	if (addr!=null) {
+		MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
+		MemoryInfo *currentMemoryInfo = (*memoryManager).firstMemoryInfo;
+		MemoryInfo *memoryInfo = (*memoryManager).lastMemoryInfo;
+		while (TRUE) {
+			if (memoryInfo==null) {
+				break;			
+			} else if ((*memoryInfo).addr==addr) {
+				break;			
+			} else {
+				memoryInfo = (*memoryInfo).prev;
+			}
+		}
+		if (memoryInfo!=null) {
+			(*memoryInfo).status = STATUS_UNALLOC;
+			u32 i=0, j=0, totalNum=0;
+			while(currentMemoryInfo!=null) {
+				(*memoryManager).memoryInfos[i] = currentMemoryInfo;
+				currentMemoryInfo = (*currentMemoryInfo).next;
+				++i;
+			}
+			(*memoryManager).totalNum = i;
+			totalNum = (*memoryManager).totalNum;
+			if (totalNum>1) {
+				sort((Object **)(*memoryManager).memoryInfos, totalNum, isAddrLargeThan);
+				i=0;
+				while(i<totalNum-1) {
+					MemoryInfo *memoryInfo1 = (*memoryManager).memoryInfos[i];
+					MemoryInfo *memoryInfo2 = (*memoryManager).memoryInfos[i+1];
+					if ((*memoryInfo1).status==STATUS_UNALLOC && (*memoryInfo2).status==STATUS_UNALLOC) {
+						u32 top = (*memoryInfo1).addr + (*memoryInfo1).size;
+						if (top==(*memoryInfo2).addr) {
+							(*memoryInfo1).size += (*memoryInfo2).size;
+							(*memoryInfo2).status = STATUS_UNDEFIN;
+							(*memoryInfo2).prev = null;
+		 					(*memoryInfo2).next = null;
+							for (j=i+1;j<totalNum-1;++j) {
+								(*memoryManager).memoryInfos[j] = (*memoryManager).memoryInfos[j+1];					
+							}
+							totalNum--;
+						} else {
+							++i;						
+						}
+					} else {
+						++i;					
+					}				
+				}
+				(*memoryManager).totalNum = totalNum;
+				sort((Object **)(*memoryManager).memoryInfos, totalNum, isSizeLargeThan);
+				if (totalNum>=1) {
+					for (i=0;i<totalNum;++i) {
+						MemoryInfo *memoryInfo = (*memoryManager).memoryInfos[i];
+						(*memoryInfo).prev = null;
+						(*memoryInfo).next = null;						
+					}
+	
+					for (i=0;i<totalNum-1;++i) {
+						MemoryInfo *memoryInfo1 = (*memoryManager).memoryInfos[i];
+						MemoryInfo *memoryInfo2 = (*memoryManager).memoryInfos[i+1];
+						if (memoryInfo1!=memoryInfo2) {
+							(*memoryInfo1).next = memoryInfo2;
+							(*memoryInfo2).prev = memoryInfo1;	
+						}
+					}
+					(*memoryManager).firstMemoryInfo = (*memoryManager).memoryInfos[0];
+					(*memoryManager).lastMemoryInfo = (*memoryManager).memoryInfos[totalNum-1];
+				}
+			}						
+		}
+	}
 }
 
 void releasePage(u32 addr, u32 size)

@@ -5,5 +5,5 @@ VideoModeInfo *videoModeInfo;
 
 void initVideoModeInfo()
 {
-	videoModeInfo = (VideoModeInfo *)0x21800;
+	videoModeInfo = (VideoModeInfo *)VIDEO_INFO_BASE;
 }

@@ -1,7 +1,5 @@
 #define IMAGE_HEADER_SIZE 8
 
-#define READ_BLOCK_SIZE 0x10000
-
 typedef struct Image
 {
     u8 *head;

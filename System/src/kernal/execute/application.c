@@ -32,7 +32,7 @@ Application *createApplication(ExecutableFile *executableFile)
 
 		showIntegerValue(pageNo, 100, 220);
 		
-		Application *application = (Application *)alloc(sizeof(Application));
+		Application *application = (Application *)allocPage(sizeof(Application));
 		(*application).startBase = startBase;
 		(*application).startAddr = startAddr;
 		(*application).totalSize = totalSize;

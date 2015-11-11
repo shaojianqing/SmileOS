@@ -81,7 +81,7 @@ void drawMouseMap(char *buffer)
 Sheet *prepareMouseSheet(Sheet* sheet)
 {
     if (sheet != 0) {
-        (*sheet).buffer = (char *)allocPage(MOUSE_WIDTH*MOUSE_HEIGHT*SCREEN_DENSITY);
+        (*sheet).buffer = (char *)alloc(MOUSE_WIDTH*MOUSE_HEIGHT*SCREEN_DENSITY);
         (*sheet).x = 500;
         (*sheet).y = 380;
         (*sheet).width = MOUSE_WIDTH;

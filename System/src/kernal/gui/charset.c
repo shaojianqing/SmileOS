@@ -8,7 +8,7 @@ void printChar(View *view, u8 c, int x, int y, Color color)
     u8 d;
     int i=0;
     u8 *buffer = (*view).buffer;
-    u8 *pos = (u8 *)(0x19400 + (int)c*16);
+    u8 *pos = (u8 *)(CHARSET_DATA_BASE + (int)c*16);
     for (i=0; i<16; ++i) {
         int p = ((y + i)*(*view).width + x)*3;
         d = *(pos + i);
@@ -85,7 +85,9 @@ void printHexInteger(View *view, int value, int x, int y, Color color)
 			letter+=55;
 		}
 		printChar(view, (char)letter, x, y, color);
-    }
+    } else {
+		printChar(view, '0', x, y, color);
+	}
 }
 
 void printHexByte(View *view, u8 value, int x, int y, Color color) 
@@ -112,7 +114,7 @@ void printCharTest(u8 *buffer, u8 c, int x, int y, Color color)
 {
     u8 d;
     int i=0;
-    u8 *pos = (u8 *)(0x19400 + (int)c*16);
+    u8 *pos = (u8 *)(CHARSET_DATA_BASE + (int)c*16);
     for (i=0; i<16; ++i) {
         int p = ((y + i)*1024+x)*3;
         d = *(pos + i);
@@ -157,6 +159,26 @@ void printCharTest(u8 *buffer, u8 c, int x, int y, Color color)
             *(buffer + p + 23) = color.red;
         }
     }
+}
+
+void printHexByteTest(u8 *buffer, u8 value, int x, int y, Color color) 
+{
+		u8 letter = value%16;
+		if (letter<10) {
+			letter+=48;
+ 		} else {
+			letter+=87;
+		}
+		printCharTest(buffer, (u8)letter, x, y, color);
+		
+		value /=16;
+		letter = value%16;
+		if (letter<10) {
+			letter+=48;
+ 		} else {
+			letter+=87;
+		}
+		printCharTest(buffer, (u8)letter, x-8, y, color);
 }
 
 void printHexIntegerTest(u8 *buffer, int value, int x, int y, Color color)

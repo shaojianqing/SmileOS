@@ -1,3 +1,4 @@
+#include "../const/const.h"
 #include "../type/type.h"
 #include "../gui/sheet.h"
 #include "../execute/execute.h"
@@ -52,3 +53,27 @@ int queueBufferStatus(QueueBuffer *queueBuffer)
 {
 	return (*queueBuffer).size - (*queueBuffer).free;
 }
+
+void sort(Object *list[], u32 num, Compare compare)
+{
+	if (num>1) {
+		Object *minObject;
+		u32 i=0, j=0, index=0;
+		for (i=0;i<num-1;++i) {
+			minObject = list[i];
+			for (j=i+1;j<num;++j) {
+				Object *object = list[j];
+				if (compare(minObject, object)==TRUE) {
+					minObject = object;
+					index = j;
+				}							
+			}
+			if (minObject!=list[i]) {
+				Object *object = list[i];
+				list[index] = object;
+				list[i] = minObject;
+			}			
+		}
+	}
+}
+

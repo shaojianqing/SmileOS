@@ -10,6 +10,10 @@
 #include "desktop.h"
 #include "test.h"
 
+//u8 *buf0, *buf1, *buf2, *buf3;
+
+bool oper = TRUE;
+
 int currentDesktopIndex;
 
 extern Process *kernelProcess;
@@ -62,6 +66,8 @@ void reArrangeDesktopSheet()
 void initDesktopInfoSheet()
 {
 	currentDesktopIndex = 1;
+
+	oper = TRUE;
 	
 	background = prepareSheet();
 	(*background).process = kernelProcess;
@@ -141,7 +147,7 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
 		(*sheet).z = 0;
         u32 size = SCREEN_WIDTH*SCREEN_HEIGHT*SCREEN_DENSITY+8;
         Image *bgImage = loadImageFromStorage(0x4000);
-		(*sheet).buffer = (*bgImage).data; 
+		(*sheet).buffer = (*bgImage).data;		 
 
         Color startColor;
         startColor.red = 250;
@@ -224,38 +230,140 @@ Sheet* prepareStartBarSheet(Sheet *sheet)
 }
 
 void sysInfoBtnOnMouseDown(View *this, MouseEvent *event)
-{	
+{
+	if (oper==TRUE) {
+		oper = FALSE;
+		/*u32 *buf0 = (u32 *)alloc(0x08);	
+		u32 *buf1 = (u32 *)alloc(0x13);
+		u32 *buf2 = (u32 *)alloc(0x23);
+		u32 *buf3 = (u32 *)alloc(0x31);
+		u32 *buf4 = (u32 *)alloc(0x101);
+		u32 *buf5 = (u32 *)alloc(0x41);
+		u32 *buf6 = (u32 *)alloc(0x51);
+		u32 *buf7 = (u32 *)alloc(0x29);
+		u32 *buf8 = (u32 *)alloc(0x39);
+		//u32 *buf9 = (u32 *)alloc(0x43);//-------------------------------
+		//u32 *buf10 = (u32 *)alloc(0x47);
+		//u32 *buf11 = (u32 *)alloc(0x53);
+		//u32 *buf12 = (u32 *)alloc(0x61);
+
+		release(buf0);
+		//release(buf1);
+		release(buf2);
+		release(buf3);
+		//release(buf4);
+		release(buf5);
+		//release(buf6);
+		release(buf7);
+		//release(buf8);
+		//release(buf6);
+		release(buf8);
+		//release(buf10);
+
+		u32 *buf11 = (u32 *)alloc(0x29);*/
+
+		//u32 *buf13 = (u32 *)alloc(0x103);
+
+		//release((u32)buf9);
+		//release((u32)buf1);
+		/*u32 *buf0 = (u32 *)alloc(0x08);
+		u32 *buf4 = (u32 *)alloc(0x101);
+		u32 *buf5 = (u32 *)alloc(0x41);
+
+		*/	
+	
+		//release((u32)buf2);
+		//release((u32)buf3);
+		//release((u32)buf1);
+		//release((u32)buf2);
+		//release((u32)buf1);
+		//release((u32)buf0);
+		//release((u32)buf0);
+	
+		showMemoryTable();
+	}
+
 	//showIntegerValue(88, 100, 100);
-	startLoadExecuteFile();
+	//startLoadExecuteFile();
 	//startSysInfoApplication();
 }
 
 void commandBtnOnMouseDown(View *this, MouseEvent *event)
 {
-	showIntegerValue(111, 100, 100);
+	/*if (buf2!=null) {
+		showIntegerValue((u32)buf2, 100, 60);
+		release((u32)buf2);
+		buf2=null;
+	}*/
+	
+	showMemoryTable();
+	//showIntegerValue(111, 100, 100);
 	//startCommandApplication();
 }
 
 void imgInfoBtnOnMouseDown(View *this, MouseEvent *event)
 {
+	//buf3 = (u8 *)alloc(0x13);
+	//showMemoryTable();
+	
 	startMathematicsApplication();
 }
 
 void calculatorBtnOnMouseDown(View *this, MouseEvent *event)
 {
-	showIntegerValue(88, 100, 100);
+	//showIntegerValue(88, 100, 100);
 	startCalculatorApplication();
 }
 
 void dataGraphBtnOnMouseDown(View *this, MouseEvent *event)
 {
-	showIntegerValue(33, 100, 100);
+	//showIntegerValue(33, 100, 100);
 	startDataGraphApplication();
 }
 
 void startLoadExecuteFile()
 {
-	ExecutableFile *executeFile = loadExecuteFromStorage(0x1000);
+	
+
+	/*u8 *buf1 = (u8 *)alloc(0x31);
+	showIntegerValue((u32)buf1, 100, 160);
+
+	//
+
+	u8 *buf2 = (u8 *)alloc(0x04);
+	showIntegerValue((u32)buf2, 100, 220);*/
+
+	
+
+	//release((u32)buf1);
+
+	//release((u32)buf2);
+
+	//buf0 = (u8 *)alloc(0x08);
+
+	/*release((u32)buf1);
+
+	release((u32)buf0);
+
+	release((u32)buf2);
+	
+	u8 *buf4 = (u8 *)alloc(0x08);
+	showIntegerValue((u32)buf4, 200, 280);
+
+	u8 *buf5 = (u8 *)alloc(0x06);
+	showIntegerValue((u32)buf5, 200, 340);
+
+	release((int)buf4);
+
+
+	u8 *buf6 = (u8 *)alloc(0x09);
+	showIntegerValue((u32)buf6, 200, 400);
+
+	release((u32)buf5);
+
+	release((u32)buf6);*/
+
+	/*ExecutableFile *executeFile = loadExecuteFromStorage(0x1000);
 	Application *application = createApplication(executeFile);
 	if (application!=null) {
 		startApplication(application);
@@ -264,5 +372,5 @@ void startLoadExecuteFile()
 	showBufferData((*executeFile).executeBuffer+0x1110);
 	ElfFileHeader *header = (*executeFile).header;
 	ElfProgramHeader *programHeader = (*executeFile).dataHeader;
-	showIntegerValue((*executeFile).executeSize, 100, 300);
+	showIntegerValue((*executeFile).executeSize, 100, 300);*/
 }

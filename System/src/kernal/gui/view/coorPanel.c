@@ -19,7 +19,7 @@ static void onMouseDown(View *this, MouseEvent *event);
 
 CoorPanel *createCoorPanel(int x, int y, int w, int h)
 {
-	CoorPanel *coorPanel = (CoorPanel *)alloc(sizeof(CoorPanel));
+	CoorPanel *coorPanel = (CoorPanel *)allocPage(sizeof(CoorPanel));
 	coorPanel = (CoorPanel *)initWithViewFunction((View*)coorPanel, x, y, w, h);
 	(*coorPanel).canvas = createView(x, y, w, h);	
 	(*coorPanel).initPanel = initCoorPanel;

@@ -74,7 +74,7 @@ bool sendHdCommand(HdCommand *command)
 	}
 }
 
-void readHardSector(u32 sector, u8 *buffer, int sectorCount)
+void readHardSector(u32 sector, u8 *buffer, int sectorCount, int size)
 {
   	command.features = 0;
 	command.count = sectorCount;
@@ -88,9 +88,10 @@ void readHardSector(u32 sector, u8 *buffer, int sectorCount)
 	isHardDiskReady = FALSE;
 	sendHdCommand(&command);
 	int sectorLeft = command.count;
-	while (sectorLeft>0) {
+	while (sectorLeft>0 && size>0) {
+		u32 sectorSize = (size<512?size:512);	
 		waitForStatus(STATUS_BSY, 0, HD_TIMEOUT);
-		readPort(REG_DATA, buffer, 512);
+		readPort(REG_DATA, buffer, sectorSize);
 		buffer+=512;
 		sectorLeft--;
 	}
@@ -100,7 +101,7 @@ void readHardDisk(u32 sector, u8 *buffer, int size)
 {
 	while (size>0) {
 		int sectorCount = (size/512)>255?255:(size/512+1);
-		readHardSector(sector, buffer, sectorCount);
+		readHardSector(sector, buffer, sectorCount, size);
 		sector += sectorCount;
 		buffer += sectorCount*512;
 		size -= sectorCount*512;

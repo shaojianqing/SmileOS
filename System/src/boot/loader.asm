@@ -51,7 +51,7 @@ enter_protect_mode:
 	mov ax, 0x4f02
 	int 0x10 
 
-	mov ax, 0x2180
+	mov ax, 0x2080
 	mov es, ax
 	xor di, di
 
@@ -60,7 +60,7 @@ enter_protect_mode:
 	int 0x10
 
 	;------------------------;
-	mov ax, 0x2140
+	mov ax, 0x2040
 	mov ds, ax
 	xor bx, bx
 	mov ah, 0x88

@@ -3,6 +3,7 @@
 #include "algorithm/algorithm.h"
 #include "macro/macro.h"
 #include "inOutput/inOutput.h"
+#include "gui/view/view.h"
 #include "memory/memory.h"
 #include "gui/color.h"
 #include "gui/video.h"
@@ -78,7 +79,7 @@ void initSystem(void)
 	initKeyTableSetting();				
     initMemoryManagement();				
     initSheetManagement();				
-	initProcessManagement();			
+	initProcessManagement();
 	prepareKernelProcess();				
 	initDesktopInfoSheet();
 
