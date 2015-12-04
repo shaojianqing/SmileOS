@@ -2,6 +2,7 @@
 #include "../../type/type.h"
 #include "../../include/timing.h"
 #include "view.h"
+#include "../image.h"
 #include "../sheet.h"
 #include "../color.h"
 #include "../corner.h"
@@ -24,10 +25,11 @@ void drawDownAppearance(Button *this, int width, int height);
 
 void drawButtonText(Button *this, char *string, int length, int width, int height);
 
-Button *createButton(int x, int y, int w, int h, Factory *factory)
+Button *createButton(int x, int y, int w, int h, Factory *factory, Image *image)
 {
 	Button *button = (Button *)alloc(sizeof(Button));
 	button = (Button *)initWithViewFunction((View*)button, x, y, w, h);
+	(*button).image = image;
 	(*button).factory = factory;
 	(*button).initButton = initButton;
 	(*button).view.onMouseDown = onMouseDown;
@@ -102,12 +104,12 @@ void drawAppearance(Button *this, int width, int height)
 	ButtonStyle *buttonStyle;
 	ButtonStyleType buttonStyleType=(*this).buttonStyleType;
 	if (buttonStyleType!=null) {
-		buttonStyle=buttonStyleType();
-			
+		buttonStyle=buttonStyleType();			
 	}
 
 	drawCornerRect((View *)this, 0, 0, width, height, (*buttonStyle).borderColor, (*buttonStyle).corner);
     drawGradualVerticalCornerRect((View *)this, 1, 1, width-2, height-2, (*buttonStyle).startColor, (*buttonStyle).endColor, (*buttonStyle).corner, DIRECTION_DOWN);
+	drawImage((View *)this, 4, 4, (*this).image);
 }
 
 void drawDownAppearance(Button *this, int width, int height)
@@ -120,6 +122,7 @@ void drawDownAppearance(Button *this, int width, int height)
 
 	drawCornerRect((View *)this, 0, 0, width, height, (*buttonStyle).borderColor, (*buttonStyle).corner);
     drawGradualVerticalCornerRect((View *)this, 1, 1, width-2, height-2, (*buttonStyle).startDownColor, (*buttonStyle).endDownColor, (*buttonStyle).corner, DIRECTION_DOWN);
+	drawImage((View *)this, 4, 4, (*this).image);
 }
 
 void drawButtonText(Button *this, char *string, int length, int width, int height)
@@ -137,5 +140,5 @@ void drawButtonText(Button *this, char *string, int length, int width, int heigh
 		(*this).title[i] = *(string+i);
 	}	
 
-	printString((View *)this, (*this).title, (*this).length, 38, 8, (*buttonStyle).textColor);
+	printString((View *)this, (*this).title, (*this).length, 38, 8, (*buttonStyle).textColor, (*buttonStyle).shadowColor);
 }

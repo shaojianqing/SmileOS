@@ -1,12 +1,16 @@
 #include "../const/const.h"
 #include "../type/type.h"
+#include "../execute/systemApi.h"
 
 int cata = 88;
 
 int data = 11;
 
 void initApplication()
-{
-	cata = 0x88997766;
-	data = 0x33221177;
+{	
+	int a = firstApi(0xff8822);
+	
+	while(TRUE) {
+		a++;
+	}
 }

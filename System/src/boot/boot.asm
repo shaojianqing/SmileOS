@@ -16,7 +16,7 @@ start:
 	mov ds, ax
 	mov byte [packageSize], 0x10
 	mov byte [reserveByte], 0x00
-	mov word [blockCount], 0x20
+	mov word [blockCount], 0x48
 	mov word [bufferOffs], 0x00
 	mov word [bufferSegm], 0x1860
 	mov dword [blockNum], 0x01

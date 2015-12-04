@@ -252,3 +252,15 @@ void releasePage(u32 addr, u32 size)
 	}
 }
 
+void memoryCopy(void *src, void *dest, u32 count)
+{
+	if (src!=null && dest!=null) {
+		u8 *temp = dest;
+		u8 *sour = src;
+		u32 i=0;
+		for (i=0;i<count;++i) {
+			*(temp+i) = *(sour+i);		
+		}			
+	}
+}
+

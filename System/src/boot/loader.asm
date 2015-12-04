@@ -36,10 +36,20 @@ enter_protect_mode:
 	mov ds, ax
 	mov byte [packageSize], 0x10
 	mov byte [reserveByte], 0x00
-	mov word [blockCount], 0x70
+	mov word [blockCount], 0x80
 	mov word [bufferOffs], 0x00
 	mov word [bufferSegm], 0x8000
-	mov dword [blockNum], 0x40
+	mov dword [blockNum], 0x48
+
+	mov ah, 0x42
+	mov dl, 0x80
+	mov si, packageSize
+	int 0x13
+
+	mov word [blockCount], 0x40
+	mov word [bufferOffs], 0x00
+	mov word [bufferSegm], 0x9000
+	mov dword [blockNum], 0xC8
 
 	mov ah, 0x42
 	mov dl, 0x80
@@ -51,7 +61,7 @@ enter_protect_mode:
 	mov ax, 0x4f02
 	int 0x10 
 
-	mov ax, 0x2080
+	mov ax, 0x2180
 	mov es, ax
 	xor di, di
 
@@ -60,7 +70,7 @@ enter_protect_mode:
 	int 0x10
 
 	;------------------------;
-	mov ax, 0x2040
+	mov ax, 0x2140
 	mov ds, ax
 	xor bx, bx
 	mov ah, 0x88

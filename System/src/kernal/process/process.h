@@ -9,7 +9,7 @@
 
 #define TOTAL_PROCESS_NUM				1000
 #define USER_PROCESS_NUM 				TOTAL_PROCESS_NUM-1
-#define PROCESS_TABLE_ADDRESS			0x30000
+#define PROCESS_TABLE_ADDRESS			0x31000
 
 #define STATUS_PROCESS_INIT 			0
 #define STATUS_PROCESS_USING 			1
@@ -54,9 +54,11 @@ typedef struct Process
 
 	int priority;
 
+	u32 index;
+
 	Sheet *mainWindow;
 
-	char name[PROCESS_NAME_LENGTH];
+	char *name;
 
 } Process;
 
@@ -99,3 +101,5 @@ Process *startRunProcess(Process *process, int priority);
 void startSleepProcess(Process *process);
 
 void startSwitchProcess();
+
+void switchKernelProcess();

@@ -3,6 +3,8 @@
 #include "../algorithm/algorithm.h"
 #include "../gui/color.h"
 #include "../gui/sheet.h"
+#include "../system/descriptor.h"
+#include "../process/process.h"
 #include "keyboard.h"
 
 extern QueueBuffer systemBuffer;
@@ -12,7 +14,7 @@ void intHandler21()
 	outByte(PIC0_OCW2, 0x61);
 	u8 data = inByte(PORT_KEYDATA);
 	putQueueBuffer(&systemBuffer, data+1024);
-	return;
+	switchKernelProcess();
 }
 
 void initKeyTableSetting()
@@ -145,9 +147,15 @@ void processKeyData(KeyData *keyData, u32 data, Sheet *sheet)
 				mainColor.red = 240;
 				mainColor.green = 240;
 				mainColor.blue = 240;
+
+				Color shadowColor;
+				shadowColor.red = 240;
+				shadowColor.green = 240;
+				shadowColor.blue = 240;
+
 				charX+=8;
 				//drawRect((*sheet).buffer, sheet, 8+charX, 24, 8, 16, txtMainColor);
-				printChar(sheet, ascii, 8+charX, 24, mainColor);
+				printChar(sheet, ascii, 8+charX, 24, mainColor, shadowColor);
 			}		
 		} 
 

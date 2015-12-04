@@ -7,6 +7,8 @@
 #include "../graphics.h"
 #include "graphPanel.h"
 
+static void initGraphPanel(GraphPanel *this);
+
 static void drawBackground(GraphPanel *this, int width, int height);
 
 static void drawGridView(GraphPanel *this, int width, int height);
@@ -29,7 +31,7 @@ GraphPanel *createGraphPanel(int x, int y, int w, int h)
 	return graphPanel;
 }
 
-void initGraphPanel(GraphPanel *this)
+static void initGraphPanel(GraphPanel *this)
 {
 	if (this!=null) {		
 		int width = (*this).view.width;
@@ -42,7 +44,7 @@ void initGraphPanel(GraphPanel *this)
 	}
 }
 
-void drawBackground(GraphPanel *this, int width, int height)
+static void drawBackground(GraphPanel *this, int width, int height)
 {
 	Color color;
     color.red = 240;
@@ -52,7 +54,7 @@ void drawBackground(GraphPanel *this, int width, int height)
 	drawRect((View *)this, 0, 0, width, height, color);
 }
 
-void drawGridView(GraphPanel *this, int width, int height)
+static void drawGridView(GraphPanel *this, int width, int height)
 {
 	Color color;
     color.red = 200;
@@ -72,7 +74,7 @@ void drawGridView(GraphPanel *this, int width, int height)
 	}
 }
 
-void drawCoorindate(GraphPanel *this, int width, int height)
+static void drawCoorindate(GraphPanel *this, int width, int height)
 {
 	Color color;
     color.red = 160;
@@ -92,7 +94,7 @@ void drawCoorindate(GraphPanel *this, int width, int height)
 	}
 }
 
-void drawBorder(GraphPanel *this, int width, int height)
+static void drawBorder(GraphPanel *this, int width, int height)
 {
 	Color color;
 	color.red = 160;
@@ -105,7 +107,7 @@ void drawBorder(GraphPanel *this, int width, int height)
 	drawLine((View *)this, width-1, 0, width-1, height, color, LINE_THIN);
 }
 
-void onMouseDown(View *this, MouseEvent *event)
+static void onMouseDown(View *this, MouseEvent *event)
 {
 	showIntegerValue(898, 100, 50);
 }

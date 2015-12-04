@@ -30,7 +30,7 @@ void intHandler2c()
 	outByte(PIC0_OCW2, 0x62);
 	data = inByte(PORT_KEYDATA) + 2048;
 	putQueueBuffer(&systemBuffer, data);
-	return;
+	switchKernelProcess();
 }
 
 void drawMouseMap(char *buffer)

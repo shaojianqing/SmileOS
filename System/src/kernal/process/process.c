@@ -9,7 +9,7 @@ extern Process *kernelProcess;
 
 void initProcessManagement()
 {
-	int i=0;
+	u32 i=0;
 	processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
 	(*processManager).current = 0;
 	(*processManager).running = 1;
@@ -17,14 +17,14 @@ void initProcessManagement()
 	(*processManager).coreProcess.status = STATUS_PROCESS_INIT;
 	(*processManager).coreProcess.tssSelector = KERNEL_PROCESS_GDT*8+RPL_0;
 	(*processManager).coreProcess.ldtSelector = 0;
-	setGlobalDescriptor(KERNEL_PROCESS_GDT, 103, (int)&((*processManager).coreProcess.tss), AR_TSS+DPL_0);	
+	setGlobalDescriptor(KERNEL_PROCESS_GDT, 103, (u32)&((*processManager).coreProcess.tss), AR_TSS+DPL_0);	
 
 	for (i=0;i<USER_PROCESS_NUM;i++) {
 		(*processManager).processArray[i].status = STATUS_PROCESS_INIT;
 		(*processManager).processArray[i].tssSelector = (START_PROCESS_GDT+i)*8+RPL_3;
 		(*processManager).processArray[i].ldtSelector = (START_PROCESS_GDT+i+TOTAL_PROCESS_NUM)*8;
-		setGlobalDescriptor(START_PROCESS_GDT+i, 103, (int)&((*processManager).processArray[i].tss), AR_TSS+DPL_3);
-		setGlobalDescriptor(START_PROCESS_GDT+i+TOTAL_PROCESS_NUM, 63, (int)&((*processManager).processArray[i].ldt), AR_LDT);
+		setGlobalDescriptor(START_PROCESS_GDT+i, 103, (u32)&((*processManager).processArray[i].tss), AR_TSS+DPL_3);
+		setGlobalDescriptor(START_PROCESS_GDT+i+TOTAL_PROCESS_NUM, 63, (u32)&((*processManager).processArray[i].ldt), AR_LDT);
 	}
 }
 
@@ -87,7 +87,8 @@ Process *addProcess(Process *process)
 {	
 	if (process != null) {
 		ProcessManager *processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
-		if ((*processManager).running<TOTAL_PROCESS_NUM) {			
+		if ((*processManager).running<TOTAL_PROCESS_NUM) {
+			(*process).index = (*processManager).running;
 			(*processManager).processList[(*processManager).running] = process;
 			(*process).status = STATUS_PROCESS_RUNNING;
 			(*processManager).running++;
@@ -168,3 +169,22 @@ void startSwitchProcess()
 	}
 	return;
 }
+
+void switchKernelProcess()
+{
+	if (processManager!=null) {
+		Process *currentProcess = (*processManager).processList[(*processManager).current];
+		if (currentProcess!=null && kernelProcess!=currentProcess) {
+			u32 index = (*kernelProcess).index;
+			(*currentProcess).index = index;
+			(*kernelProcess).index = (*processManager).current;
+			(*processManager).processList[index] = currentProcess;
+			(*processManager).currentPriority = (*kernelProcess).priority;
+			(*processManager).processList[(*processManager).current] = kernelProcess;
+			short kernelProcessNum = (*kernelProcess).tssSelector;
+			switchProcess(0, kernelProcessNum);
+		}
+	}
+}
+
+

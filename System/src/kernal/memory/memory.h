@@ -1,5 +1,5 @@
-#define 	SYS_INFO_BASE		0x20400
-#define 	MEM_MANAGE_BASE		0x21800
+#define 	SYS_INFO_BASE		0x21400
+#define 	MEM_MANAGE_BASE		0x22800
 #define 	SYS_MEM 			1024*1024
 #define 	VRAM_MAP 			1024*1024
 #define 	SYS_HEAP_BASE		1024*1024*2
@@ -61,3 +61,5 @@ u32 allocPage(u32 size);
 void release(u32 addr);
 
 void releasePage(u32 addr, u32 size);
+
+void memoryCopy(void *src, void *dest, u32 count);

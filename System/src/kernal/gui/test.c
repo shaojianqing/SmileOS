@@ -62,6 +62,23 @@ Sheet* prepareTestSheet(Sheet *sheet)
     }
 }
 
+void showLetter(int x, int y) 
+{
+	Color mainColor;
+    mainColor.red = 255;
+    mainColor.green = 255;
+    mainColor.blue = 255;
+
+	Color shadowColor;
+    shadowColor.red = 80;
+    shadowColor.green = 160;
+    shadowColor.blue = 240;
+
+	View *mainView = (*testSheet).contentView;
+	printString(mainView, "AAAabcdefghijklmnopqrstuvwxyzBBB", 32, x, y, mainColor, shadowColor);
+	(*mainView).refreshRectView(mainView);
+}
+
 void showIntegerValue(int value, int x, int y)
 {
 	Color mainColor;
@@ -69,15 +86,20 @@ void showIntegerValue(int value, int x, int y)
     mainColor.green = 40;
     mainColor.blue = 60;
 
-    Color color;
-    color.red = 250;
-    color.green = 88;
-    color.blue = 22;
+    Color fontColor;
+    fontColor.red = 250;
+    fontColor.green = 88;
+    fontColor.blue = 22;
+
+	Color shadowColor;
+    shadowColor.red = 250;
+    shadowColor.green = 88;
+    shadowColor.blue = 22;
 
 	View *mainView = (*testSheet).contentView;
 
     drawRect(mainView, x-80, y, 200, 20, mainColor);
-    printHexInteger(mainView, value, x, y, color);
+    printHexInteger(mainView, value, x, y, fontColor, shadowColor);
 	(*mainView).refreshRectView(mainView);
 }
 
@@ -86,7 +108,12 @@ void showBufferData(char *buffer)
 	Color mainColor;
     mainColor.red = 240;
     mainColor.green = 200;
-    mainColor.blue = 66;	
+    mainColor.blue = 66;
+
+	Color shadowColor;
+    shadowColor.red = 240;
+    shadowColor.green = 200;
+    shadowColor.blue = 66;	
 		
 	int totalSize = 256, rowNum = 16, columnNum = 16;
 	View *mainView = (*testSheet).contentView;
@@ -95,7 +122,7 @@ void showBufferData(char *buffer)
 	for (y=0;y<columnNum;++y) {
 		for (x=0;x<rowNum;++x) {
 			char data= *(buffer+y*16+x);
-			printHexByte(mainView, data, x*28+340, y*28+44, mainColor);
+			printHexByte(mainView, data, x*28+340, y*28+44, mainColor, shadowColor);
 		}	
 	}
 
@@ -110,6 +137,11 @@ void printMemoryTable(View *view)
         topColor.red = 240;
         topColor.green = 240;
         topColor.blue = 80;
+
+		Color shadowColor;
+        shadowColor.red = 240;
+        shadowColor.green = 240;
+        shadowColor.blue = 80;
 
 		Color titleColor;
         titleColor.red = 240;
@@ -141,7 +173,7 @@ void printMemoryTable(View *view)
         mainColor.green = 40;
         mainColor.blue = 60;
 
-		printString(view, "Memory Allocation Table", 23, 450, 44, topColor);
+		printString(view, "Memory Allocation Table", 23, 450, 44, topColor, shadowColor);
 
 		drawRect(view, 349, 69, 402, 502, bgColor);
 		drawRect(view, 350, 70, 400, 500, mainColor);
@@ -153,12 +185,12 @@ void printMemoryTable(View *view)
 		drawLine(view, 650, 69, 650, 570, bgColor, LINE_THIN);
 		drawLine(view, 710, 69, 710, 570, bgColor, LINE_THIN);
 		
-		printString(view, "Addr", 4, 360, 74, titleColor);		
-		printString(view, "Point", 5, 430, 74, titleColor);
-		printString(view, "Prev", 4, 505, 74, titleColor);
-		printString(view, "Next", 4, 580, 74, titleColor);
-		printString(view, "Size", 4, 660, 74, titleColor);
-		printString(view, "ST", 2, 720, 74, titleColor);
+		printString(view, "Addr", 4, 360, 74, titleColor, shadowColor);		
+		printString(view, "Point", 5, 430, 74, titleColor, shadowColor);
+		printString(view, "Prev", 4, 505, 74, titleColor, shadowColor);
+		printString(view, "Next", 4, 580, 74, titleColor, shadowColor);
+		printString(view, "Size", 4, 660, 74, titleColor, shadowColor);
+		printString(view, "ST", 2, 720, 74, titleColor, shadowColor);
 
 		MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
 		MemoryInfo *currentMemoryInfo = (*memoryManager).firstMemoryInfo;
@@ -177,12 +209,12 @@ void printMemoryTable(View *view)
         		statusColor.blue = 40;
 			}
 
-			printHexInteger(view, (*currentMemoryInfo).addr, 400, 100+(i-1)*30, addrColor);
-			printHexInteger(view, currentMemoryInfo, 475, 100+(i-1)*30, pointColor);
-			printHexInteger(view, (*currentMemoryInfo).prev, 550, 100+(i-1)*30, pointColor);
-			printHexInteger(view, (*currentMemoryInfo).next, 625, 100+(i-1)*30, pointColor);
-			printHexInteger(view, (*currentMemoryInfo).size, 700, 100+(i-1)*30, sizeColor);
-			printHexByte(view, (*currentMemoryInfo).status, 730, 100+(i-1)*30, statusColor);
+			printHexInteger(view, (*currentMemoryInfo).addr, 400, 100+(i-1)*30, addrColor, shadowColor);
+			printHexInteger(view, currentMemoryInfo, 475, 100+(i-1)*30, pointColor, shadowColor);
+			printHexInteger(view, (*currentMemoryInfo).prev, 550, 100+(i-1)*30, pointColor, shadowColor);
+			printHexInteger(view, (*currentMemoryInfo).next, 625, 100+(i-1)*30, pointColor, shadowColor);
+			printHexInteger(view, (*currentMemoryInfo).size, 700, 100+(i-1)*30, sizeColor, shadowColor);
+			printHexByte(view, (*currentMemoryInfo).status, 730, 100+(i-1)*30, statusColor, shadowColor);
 			drawLine(view, 350, 100+(i-1)*30+24, 750, 100+(i-1)*30+25, bgColor, LINE_THIN);		
 			currentMemoryInfo = (*currentMemoryInfo).next;
 			i++;

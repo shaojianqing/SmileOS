@@ -39,20 +39,20 @@ void drawBoldPoint(View *view, int x, int y, Color color)
 void drawLine(View *view, int x1, int y1, int x2, int y2, Color color, int style)
 {
 	if (view!=null && (*view).buffer!=null) {
-		if (x2>x1 && y2>=y1) {
+		if (x2>x1) {			
 			int dx=x2-x1, dy=y2-y1, x=0, y=0;
 			u8 *buffer = (*view).buffer;
 			for (x=x1;x<=x2;++x) {
 				y=(x-x1)*dy/dx +y1;
 				*(buffer + (y*(*view).width+x)*3) = color.blue;
-                *(buffer + (y*(*view).width+x)*3 + 1) = color.green;
-                *(buffer + (y*(*view).width+x)*3 + 2) = color.red;
+	            *(buffer + (y*(*view).width+x)*3 + 1) = color.green;
+	            *(buffer + (y*(*view).width+x)*3 + 2) = color.red;
 				if (style==LINE_BOLD) {
 					*(buffer + ((y+1)*(*view).width+x)*3) = color.blue;
-                	*(buffer + ((y+1)*(*view).width+x)*3 + 1) = color.green;
-                	*(buffer + ((y+1)*(*view).width+x)*3 + 2) = color.red;
+	            	*(buffer + ((y+1)*(*view).width+x)*3 + 1) = color.green;
+	            	*(buffer + ((y+1)*(*view).width+x)*3 + 2) = color.red;
 				}	
-			}
+			}			
 		} else if (x2==x1) {
 			int x=x1, y=0;
 			u8 *buffer = (*view).buffer;

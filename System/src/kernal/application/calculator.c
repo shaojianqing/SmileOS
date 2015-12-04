@@ -96,9 +96,9 @@ void startCalculatorApplication()
 void prepareProcessLdtLocal(Process *process)
 {
 	if (process != null) {
-		setLocalDescriptor((int)&(*process).ldt, 0, 0xFFFFF, 0x00000000, DA_C|DA_32_4K);
-		setLocalDescriptor((int)&(*process).ldt, 1, 0xFFFFF, 0x00000000, DA_DRW|DA_32_4K);
-		setLocalDescriptor((int)&(*process).ldt, 2, 0xFFFFF, 0x00000000, DA_DRWA|DA_32_4K);
+		setLocalDescriptor((u32)&(*process).ldt, 0, 0xFFFFF, 0x00000000, DA_C|DA_32_4K);
+		setLocalDescriptor((u32)&(*process).ldt, 1, 0xFFFFF, 0x00000000, DA_DRW|DA_32_4K);
+		setLocalDescriptor((u32)&(*process).ldt, 2, 0xFFFFF, 0x00000000, DA_DRWA|DA_32_4K);
 	}
 }
 
@@ -158,6 +158,11 @@ void prepareWindowSheetCal(Sheet *sheet)
         textColor.green = 0x55;
         textColor.blue = 0x55;
 
+		Color shadowColor;
+        shadowColor.red = 0x55;
+        shadowColor.green = 0x55;
+        shadowColor.blue = 0x55;
+
         drawCornerRect(mainView, 0, 0, (*mainView).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect(mainView, 1, 1, (*mainView).width-2, 20, startColor, endColor, corner, DIRECTION_UP);
         drawRect(mainView, 0, 21, (*mainView).width, 480, mainBgColor);
@@ -188,99 +193,99 @@ void prepareWindowSheetCal(Sheet *sheet)
 		drawCornerRect(mainView, 10, 30, (*mainView).width-20, 80, inputBgColor, inputBgCorner);
 		drawCornerRect(mainView, 12, 32, (*mainView).width-24, 76, inputColor, inputCorner);
 
-		printString(mainView, "Calculator-LDT", 14, 160, 4, textColor);
+		printString(mainView, "Calculator", 10, 160, 4, textColor, shadowColor);
 
-		clearBtn = createButton(10, 150, 80, 60, &calculatorFactory);
+		clearBtn = createButton(10, 150, 80, 60, &calculatorFactory, null);
 		(*clearBtn).initButton(clearBtn, "C", 1, ButtonStyleDarkOrange);
 		(*clearBtn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)clearBtn);
 
-		allClearBtn = createButton(110, 150, 80, 60, &calculatorFactory);
+		allClearBtn = createButton(110, 150, 80, 60, &calculatorFactory, null);
 		(*allClearBtn).initButton(allClearBtn, "AC", 2, ButtonStyleDarkOrange);
 		(*allClearBtn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)allClearBtn);
 
-		backBtn = createButton(210, 150, 80, 60, &calculatorFactory);
+		backBtn = createButton(210, 150, 80, 60, &calculatorFactory, null);
 		(*backBtn).initButton(backBtn, "<", 1, ButtonStyleDarkOrange);
 		(*backBtn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)backBtn);
 
-		num1Btn = createButton(10, 220, 80, 60, &calculatorFactory);
+		num1Btn = createButton(10, 220, 80, 60, &calculatorFactory, null);
 		(*num1Btn).initButton(num1Btn, "1", 1, ButtonStyleLightGray);
 		(*num1Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num1Btn);
 
-		num2Btn = createButton(110, 220, 80, 60, &calculatorFactory);
+		num2Btn = createButton(110, 220, 80, 60, &calculatorFactory, null);
 		(*num2Btn).initButton(num2Btn, "2", 1, ButtonStyleLightGray);
 		(*num2Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num2Btn);
 
-		num3Btn = createButton(210, 220, 80, 60, &calculatorFactory);
+		num3Btn = createButton(210, 220, 80, 60, &calculatorFactory, null);
 		(*num3Btn).initButton(num3Btn, "3", 1, ButtonStyleLightGray);
 		(*num3Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num3Btn);
 
-		num4Btn = createButton(10, 290, 80, 60, &calculatorFactory);
+		num4Btn = createButton(10, 290, 80, 60, &calculatorFactory, null);
 		(*num4Btn).initButton(num4Btn, "4", 1, ButtonStyleLightGray);
 		(*num4Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num4Btn);
 
-		num5Btn = createButton(110, 290, 80, 60, &calculatorFactory);
+		num5Btn = createButton(110, 290, 80, 60, &calculatorFactory, null);
 		(*num5Btn).initButton(num5Btn, "5", 1, ButtonStyleLightGray);
 		(*num5Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num5Btn);
 
-		num6Btn = createButton(210, 290, 80, 60, &calculatorFactory);
+		num6Btn = createButton(210, 290, 80, 60, &calculatorFactory, null);
 		(*num6Btn).initButton(num6Btn, "6", 1, ButtonStyleLightGray);
 		(*num6Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num6Btn);
 
-		num7Btn = createButton(10, 360, 80, 60, &calculatorFactory);
+		num7Btn = createButton(10, 360, 80, 60, &calculatorFactory, null);
 		(*num7Btn).initButton(num7Btn, "7", 1, ButtonStyleLightGray);
 		(*num7Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num7Btn);
 
-		num8Btn = createButton(110, 360, 80, 60, &calculatorFactory);
+		num8Btn = createButton(110, 360, 80, 60, &calculatorFactory, null);
 		(*num8Btn).initButton(num8Btn, "8", 1, ButtonStyleLightGray);
 		(*num8Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num8Btn);
 
-		num9Btn = createButton(210, 360, 80, 60, &calculatorFactory);
+		num9Btn = createButton(210, 360, 80, 60, &calculatorFactory, null);
 		(*num9Btn).initButton(num9Btn, "9", 1, ButtonStyleLightGray);
 		(*num9Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num9Btn);
 
-		num0Btn = createButton(10, 430, 80, 60, &calculatorFactory);
+		num0Btn = createButton(10, 430, 80, 60, &calculatorFactory, null);
 		(*num0Btn).initButton(num0Btn, "0", 1, ButtonStyleLightGray);
 		(*num0Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num0Btn);
 
-		num00Btn = createButton(110, 430, 180, 60, &calculatorFactory);
+		num00Btn = createButton(110, 430, 180, 60, &calculatorFactory, null);
 		(*num00Btn).initButton(num00Btn, "00", 2, ButtonStyleLightGray);
 		(*num00Btn).onMouseClick = numBtnClick;
 		(*mainView).addSubView(mainView, (View *)num00Btn);
 
-		plusBtn = createButton(310, 150, 80, 60, &calculatorFactory);
+		plusBtn = createButton(310, 150, 80, 60, &calculatorFactory, null);
 		(*plusBtn).initButton(plusBtn, "+", 1, ButtonStyleDarkBlue);
 		(*plusBtn).onMouseClick = operBtnClick;
 		(*mainView).addSubView(mainView, (View *)plusBtn);
 
-		minusBtn = createButton(310, 220, 80, 60, &calculatorFactory);
+		minusBtn = createButton(310, 220, 80, 60, &calculatorFactory, null);
 		(*minusBtn).initButton(minusBtn, "-", 1, ButtonStyleDarkBlue);
 		(*minusBtn).onMouseClick = operBtnClick;
 		(*mainView).addSubView(mainView, (View *)minusBtn);
 
-		multiplyBtn = createButton(310, 290, 80, 60, &calculatorFactory);
+		multiplyBtn = createButton(310, 290, 80, 60, &calculatorFactory, null);
 		(*multiplyBtn).initButton(multiplyBtn, "*", 1, ButtonStyleDarkBlue);
 		(*multiplyBtn).onMouseClick = operBtnClick;
 		(*mainView).addSubView(mainView, (View *)multiplyBtn);
 
-		divisionBtn = createButton(310, 360, 80, 60, &calculatorFactory);
+		divisionBtn = createButton(310, 360, 80, 60, &calculatorFactory, null);
 		(*divisionBtn).initButton(divisionBtn, "/", 1, ButtonStyleDarkBlue);
 		(*divisionBtn).onMouseClick = operBtnClick;
 		(*mainView).addSubView(mainView, (View *)divisionBtn);
 
-		equalityBtn = createButton(310, 430, 80, 60, &calculatorFactory);
+		equalityBtn = createButton(310, 430, 80, 60, &calculatorFactory, null);
 		(*equalityBtn).initButton(equalityBtn, "=", 1, ButtonStyleDarkRed);
 		(*equalityBtn).onMouseClick = operBtnClick;
 		(*mainView).addSubView(mainView, (View *)equalityBtn);

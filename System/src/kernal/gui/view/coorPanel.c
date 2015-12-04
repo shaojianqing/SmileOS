@@ -108,12 +108,17 @@ void drawFirstLine(CoorPanel *this)
 	color.red = 160;
     color.green = 160;
     color.blue = 240;
+
+	Color shadowColor;
+	shadowColor.red = 160;
+    shadowColor.green = 160;
+    shadowColor.blue = 240;
 	
 	drawLine((*this).canvas, 10, 10, 300, 400, color, LINE_BOLD);
 
 	drawLine((*this).canvas, 10, 10, 700, 200, color, LINE_BOLD);
 
-	printString((*this).canvas, "y=2*x-8", 7, 600, 160, color);
+	printString((*this).canvas, "y=2*x-8", 7, 600, 160, color, shadowColor);
 
 	View *canvas = (*this).canvas;
 	(*canvas).refreshRectView(canvas);

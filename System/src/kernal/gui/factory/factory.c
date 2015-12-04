@@ -1,5 +1,6 @@
 #include "../../const/const.h"
 #include "../../type/type.h"
+#include "../image.h"
 #include "../color.h"
 #include "../corner.h"
 #include "../view/view.h"

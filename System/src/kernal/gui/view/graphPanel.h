@@ -1,4 +1,8 @@
 
+#define ORIGIN_X			10
+
+#define ORIGIN_Y			10
+
 typedef struct GraphPanel GraphPanel;
 
 typedef struct GraphPanel
@@ -14,5 +18,3 @@ typedef struct GraphPanel
 } GraphPanel;
 
 GraphPanel *createGraphPanel(int x, int y, int w, int h);
-
-void initGraphPanel(GraphPanel *this);

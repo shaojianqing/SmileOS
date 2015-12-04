@@ -7,7 +7,11 @@
 #include "execute.h"
 #include "application.h"
 
-void prepareProcessLdt(Process *process, int codeSize, int dataSize, int stackSize);
+void prepareProcessLdt(Process *process, u32 codeSize, u32 dataSize, u32 stackSize);
+
+void prepareProcessTss(Process *process, u32 startAddr, u32 codeSize, u32 dataSize, u32 stackSize);
+
+void prepareProcessPage(u32 startAddr, u32 totalSize, u32 codeSize, u32 dataSize, u32 stackSize, u32 heapSize, u32 pageDirSize, u32 pageSize);
 
 Application *createApplication(ExecutableFile *executableFile)
 {
@@ -16,29 +20,34 @@ Application *createApplication(ExecutableFile *executableFile)
 		ElfProgramHeader *dataHeader = (*executableFile).dataHeader;
 		ElfProgramHeader *stackHeader = (*executableFile).stackHeader;
 		
-		u32 codeSize = (((*codeHeader).memorySize+0x1000) & 0xFFFFF000);
-		u32 dataSize = (((*dataHeader).memorySize+0x1000) & 0xFFFFF000);
+		u32 codeSize = (((*codeHeader).memorySize+0xFFF) & 0xFFFFF000);
+		u32 dataSize = (((*dataHeader).memorySize+0xFFF) & 0xFFFFF000);
 		u32 stackSize = APP_STACK_SIZE + APP_TAIL_SIZE;
+		u32 pageDirSize = APP_PAGE_DIR_SIZE;
+		u32 pageSize = APP_PAGE_SIZE;
+		u32 heapSize = APP_HEAP_SIZE;		
 
-		u32 totalSize = codeSize + dataSize + stackSize;
+		u32 totalSize = codeSize + dataSize + stackSize + heapSize + pageDirSize + pageSize;
 		u32 startAddr = allocPage(totalSize);
-		u32 startBase = ((startAddr+0x1000) & 0xFFFFF000);
 		
-		u32 pageNo = startBase/0x1000;
-
-		showIntegerValue(startAddr, 100, 100);
-
-		showIntegerValue(startBase, 100, 160);
-
-		showIntegerValue(pageNo, 100, 220);
-		
-		Application *application = (Application *)allocPage(sizeof(Application));
-		(*application).startBase = startBase;
+		Application *application = (Application *)alloc(sizeof(Application));
 		(*application).startAddr = startAddr;
 		(*application).totalSize = totalSize;
+
+		u8 *codeDest = (u8 *)(startAddr + pageDirSize + pageSize);
+		u8 *dataDest = (u8 *)(startAddr + pageDirSize + pageSize + codeSize);
+
+		u8 *codeSource = (u8 *)((*executableFile).executeBuffer + (*codeHeader).offset);
+		u8 *dataSource = (u8 *)((*executableFile).executeBuffer + (*dataHeader).offset);
+
+		memoryCopy(codeSource, codeDest, codeSize);
+		memoryCopy(dataSource, dataDest, dataSize);
+
 		Process *process = requestProcess();
+		prepareProcessPage(startAddr, totalSize, codeSize, dataSize, stackSize, heapSize, pageDirSize, pageSize);
 		prepareProcessLdt(process, codeSize, dataSize, stackSize);
-		(*application).process = process;
+		prepareProcessTss(process, startAddr, codeSize, dataSize, stackSize);
+		(*application).process = process;	
 
 		return application;			
 	}
@@ -47,15 +56,51 @@ Application *createApplication(ExecutableFile *executableFile)
 void startApplication(Application *application)
 {
 	if (application != null) {
-			
+		startRunProcess((*application).process, 4);
 	}
 }
 
-void prepareProcessLdt(Process *process, int codeSize, int dataSize, int stackSize)
+void prepareProcessPage(u32 startAddr, u32 totalSize, u32 codeSize, u32 dataSize, u32 stackSize, u32 heapSize, u32 pageDirSize, u32 pageSize)
 {
-	if (process != null) {
-		setLocalDescriptor((int)&(*process).ldt, CODE_SELECTOR, codeSize, 0x00000000, DA_C);
-		setLocalDescriptor((int)&(*process).ldt, DATA_SELECTOR, dataSize, 0x00000000, DA_DRW);
-		setLocalDescriptor((int)&(*process).ldt, STACK_SELECTOR, stackSize, 0x00000000, DA_DRWA);
+	u32 i=0;
+	u32 pageNum = totalSize/PAGE_DIR_SIZE;
+	if (totalSize%PAGE_DIR_SIZE==0) {
+		pageNum = totalSize/PAGE_DIR_SIZE;
+	} else {
+		pageNum = totalSize/PAGE_DIR_SIZE+1;
+	}
+	u32 *pdtb = (u32 *)startAddr;	
+	for (i=0;i<pageNum;++i) {
+		*(pdtb+i) = startAddr + pageDirSize + i*PAGE_SIZE + APP_PAGE_ATTR;
+	}	
+	
+	u32 *pageBase = (u32 *)(startAddr + pageDirSize);
+	for (i=0;i<1024;++i) {
+		*(pageBase+i) = startAddr + pageDirSize + pageSize + i*PAGE_SIZE + APP_PAGE_ATTR;
 	}
 }
+
+void prepareProcessLdt(Process *process, u32 codeSize, u32 dataSize, u32 stackSize)
+{
+	if (process != null) {
+		setLocalDescriptor((u32)&(*process).ldt, CODE_SELECTOR, 0xFFFFF, 0x00000000, DA_C|DA_32_4K);
+		setLocalDescriptor((u32)&(*process).ldt, DATA_SELECTOR, 0xFFFFF, 0x00000000, DA_DRW|DA_32_4K);
+		setLocalDescriptor((u32)&(*process).ldt, STACK_SELECTOR, stackSize, 0x00000000, DA_DRWA|DA_32_4K);
+	}
+}
+
+void prepareProcessTss(Process *process, u32 startAddr, u32 codeSize, u32 dataSize, u32 stackSize) 
+{
+	if (process != null) {
+		(*process).tss.esp = (startAddr + codeSize + dataSize + stackSize);
+		(*process).tss.eip = APP_START_ADDR;		
+		(*process).tss.cs = 0 * 8 + 4;		
+		(*process).tss.ds = 1 * 8 + 4;
+		(*process).tss.es = 1 * 8 + 4;
+		(*process).tss.fs = 1 * 8 + 4;
+		(*process).tss.gs = 1 * 8 + 4;
+		(*process).tss.ss = 2 * 8 + 4;
+		(*process).tss.cr3 = startAddr;
+	}
+}
+

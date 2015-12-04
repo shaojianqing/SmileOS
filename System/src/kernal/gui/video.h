@@ -1,4 +1,4 @@
-#define			VIDEO_INFO_BASE			0x20800
+#define			VIDEO_INFO_BASE			0x21800
 
 typedef struct VideoModeInfo
 {

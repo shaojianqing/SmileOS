@@ -7,4 +7,6 @@ void showBufferData(char *buffer);
 
 void showMemoryTable();
 
+void showLetter(int x, int y);
+
 

@@ -87,12 +87,17 @@ void prepareWindowSheetCmd(Sheet *sheet)
         textColor.green = 0x55;
         textColor.blue = 0x55;
 
+		Color shadowColor;
+        shadowColor.red = 0x55;
+        shadowColor.green = 0x55;
+        shadowColor.blue = 0x55;
+
         drawCornerRect((*sheet).buffer, sheet, 0, 0, (*sheet).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect((*sheet).buffer, sheet, 1, 1, (*sheet).width-2, 20, startColor, endColor, corner);
         //drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 539, mainBgColor);
         //drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-2, 538, mainColor);
 
-		printString(sheet, "Command", 8, 370, 4, textColor);
+		printString(sheet, "Command", 8, 370, 4, textColor, shadowColor);
     }
 }
 

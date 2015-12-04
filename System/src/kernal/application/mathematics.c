@@ -129,33 +129,38 @@ void prepareWindowSheetMath(Sheet *sheet)
         textColor.green = 0x55;
         textColor.blue = 0x55;
 
+		Color shadowColor;
+        shadowColor.red = 0x55;
+        shadowColor.green = 0x55;
+        shadowColor.blue = 0x55;
+
         drawCornerRect(mainView, 0, 0, (*mainView).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect(mainView, 1, 1, (*mainView).width-2, 20, startColor, endColor, corner, DIRECTION_UP);
         drawRect(mainView, 0, 21, (*mainView).width, 540, mainBgColor);
 		drawRect(mainView, 1, 21, (*mainView).width-2, 538, mainColor);
 
-		printString(mainView, "Mathematics", 12, 350, 4, textColor);
+		printString(mainView, "Mathematics", 12, 350, 4, textColor, shadowColor);
 
 		coorPanel = createCoorPanel(5, 60, 790, 494);
 		(*mainView).addSubView(mainView, (View *)coorPanel);
 		(*mainView).addSubView(mainView, (*coorPanel).canvas);
 
-		linearBtn = createButton(5, 24, 120, 32, &mathematicsFactory);
+		linearBtn = createButton(5, 24, 120, 32, &mathematicsFactory, null);
 		(*linearBtn).initButton(linearBtn, "Linear", 6, ButtonStyleLightGray);
 		(*linearBtn).onMouseClick = onLinearBtnClick;
 		(*mainView).addSubView(mainView, (View *)linearBtn);
 
-		quadraticBtn = createButton(130, 24, 120, 32, &mathematicsFactory);
+		quadraticBtn = createButton(130, 24, 120, 32, &mathematicsFactory, null);
 		(*quadraticBtn).initButton(quadraticBtn, "Quadratic", 9, ButtonStyleLightGray);
 		(*quadraticBtn).onMouseClick = onQuadraticBtnClick;
 		(*mainView).addSubView(mainView, (View *)quadraticBtn);
 
-		circleBtn = createButton(255, 24, 120, 32, &mathematicsFactory);
+		circleBtn = createButton(255, 24, 120, 32, &mathematicsFactory, null);
 		(*circleBtn).initButton(circleBtn, "Circle", 6, ButtonStyleLightGray);
 		(*circleBtn).onMouseClick = onCircleBtnClick;
 		(*mainView).addSubView(mainView, (View *)circleBtn);
 
-		ellipseBtn = createButton(380, 24, 120, 32, &mathematicsFactory);
+		ellipseBtn = createButton(380, 24, 120, 32, &mathematicsFactory, null);
 		(*ellipseBtn).initButton(ellipseBtn, "Ellipse", 7, ButtonStyleLightGray);
 		(*ellipseBtn).onMouseClick = onEllipseBtnClick;
 		(*mainView).addSubView(mainView, (View *)ellipseBtn);
@@ -188,12 +193,17 @@ void drawLinearFunction(CoorPanel *coorPanel)
         linearColor.green = 180;
         linearColor.blue = 250;
 
+		Color shadowColor;
+        shadowColor.red = 120;
+        shadowColor.green = 180;
+        shadowColor.blue = 250;
+
 		int x=0, y=0;		
 		for (x=-400;x<=400;++x) {
 			y=x-80;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "y=x-80", 6, 560, 160, linearColor);
+		printString(canvas, "y=x-80", 6, 560, 160, linearColor, shadowColor);
 
 		linearColor.red = 150;
         linearColor.green = 10;
@@ -203,7 +213,7 @@ void drawLinearFunction(CoorPanel *coorPanel)
 			y=x;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "y=x", 3, 470, 160, linearColor);
+		printString(canvas, "y=x", 3, 470, 160, linearColor, shadowColor);
 
         linearColor.red = 180;
         linearColor.green = 160;
@@ -213,7 +223,7 @@ void drawLinearFunction(CoorPanel *coorPanel)
 			y=100;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "y=100", 6, 200, 160, linearColor);
+		printString(canvas, "y=100", 6, 200, 160, linearColor, shadowColor);
 
 		linearColor.red = 240;
         linearColor.green = 100;
@@ -223,7 +233,7 @@ void drawLinearFunction(CoorPanel *coorPanel)
 			x=-100;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "x=-100", 6, 300, 440, linearColor);
+		printString(canvas, "x=-100", 6, 300, 440, linearColor, shadowColor);
 
 		linearColor.red = 60;
         linearColor.green = 200;
@@ -233,7 +243,7 @@ void drawLinearFunction(CoorPanel *coorPanel)
 			y=80-x;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "y=80-x", 6, 550, 300, linearColor);
+		printString(canvas, "y=80-x", 6, 550, 300, linearColor, shadowColor);
 
 		linearColor.red = 255;
         linearColor.green = 10;
@@ -243,7 +253,7 @@ void drawLinearFunction(CoorPanel *coorPanel)
 			y=-x;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "y=-x", 4, 470, 300, linearColor);
+		printString(canvas, "y=-x", 4, 470, 300, linearColor, shadowColor);
 
 		View *view = (View *)coorPanel;
 		(*view).refreshRectView(view);
@@ -262,12 +272,17 @@ void drawQuadraticFunction(CoorPanel *coorPanel)
         linearColor.green = 180;
         linearColor.blue = 250;
 
+		Color shadowColor;
+        shadowColor.red = 120;
+        shadowColor.green = 180;
+        shadowColor.blue = 250;
+
 		int x=0, y=0;		
 		for (x=-400;x<=400;++x) {
 			y=x*x/200+x-100;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "y=x*x/200+x-100", 15, 60, 100, linearColor);
+		printString(canvas, "y=x*x/200+x-100", 15, 60, 100, linearColor, shadowColor);
 
 		linearColor.red = 20;
         linearColor.green = 180;
@@ -277,7 +292,7 @@ void drawQuadraticFunction(CoorPanel *coorPanel)
 			y=x*x/200-x-100;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "y=x*x/200-x-100", 15, 570, 360, linearColor);
+		printString(canvas, "y=x*x/200-x-100", 15, 570, 360, linearColor, shadowColor);
 
 		linearColor.red = 250;
         linearColor.green = 120;
@@ -287,7 +302,7 @@ void drawQuadraticFunction(CoorPanel *coorPanel)
 			y=100-x*x/200+x;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "y=100-x*x/200+x", 15, 570, 100, linearColor);
+		printString(canvas, "y=100-x*x/200+x", 15, 570, 100, linearColor, shadowColor);
 		
 		linearColor.red = 255;
         linearColor.green = 20;
@@ -297,7 +312,7 @@ void drawQuadraticFunction(CoorPanel *coorPanel)
 			y=100-x*x/200-x;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "y=100-x*x/200-x", 15, 60, 380, linearColor);
+		printString(canvas, "y=100-x*x/200-x", 15, 60, 380, linearColor, shadowColor);
 		
 		linearColor.red = 255;
         linearColor.green = 80;
@@ -307,7 +322,7 @@ void drawQuadraticFunction(CoorPanel *coorPanel)
 			x=-100;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "x=-100", 6, 300, 300, linearColor);
+		printString(canvas, "x=-100", 6, 300, 300, linearColor, shadowColor);
 
 		linearColor.red = 150;
         linearColor.green = 0;
@@ -317,7 +332,7 @@ void drawQuadraticFunction(CoorPanel *coorPanel)
 			x=100;
 			drawCoorPoint(canvas, x, y, linearColor);	
 		}
-		printString(canvas, "x=100", 5, 500, 300, linearColor);
+		printString(canvas, "x=100", 5, 500, 300, linearColor, shadowColor);
 
 		View *view = (View *)coorPanel;
 		(*view).refreshRectView(view);
@@ -336,6 +351,11 @@ void drawCircleFunction(CoorPanel *coorPanel)
         linearColor.green = 10;
         linearColor.blue = 200;
 
+		Color shadowColor;
+        shadowColor.red = 255;
+        shadowColor.green = 10;
+        shadowColor.blue = 200;
+
 		int x=0, y=0;		
 		for (x=-160;x<=160;++x) {
 			for (y=-160;y<=160;++y) {
@@ -344,7 +364,7 @@ void drawCircleFunction(CoorPanel *coorPanel)
 				}				
 			}			
 		}
-		printString(canvas, "x^2+y^2=160^160", 15, 540, 160, linearColor);
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 160, linearColor, shadowColor);
 
 		linearColor.red = 20;
         linearColor.green = 220;
@@ -357,7 +377,7 @@ void drawCircleFunction(CoorPanel *coorPanel)
 				}				
 			}			
 		}
-		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor, shadowColor);
 
 		linearColor.red = 20;
         linearColor.green = 220;
@@ -370,7 +390,7 @@ void drawCircleFunction(CoorPanel *coorPanel)
 				}				
 			}			
 		}
-		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor, shadowColor);
 
 		linearColor.red = 20;
         linearColor.green = 220;
@@ -383,7 +403,7 @@ void drawCircleFunction(CoorPanel *coorPanel)
 				}				
 			}			
 		}
-		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor, shadowColor);
 
 		linearColor.red = 20;
         linearColor.green = 220;
@@ -396,7 +416,7 @@ void drawCircleFunction(CoorPanel *coorPanel)
 				}				
 			}			
 		}
-		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor, shadowColor);
 
 		linearColor.red = 20;
         linearColor.green = 80;
@@ -409,7 +429,7 @@ void drawCircleFunction(CoorPanel *coorPanel)
 				}				
 			}			
 		}
-		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
+		printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor, shadowColor);
 
 		View *view = (View *)coorPanel;
 		(*view).refreshRectView(view);
@@ -436,7 +456,6 @@ void drawEillpseFunction(CoorPanel *coorPanel)
 				}				
 			}			
 		}
-		//printString(canvas, "x^2+y^2=160^160", 15, 540, 160, linearColor);
 
 		linearColor.red = 20;
         linearColor.green = 220;
@@ -449,8 +468,6 @@ void drawEillpseFunction(CoorPanel *coorPanel)
 				}				
 			}			
 		}
-		
-		//printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor);
 
 		View *view = (View *)coorPanel;
 		(*view).refreshRectView(view);

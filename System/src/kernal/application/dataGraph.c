@@ -1,5 +1,6 @@
 #include "../const/const.h"
 #include "../type/type.h"
+#include "../gui/resource.h"
 #include "../gui/color.h"
 #include "../gui/corner.h"
 #include "../gui/sheet.h"
@@ -13,11 +14,16 @@
 #include "../gui/factory/factory.h"
 #include "../gui/view/button.h"
 #include "../gui/view/graphPanel.h"
+#include "dataSetting.h"
 #include "dataGraph.h"
 
 Button *barGraphBtn;
 
 Button *lineGraphBtn;
+
+Button *hybridGraphBtn;
+
+Button *financeGraphBtn;
 
 GraphPanel *graphPanel;
 
@@ -28,6 +34,10 @@ extern Process *dataGraphProcess;
 void onBarGraphBtnClick(Button *this, MouseEvent *event);
 
 void onLineGraphBtnClick(Button *this, MouseEvent *event);
+
+void onHybridGraphBtnClick(Button *this, MouseEvent *event);
+
+void onFinanceGraphBtnClick(Button *this, MouseEvent *event);
 
 void drawBarGraph(GraphPanel *this);
 
@@ -116,59 +126,45 @@ void prepareWindowSheetGraph(Sheet *sheet)
         textColor.green = 0x55;
         textColor.blue = 0x55;
 
+		Color shadowColor;
+        shadowColor.red = 0x55;
+        shadowColor.green = 0x55;
+        shadowColor.blue = 0x55;
+
        	drawCornerRect(mainView, 0, 0, (*mainView).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect(mainView, 1, 1, (*mainView).width-2, 20, startColor, endColor, corner, DIRECTION_UP);
         drawRect(mainView, 0, 21, (*mainView).width, 540, mainBgColor);
 		drawRect(mainView, 1, 21, (*mainView).width-2, 538, mainColor);
 
-		printString(mainView, "DataGraph", 9, 350, 4, textColor);
+		printString(mainView, "DataGraph", 9, 350, 4, textColor, shadowColor);
 
 		graphPanel = createGraphPanel(5, 60, 790, 494);
 		(*mainView).addSubView(mainView, (View *)graphPanel);
 		(*mainView).addSubView(mainView, (*graphPanel).canvas);
 
-		barGraphBtn = createButton(5, 24, 120, 32, &dataGraphFactory);
+		Image *image = (Image *)loadImageFromStorage(ico_btn_bar_graph);
+		barGraphBtn = createButton(5, 24, 140, 32, &dataGraphFactory, image);
 		(*barGraphBtn).initButton(barGraphBtn, "Bar Graph", 9, ButtonStyleLightGray);
 		(*barGraphBtn).onMouseClick = onBarGraphBtnClick;
 		(*mainView).addSubView(mainView, (View *)barGraphBtn);
 
-		lineGraphBtn = createButton(130, 24, 120, 32, &dataGraphFactory);
+		lineGraphBtn = createButton(150, 24, 140, 32, &dataGraphFactory, null);
 		(*lineGraphBtn).initButton(lineGraphBtn, "Line Graph", 10, ButtonStyleLightGray);
 		(*lineGraphBtn).onMouseClick = onLineGraphBtnClick;
 		(*mainView).addSubView(mainView, (View *)lineGraphBtn);
 
+		hybridGraphBtn = createButton(295, 24, 140, 32, &dataGraphFactory, null);
+		(*hybridGraphBtn).initButton(hybridGraphBtn, "Hybrid Graph", 12, ButtonStyleLightGray);
+		(*hybridGraphBtn).onMouseClick = onHybridGraphBtnClick;
+		(*mainView).addSubView(mainView, (View *)hybridGraphBtn);
+
+		financeGraphBtn = createButton(440, 24, 140, 32, &dataGraphFactory, null);
+		(*financeGraphBtn).initButton(financeGraphBtn, "Stack Graph", 11, ButtonStyleLightGray);
+		(*financeGraphBtn).onMouseClick = onFinanceGraphBtnClick;
+		(*mainView).addSubView(mainView, (View *)financeGraphBtn);
+
 		loadContentView(sheet, mainView);	
     }
-}
-
-void drawBarGraph(GraphPanel *this)
-{
-	if (this!=null && (*this).canvas!=null) {
-		View *canvas = (*this).canvas;
-		(*canvas).clearView(canvas);
-		
-		Color startColor;
-		startColor.red = 60;
-    	startColor.green = 140;
-    	startColor.blue = 210;
-
-		Color endColor;
-		endColor.red = 100;
-    	endColor.green = 180;
-    	endColor.blue = 250;
-
-		Corner corner;
-		corner.leftTop = 2;
-		corner.rightTop = 2;
-		corner.leftBtm = 2;
-		corner.rightBtm = 2;
-
-		drawGradualHorizontalCornerRect(canvas, 100, 100, 40, 360, startColor, endColor, corner, DIRECTION_UP);
-
-		View *view = (View *)graphPanel;
-		(*view).refreshRectView(view);
-		(*canvas).refreshRectView(canvas);
-	}
 }
 
 void onBarGraphBtnClick(Button *this, MouseEvent *event)
@@ -179,7 +175,21 @@ void onBarGraphBtnClick(Button *this, MouseEvent *event)
 
 void onLineGraphBtnClick(Button *this, MouseEvent *event)
 {
-	showIntegerValue(3663, 100, 50);
+	(*graphPanel).drawGraph = drawLineGraph;
+	(*graphPanel).drawGraph(graphPanel);
 }
 
+void onHybridGraphBtnClick(Button *this, MouseEvent *event)
+{
+	(*graphPanel).drawGraph = drawBarGraph;
+	(*graphPanel).drawGraph(graphPanel);
+	(*graphPanel).drawGraph = drawLineGraph;
+	(*graphPanel).drawGraph(graphPanel);
+}
+
+void onFinanceGraphBtnClick(Button *this, MouseEvent *event)
+{
+	(*graphPanel).drawGraph = drawLineGraph;
+	(*graphPanel).drawGraph(graphPanel);
+}
 

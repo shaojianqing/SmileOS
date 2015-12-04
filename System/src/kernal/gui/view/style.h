@@ -13,6 +13,8 @@ typedef struct ButtonStyle
 
 	Color textColor; 
 
+	Color shadowColor;
+
 	Corner corner;
 
 } ButtonStyle;

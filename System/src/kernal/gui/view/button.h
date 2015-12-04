@@ -15,6 +15,8 @@ typedef struct Button
 
 	int length;
 
+	Image *image;
+
 	Factory *factory;
 
 	ButtonStyleType buttonStyleType;
@@ -29,6 +31,6 @@ typedef struct Button
 
 } Button;
 
-Button *createButton(int x, int y, int w, int h, Factory *factory);
+Button *createButton(int x, int y, int w, int h, Factory *factory, Image *image);
 
 void initButton(Button *this, char *text, int length, ButtonStyleType buttonStyleType);

@@ -3,94 +3,67 @@
 #include "view/view.h"
 #include "charset.h"
 
-void printChar(View *view, u8 c, int x, int y, Color color)
+void printChar(View *view, u8 c, int x, int y, Color mainColor, Color shadowColor)
 {
-    u8 d;
-    int i=0;
+    u8 data = 0;
+    u32 i=0, j=0;
     u8 *buffer = (*view).buffer;
-    u8 *pos = (u8 *)(CHARSET_DATA_BASE + (int)c*16);
-    for (i=0; i<16; ++i) {
-        int p = ((y + i)*(*view).width + x)*3;
-        d = *(pos + i);
-        if (d & 0x80) {
-            *(buffer + p) = color.blue;
-            *(buffer + p + 1) = color.green;
-            *(buffer + p + 2) = color.red;
-        }
-        if (d & 0x40) {
-            *(buffer + p + 3) = color.blue;
-            *(buffer + p + 4) = color.green;
-            *(buffer + p + 5) = color.red;
-        }
-        if (d & 0x20) {
-            *(buffer + p + 6) = color.blue;
-            *(buffer + p + 7) = color.green;
-            *(buffer + p + 8) = color.red;
-        }
-        if (d & 0x10) {
-            *(buffer + p + 9) = color.blue;
-            *(buffer + p + 10) = color.green;
-            *(buffer + p + 11) = color.red;
-        }
-        if (d & 0x08) {
-            *(buffer + p + 12) = color.blue;
-            *(buffer + p + 13) = color.green;
-            *(buffer + p + 14) = color.red;
-        }
-        if (d & 0x04) {
-            *(buffer + p + 15) = color.blue;
-            *(buffer + p + 16) = color.green;
-            *(buffer + p + 17) = color.red;
-        }
-        if (d & 0x02) {
-            *(buffer + p + 18) = color.blue;
-            *(buffer + p + 19) = color.green;
-            *(buffer + p + 20) = color.red;
-        }
-        if (d & 0x01) {
-            *(buffer + p + 21) = color.blue;
-            *(buffer + p + 22) = color.green;
-            *(buffer + p + 23) = color.red;
-        }
+	u32 point = 0;
+    u8 *pos = (u8 *)(CHARSET_DATA_BASE + (u32)c*CHARSET_HEIGHT*CHARSET_WIDTH);
+    for (i=0; i<CHARSET_HEIGHT; ++i) {
+		for (j=0; j<CHARSET_WIDTH; ++j) {
+			data = *(pos + i*CHARSET_WIDTH + j);
+			if (data=='*') {
+				point = ((y + i)*(*view).width + x + j)*3;
+				*(buffer + point) = mainColor.blue;
+            	*(buffer + point + 1) = mainColor.green;
+            	*(buffer + point + 2) = mainColor.red;
+			} else if (data=='~') {
+				point = ((y + i)*(*view).width + x + j)*3;
+				*(buffer + point) = shadowColor.blue;
+            	*(buffer + point + 1) = shadowColor.green;
+            	*(buffer + point + 2) = shadowColor.red;		
+			}	
+		}
     }
 }
 
-void printString(View *view, char *string, int size, int x, int y, Color color) {
+void printString(View *view, char *string, int size, int x, int y, Color mainColor, Color shadowColor) {
    int i=0;
    for (i=0;i<size;++i) {
       char c = *(string + i);
       int p = x + i*8;
-      printChar(view, c, p, y, color);
+      printChar(view, c, p, y, mainColor, shadowColor);
    }
 }
 
-void printInteger(View *view, int value, int x, int y, Color color)
+void printInteger(View *view, int value, int x, int y, Color mainColor, Color shadowColor)
 {
     if (value>0) {
-        printInteger(view, value/10, x-8, y, color);
-        printChar(view, (char)(value%10 + 48), x, y, color);
+        printInteger(view, value/10, x-8, y, mainColor, shadowColor);
+        printChar(view, (char)(value%10 + 48), x, y, mainColor, shadowColor);
     } else if (value == 0) {
-        printChar(view, '0', x, y, color);
+        printChar(view, '0', x, y, mainColor, shadowColor);
     }
 }
 
-void printHexInteger(View *view, int value, int x, int y, Color color) 
+void printHexInteger(View *view, int value, int x, int y, Color mainColor, Color shadowColor) 
 {
 	if (value>0) {
-        printHexInteger(view, value/16, x-8, y, color);
+        printHexInteger(view, value/16, x-8, y, mainColor, shadowColor);
 		int letter = value%16;
 		if (letter<10) {
 			letter+=48;
  		} else {
 			letter+=55;
 		}
-		printChar(view, (char)letter, x, y, color);
+		printChar(view, (char)letter, x, y, mainColor, shadowColor);
     } else {
-		printChar(view, '0', x, y, color);
+		printChar(view, '0', x, y, mainColor, shadowColor);
 	}
 }
 
-void printHexByte(View *view, u8 value, int x, int y, Color color) 
+void printHexByte(View *view, u8 value, int x, int y, Color mainColor, Color shadowColor) 
 {
 		u8 letter = value%16;
 		if (letter<10) {
@@ -98,7 +71,7 @@ void printHexByte(View *view, u8 value, int x, int y, Color color)
  		} else {
 			letter+=87;
 		}
-		printChar(view, (u8)letter, x, y, color);
+		printChar(view, (u8)letter, x, y, mainColor, shadowColor);
 		
 		value /=16;
 		letter = value%16;
@@ -107,92 +80,5 @@ void printHexByte(View *view, u8 value, int x, int y, Color color)
  		} else {
 			letter+=87;
 		}
-		printChar(view, (u8)letter, x-8, y, color);
+		printChar(view, (u8)letter, x-8, y, mainColor, shadowColor);
 }
-
-void printCharTest(u8 *buffer, u8 c, int x, int y, Color color)
-{
-    u8 d;
-    int i=0;
-    u8 *pos = (u8 *)(CHARSET_DATA_BASE + (int)c*16);
-    for (i=0; i<16; ++i) {
-        int p = ((y + i)*1024+x)*3;
-        d = *(pos + i);
-        if (d & 0x80) {
-            *(buffer + p) = color.blue;
-            *(buffer + p + 1) = color.green;
-            *(buffer + p + 2) = color.red;
-        }
-        if (d & 0x40) {
-            *(buffer + p + 3) = color.blue;
-            *(buffer + p + 4) = color.green;
-            *(buffer + p + 5) = color.red;
-        }
-        if (d & 0x20) {
-            *(buffer + p + 6) = color.blue;
-            *(buffer + p + 7) = color.green;
-            *(buffer + p + 8) = color.red;
-        }
-        if (d & 0x10) {
-            *(buffer + p + 9) = color.blue;
-            *(buffer + p + 10) = color.green;
-            *(buffer + p + 11) = color.red;
-        }
-        if (d & 0x08) {
-            *(buffer + p + 12) = color.blue;
-            *(buffer + p + 13) = color.green;
-            *(buffer + p + 14) = color.red;
-        }
-        if (d & 0x04) {
-            *(buffer + p + 15) = color.blue;
-            *(buffer + p + 16) = color.green;
-            *(buffer + p + 17) = color.red;
-        }
-        if (d & 0x02) {
-            *(buffer + p + 18) = color.blue;
-            *(buffer + p + 19) = color.green;
-            *(buffer + p + 20) = color.red;
-        }
-        if (d & 0x01) {
-            *(buffer + p + 21) = color.blue;
-            *(buffer + p + 22) = color.green;
-            *(buffer + p + 23) = color.red;
-        }
-    }
-}
-
-void printHexByteTest(u8 *buffer, u8 value, int x, int y, Color color) 
-{
-		u8 letter = value%16;
-		if (letter<10) {
-			letter+=48;
- 		} else {
-			letter+=87;
-		}
-		printCharTest(buffer, (u8)letter, x, y, color);
-		
-		value /=16;
-		letter = value%16;
-		if (letter<10) {
-			letter+=48;
- 		} else {
-			letter+=87;
-		}
-		printCharTest(buffer, (u8)letter, x-8, y, color);
-}
-
-void printHexIntegerTest(u8 *buffer, int value, int x, int y, Color color)
-{
-	if (value>0) {
-        printHexIntegerTest(buffer, value/16, x-8, y, color);
-		int letter = value%16;
-		if (letter<10) {
-			letter+=48;
- 		} else {
-			letter+=55;
-		}
-		printCharTest(buffer, (char)letter, x, y, color);
-    }
-}
-
-
