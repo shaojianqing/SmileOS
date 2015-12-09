@@ -94,7 +94,11 @@ VIEW = tgt/view.o
 
 TEST = tgt/test.o
 
+IMAGEVIEW = tgt/imageView.o
+
 STARTBUTTON = tgt/startButton.o
+
+IMAGEBUTTON = tgt/imageButton.o
 
 COORPANEL = tgt/coorPanel.o
 
@@ -117,6 +121,29 @@ BGS3 = tgt/bg3.image
 
 BGS4 = tgt/bg4.image
 
+BGS5 = tgt/bg5.image
+
+#Background Resource#
+BGSMALL1 = tgt/bg_small_1.image
+
+BGSMALL2 = tgt/bg_small_2.image
+
+BGSMALL3 = tgt/bg_small_3.image
+
+BGSMALL4 = tgt/bg_small_4.image
+
+BGSMALL5 = tgt/bg_small_5.image
+
+BGMIDDLE1 = tgt/bg_middle_1.image
+
+BGMIDDLE2 = tgt/bg_middle_2.image
+
+BGMIDDLE3 = tgt/bg_middle_3.image
+
+BGMIDDLE4 = tgt/bg_middle_4.image
+
+BGMIDDLE5 = tgt/bg_middle_5.image
+
 #Image Resource#
 APP1 = tgt/ico_app_sys.image
 
@@ -128,8 +155,14 @@ APP4 = tgt/ico_app_cal.image
 
 APP5 = tgt/ico_app_grh.image
 
+APP6 = tgt/ico_app_mat.image
+
 #Icon Resource#
 ICO_BTN_BAR = tgt/ico_btn_bar_graph.image
+
+ICO_BTN_PRO = tgt/ico_btn_sys_process.image
+
+ICO_BTN_BGD = tgt/ico_btn_background.image
 
 #Application Resource#
 COMMAND = tgt/command.o
@@ -141,6 +174,8 @@ CALCU = tgt/calculator.o
 MATHE = tgt/mathematics.o
 
 GRAPH = tgt/dataGraph.o
+
+IMAGEVIEWER = tgt/imageViewer.o
 
 DATA_SETTING = tgt/dataSetting.o
 
@@ -245,7 +280,13 @@ tgt/view.o : src/kernal/gui/view/view.c
 tgt/test.o : src/kernal/gui/test.c
 	$(CC) $(CCFLAGES) $< -o $@
 
+tgt/imageView.o : src/kernal/gui/view/imageView.c
+	$(CC) $(CCFLAGES) $< -o $@
+
 tgt/startButton.o : src/kernal/gui/view/startButton.c
+	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/imageButton.o : src/kernal/gui/view/imageButton.c
 	$(CC) $(CCFLAGES) $< -o $@
 
 tgt/coorPanel.o : src/kernal/gui/view/coorPanel.c
@@ -278,8 +319,8 @@ tgt/ka.o : src/kernal/kernal.asm
 tgt/kc.o : src/kernal/kernal.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(DATA_SETTING) $(STARTBUTTON) $(COORPANEL) $(GRIDPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(GRIDDATAITEM) $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION)
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(DATA_SETTING) $(STARTBUTTON) $(COORPANEL) $(GRIDPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(GRIDDATAITEM) $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION) -o $@
+tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH)  $(DATA_SETTING) $(IMAGEVIEWER) $(STARTBUTTON) $(IMAGEBUTTON) $(IMAGEVIEW) $(COORPANEL) $(GRIDPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(GRIDDATAITEM) $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION)
+	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(DATA_SETTING) $(IMAGEVIEWER) $(STARTBUTTON) $(IMAGEBUTTON) $(IMAGEVIEW) $(COORPANEL) $(GRIDPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(GRIDDATAITEM) $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION) -o $@
 
 tgt/kernal.sys : $(KERNALBIN)
 	$(TRIMELFHEADER) $< $@
@@ -310,6 +351,9 @@ tgt/dataGraph.o : src/kernal/application/dataGraph.c
 
 tgt/dataSetting.o : src/kernal/application/dataSetting.c
 	$(CC) $(CCFLAGES) $< -o $@
+
+tgt/imageViewer.o : src/kernal/application/imageViewer.c
+	$(CC) $(CCFLAGES) $< -o $@
 #---------------------------------------------------------------#
 tgt/systemApi.o :src/kernal/execute/systemApi.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
@@ -335,6 +379,39 @@ tgt/bg3.image : res/background/bg3.bmp
 tgt/bg4.image : res/background/bg4.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1024 768 true
 
+tgt/bg5.image : res/background/bg5.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 1024 768 true
+
+tgt/bg_small_1.image : res/background/bg_small_1.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 120 90 true
+
+tgt/bg_small_2.image : res/background/bg_small_2.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 120 90 true
+
+tgt/bg_small_3.image : res/background/bg_small_3.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 120 90 true
+
+tgt/bg_small_4.image : res/background/bg_small_4.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 120 90 true
+
+tgt/bg_small_5.image : res/background/bg_small_5.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 120 90 true
+
+tgt/bg_middle_1.image : res/background/bg_middle_1.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 600 450 true
+
+tgt/bg_middle_2.image : res/background/bg_middle_2.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 600 450 true
+
+tgt/bg_middle_3.image : res/background/bg_middle_3.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 600 450 true
+
+tgt/bg_middle_4.image : res/background/bg_middle_4.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 600 450 true
+
+tgt/bg_middle_5.image : res/background/bg_middle_5.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 600 450 true
+
 #---------------------------------------------------------------#
 tgt/ico_app_sys.image : res/images/ico_app_sys.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
@@ -351,12 +428,21 @@ tgt/ico_app_cal.image : res/images/ico_app_cal.bmp
 tgt/ico_app_grh.image : res/images/ico_app_grh.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
 
+tgt/ico_app_mat.image : res/images/ico_app_mat.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 80 80 false
+
 #---------------------------------------------------------------#
 tgt/ico_btn_bar_graph.image : res/images/ico_btn_bar_graph.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
 
+tgt/ico_btn_sys_process.image : res/images/ico_btn_sys_process.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
+tgt/ico_btn_background.image : res/images/ico_btn_background.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/browser.elf tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/ico_app_grh.image tgt/ico_btn_bar_graph.image tgt/charset.bin  
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/browser.elf tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/bg5.image tgt/bg_small_1.image tgt/bg_small_2.image tgt/bg_small_3.image tgt/bg_small_4.image tgt/bg_small_5.image tgt/bg_middle_1.image tgt/bg_middle_2.image tgt/bg_middle_3.image tgt/bg_middle_4.image tgt/bg_middle_5.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/ico_app_grh.image tgt/ico_app_mat.image tgt/ico_btn_bar_graph.image tgt/ico_btn_sys_process.image tgt/ico_btn_background.image tgt/charset.bin  
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512
@@ -364,14 +450,29 @@ System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/browser.elf tgt/bg1.
 	$(IMAGETOOL) $(COPYBINARY) $@ $(KERNAL) 36864
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BROWSER) 2097152   #0x1000
 	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_BAR) 4194304  #0x2000
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_PRO) 4196352  #0x2004
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_BGD) 4198400  #0x2008
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS1) 8388608   #0x4000
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS2) 10748928  #0x5202	
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS3) 13109248  #0x6404	
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS4) 15469568  #0x7606
-	$(IMAGETOOL) $(COPYBINARY) $@ $(APP1) 17829888  #0x8808
-	$(IMAGETOOL) $(COPYBINARY) $@ $(APP2) 17849344  #0x882e
-	$(IMAGETOOL) $(COPYBINARY) $@ $(APP3) 17868800  #0x8854
-	$(IMAGETOOL) $(COPYBINARY) $@ $(APP4) 17888256  #0x887a
-	$(IMAGETOOL) $(COPYBINARY) $@ $(APP5) 17907712  #0x88a0
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS5) 17829888  #0x8808
+	$(IMAGETOOL) $(COPYBINARY) $@ $(APP1) 20190208  #0x9a0a
+	$(IMAGETOOL) $(COPYBINARY) $@ $(APP2) 20209664  #0x9a30
+	$(IMAGETOOL) $(COPYBINARY) $@ $(APP3) 20229120  #0x9a56
+	$(IMAGETOOL) $(COPYBINARY) $@ $(APP4) 20248576  #0x9a7c
+	$(IMAGETOOL) $(COPYBINARY) $@ $(APP5) 20268032  #0x9aa2
+	$(IMAGETOOL) $(COPYBINARY) $@ $(APP6) 20287488  #0x9ac8
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGSMALL1) 20971520  #0xa000
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGSMALL2) 21135360  #0xa140
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGSMALL3) 21299200  #0xa280
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGSMALL4) 21463040  #0xa3c0
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGSMALL5) 21626880  #0xa500
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGMIDDLE1) 23068672  #0xb000
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGMIDDLE2) 23879680  #0xb630
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGMIDDLE3) 24690688  #0xbc60
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGMIDDLE4) 25501696  #0xc290
+	$(IMAGETOOL) $(COPYBINARY) $@ $(BGMIDDLE5) 26312704  #0xc8c0
+
 	$(RUN-SYSTEM)
 	

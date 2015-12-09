@@ -11,7 +11,7 @@ typedef struct Button
 
 	bool select;
 
-	char title[16];
+	char *title;
 
 	int length;
 

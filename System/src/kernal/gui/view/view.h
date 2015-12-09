@@ -36,6 +36,8 @@ typedef struct View
 
 	bool (*removeSubView)(View *this, View *view);
 
+	void (*setBackgroundColor)(View *this, Color color);
+
 	void (*clearView)(View *this);
 
 	void (*deleteView)(View *this);
@@ -55,6 +57,8 @@ typedef struct View
 View *createView(int x, int y, int width, int height);
 
 View *initWithViewFunction(View *view, int x, int y, int width, int height);
+
+void refreshViewRect(View *this, int x, int y, int w, int h, int z);
 
 void fillViewToSheetRect(View *this);
 

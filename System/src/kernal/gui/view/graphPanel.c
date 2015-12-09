@@ -1,9 +1,9 @@
 #include "../../const/const.h"
 #include "../../type/type.h"
-#include "view.h"
 #include "../sheet.h"
 #include "../color.h"
 #include "../corner.h"
+#include "view.h"
 #include "../graphics.h"
 #include "graphPanel.h"
 
@@ -65,7 +65,7 @@ static void drawGridView(GraphPanel *this, int width, int height)
 	drawLine((View *)this, width-10, 10, width-10, height-10, color, LINE_THIN);	
 
 	int i=0;
-	for (i=1;i<=12;++i) {
+	for (i=1;i<=11;++i) {
 		drawLine((View *)this, 10, i*40+10, width-10, i*40+10, color, LINE_THIN);	
 	}
 	
@@ -85,7 +85,7 @@ static void drawCoorindate(GraphPanel *this, int width, int height)
 	drawLine((View *)this, 10, 10, 10, height-10, color, LINE_BOLD);
 
 	int i=0;
-	for (i=1;i<=12;++i) {
+	for (i=1;i<=11;++i) {
 		drawLine((View *)this, 10, i*40+10, 14, i*40+10, color, LINE_THIN);	
 	}
 	
@@ -108,6 +108,4 @@ static void drawBorder(GraphPanel *this, int width, int height)
 }
 
 static void onMouseDown(View *this, MouseEvent *event)
-{
-	showIntegerValue(898, 100, 50);
-}
+{}

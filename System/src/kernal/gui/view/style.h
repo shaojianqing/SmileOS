@@ -28,3 +28,5 @@ ButtonStyle* ButtonStyleLightBlue();
 ButtonStyle* ButtonStyleDarkBlue();
 
 ButtonStyle* ButtonStyleDarkOrange();
+
+ButtonStyle* ButtonStyleBlackBlue();

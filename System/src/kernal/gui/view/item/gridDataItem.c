@@ -1,5 +1,6 @@
 #include "../../../const/const.h"
 #include "../../../type/type.h"
+#include "../../color.h"
 #include "../view.h"
 #include "gridDataItem.h"
 

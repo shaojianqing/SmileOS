@@ -10,5 +10,3 @@ typedef struct StartButton
 } StartButton;
 
 StartButton *createStartButton(int x, int y, int w, int h, u32 sector);
-
-void initWithImage(StartButton *this, Image *image);

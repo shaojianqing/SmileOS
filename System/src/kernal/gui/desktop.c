@@ -1,9 +1,10 @@
 #include "../const/const.h"
 #include "../type/type.h"
-#include "view/view.h"
+#include "resource.h"
 #include "sheet.h"
 #include "color.h"
 #include "image.h"
+#include "view/view.h"
 #include "view/startButton.h"
 #include "../execute/execute.h"
 #include "../execute/application.h"
@@ -35,7 +36,7 @@ Sheet* prepareInfoBarSheet(Sheet *sheet);
 
 Sheet* prepareStartBarSheet(Sheet *sheet);
 
-Sheet* prepareBackgroundSheet(Sheet *sheet);
+Sheet* prepareBackgroundSheet(Sheet *sheet, u32 bgCode);
 
 void commandBtnOnMouseDown(View *this, MouseEvent *event);
 
@@ -46,6 +47,8 @@ void imgInfoBtnOnMouseDown(View *this, MouseEvent *event);
 void calculatorBtnOnMouseDown(View *this, MouseEvent *event);
 
 void dataGraphBtnOnMouseDown(View *this, MouseEvent *event);
+
+void mathmaticsBtnOnMouseDown(View *this, MouseEvent *event);
 
 void startLoadExecuteFile();
 
@@ -66,7 +69,7 @@ void initDesktopInfoSheet()
 	
 	background = prepareSheet();
 	(*background).process = kernelProcess;
-    prepareBackgroundSheet(background);	  
+    prepareBackgroundSheet(background, bg_1);	  
     initBackgroundSheet(background);
 
 	infoBarSheet = prepareSheet();
@@ -88,6 +91,13 @@ void initDesktopInfoSheet()
 	(*sheetManager).sheetNum = currentDesktopIndex+3;
 	refreshSheetMap(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     refreshSheetSub(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, currentDesktopIndex+2);
+}
+
+void setBackground(u32 bgCode)
+{
+	prepareBackgroundSheet(background, bgCode);
+	refreshSheetMap(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    refreshSheetSub(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 1);	
 }
 
 void initBackgroundSheet(Sheet *sheet)
@@ -132,7 +142,7 @@ void initInfoBarSheet(Sheet *sheet)
 	}
 }
 
-Sheet* prepareBackgroundSheet(Sheet *sheet)
+Sheet* prepareBackgroundSheet(Sheet *sheet, u32 bgCode)
 {
     if (sheet != 0) {
         (*sheet).x = 0;
@@ -140,10 +150,11 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
         (*sheet).width = SCREEN_WIDTH;
         (*sheet).height = SCREEN_HEIGHT;
 		(*sheet).z = 0;
-        u32 size = SCREEN_WIDTH*SCREEN_HEIGHT*SCREEN_DENSITY+8;
-        Image *bgImage = loadImageFromStorage(0x4000);
-		(*sheet).buffer = (*bgImage).data;		 
-
+        u32 size = SCREEN_WIDTH*SCREEN_HEIGHT*SCREEN_DENSITY;
+		(*sheet).buffer  = (u8 *)allocPage(size);
+        Image *bgImage = loadImageFromStorage(bgCode);	 
+		drawBackround(sheet, bgImage);		
+	
         Color startColor;
         startColor.red = 250;
         startColor.green = 250;
@@ -160,9 +171,9 @@ Sheet* prepareBackgroundSheet(Sheet *sheet)
         sepColor.blue = 240;
 
         drawGradualVerticalRectAlphaInSheet(sheet, 0, 0, SCREEN_WIDTH, 24, startColor, endColor, 160);
-        drawGradualVerticalTrapeziumInSheet(sheet, 62, 680, START_BAR_WIDTH, START_BAR_BG_HEIGHT -5, START_BAR_BG_HEIGHT -5, startColor, endColor, 200);
-        drawRectAlphaInSheet(sheet, 62, 680+START_BAR_BG_HEIGHT -5, START_BAR_WIDTH, 1, sepColor, 240);
-        drawRectAlphaInSheet(sheet, 62, 680+START_BAR_BG_HEIGHT -4, START_BAR_WIDTH, 4, endColor, 200);
+        drawGradualVerticalTrapeziumInSheet(sheet, 112, 680, START_BAR_WIDTH, START_BAR_BG_HEIGHT -5, START_BAR_BG_HEIGHT -5, startColor, endColor, 200);
+        drawRectAlphaInSheet(sheet, 112, 680+START_BAR_BG_HEIGHT -5, START_BAR_WIDTH, 1, sepColor, 240);
+        drawRectAlphaInSheet(sheet, 112, 680+START_BAR_BG_HEIGHT -4, START_BAR_WIDTH, 4, endColor, 200);
     }
 }
 
@@ -192,7 +203,7 @@ Sheet* prepareInfoBarSheet(Sheet *sheet)
 Sheet* prepareStartBarSheet(Sheet *sheet)
 {
     if (sheet!=null) {		
-		(*sheet).x = 62;
+		(*sheet).x = 112;
         (*sheet).y = 640;
         (*sheet).width = START_BAR_WIDTH;
         (*sheet).height = START_BAR_HEIGHT;
@@ -200,25 +211,29 @@ Sheet* prepareStartBarSheet(Sheet *sheet)
 
 		View *startBarConatiner = createView(0, 0, START_BAR_WIDTH, START_BAR_HEIGHT);
 
-		StartButton *systemInfoBtn = createStartButton(740, 10, 80, 80, 0x8808);
+		StartButton *systemInfoBtn = createStartButton(610, 10, 80, 80, ico_app_sys);
 		(*startBarConatiner).addSubView(startBarConatiner, (View *)systemInfoBtn);
 		(*systemInfoBtn).view.onMouseDown = sysInfoBtnOnMouseDown;
 
-		StartButton *commandBtn = createStartButton(640, 10, 80, 80, 0x882e);
+		StartButton *commandBtn = createStartButton(510, 10, 80, 80, ico_app_cmd);
 		(*startBarConatiner).addSubView(startBarConatiner, (View *)commandBtn);
 		(*commandBtn).view.onMouseDown = commandBtnOnMouseDown;
 
-		StartButton *imageInfoBtn = createStartButton(540, 10, 80, 80, 0x8854);
+		StartButton *imageInfoBtn = createStartButton(410, 10, 80, 80, ico_app_img);
 		(*startBarConatiner).addSubView(startBarConatiner, (View *)imageInfoBtn);
 		(*imageInfoBtn).view.onMouseDown = imgInfoBtnOnMouseDown;
 
-		StartButton *calculatorBtn = createStartButton(440, 10, 80, 80, 0x887a);
+		StartButton *calculatorBtn = createStartButton(310, 10, 80, 80, ico_app_cal);
 		(*startBarConatiner).addSubView(startBarConatiner, (View *)calculatorBtn);
 		(*calculatorBtn).view.onMouseDown = calculatorBtnOnMouseDown;
 
-		StartButton *graphDataBtn = createStartButton(340, 10, 80, 80, 0x88a0);
+		StartButton *graphDataBtn = createStartButton(210, 10, 80, 80, ico_app_grh);
 		(*startBarConatiner).addSubView(startBarConatiner, (View *)graphDataBtn);
 		(*graphDataBtn).view.onMouseDown = dataGraphBtnOnMouseDown;
+
+		StartButton *mathmaticsBtn = createStartButton(110, 10, 80, 80, ico_app_mat);
+		(*startBarConatiner).addSubView(startBarConatiner, (View *)mathmaticsBtn);
+		(*mathmaticsBtn).view.onMouseDown = mathmaticsBtnOnMouseDown;
 
 		loadContentView(sheet, startBarConatiner);	
     }
@@ -236,7 +251,7 @@ void commandBtnOnMouseDown(View *this, MouseEvent *event)
 
 void imgInfoBtnOnMouseDown(View *this, MouseEvent *event)
 {	
-	startMathematicsApplication();
+	startImageViewerApplication();
 }
 
 void calculatorBtnOnMouseDown(View *this, MouseEvent *event)
@@ -247,6 +262,11 @@ void calculatorBtnOnMouseDown(View *this, MouseEvent *event)
 void dataGraphBtnOnMouseDown(View *this, MouseEvent *event)
 {
 	startDataGraphApplication();
+}
+
+void mathmaticsBtnOnMouseDown(View *this, MouseEvent *event)
+{
+	startMathematicsApplication();
 }
 
 void startLoadExecuteFile()

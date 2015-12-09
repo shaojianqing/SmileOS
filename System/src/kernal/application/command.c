@@ -10,9 +10,9 @@
 
 extern Process *commandProcess;
 
-void commandApplicationMain();
+static void commandApplicationMain();
 
-void prepareWindowSheetCmd(Sheet *sheet);
+static void prepareWindowSheetCmd(Sheet *sheet);
 
 void startCommandApplication()
 {
@@ -32,7 +32,7 @@ void startCommandApplication()
 	}
 }
 
-void commandApplicationMain()
+static void commandApplicationMain()
 {
 	Sheet *winCommand = prepareSheet();
     prepareWindowSheetCmd(winCommand);
@@ -45,7 +45,7 @@ void commandApplicationMain()
 	}
 }
 
-void prepareWindowSheetCmd(Sheet *sheet)
+static void prepareWindowSheetCmd(Sheet *sheet)
 {
     if (sheet != null) {
         (*sheet).x = 80;

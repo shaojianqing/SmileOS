@@ -1,5 +1,6 @@
 #include "../const/const.h"
 #include "../type/type.h"
+#include "../gui/resource.h"
 #include "../gui/color.h"
 #include "../gui/corner.h"
 #include "../gui/sheet.h"
@@ -20,33 +21,33 @@
 
 extern Process *sysInfoProcess;
 
-Factory sysInfoFactory;
+static Factory sysInfoFactory;
 
-Button *processInfoBtn;
+static Button *processInfoBtn;
 
-Button *memoryInfoBtn;
+static Button *memoryInfoBtn;
 
-HeaderItem headerItemList[5];
+static HeaderItem headerItemList[5];
 
-ProcessData processDataList[5];
+static ProcessData processDataList[5];
 
-GridPanel *processDataGrid;
+static GridPanel *processDataGrid;
 
-void prepareProcessHeaderList();
+static void prepareProcessHeaderList();
 
-void prepareProcessDataList();
+static void prepareProcessDataList();
 
-void sysInfoApplicationMain();
+static void sysInfoApplicationMain();
 
-void prepareWindowSheetSys(Sheet *sheet);
+static void prepareWindowSheetSys(Sheet *sheet);
 
-GridDataItem *processItemRender(GridPanel *this, u32 index, int width, int height);
+static GridDataItem *processItemRender(GridPanel *this, u32 index, int width, int height);
 
-void onProcessBtnClick(Button *this, MouseEvent *event);
+static void onProcessBtnClick(Button *this, MouseEvent *event);
 
-void onMemoryBtnClick(Button *this, MouseEvent *event);
+static void onMemoryBtnClick(Button *this, MouseEvent *event);
 
-void sysInfoOnTimer()
+static void sysInfoOnTimer()
 {
 	sysInfoFactory.changeButtonStatus(&sysInfoFactory);
 }
@@ -69,7 +70,7 @@ void startSysInfoApplication()
 	}
 }
 
-void sysInfoApplicationMain()
+static void sysInfoApplicationMain()
 {
 	initFactory(&sysInfoFactory, sysInfoOnTimer);
 	
@@ -84,14 +85,14 @@ void sysInfoApplicationMain()
 	}
 }
 
-void prepareWindowSheetSys(Sheet *sheet)
+static void prepareWindowSheetSys(Sheet *sheet)
 {
     if (sheet != null) {
         (*sheet).x = 460;
         (*sheet).y = 50;
         (*sheet).width = 500;
         (*sheet).height = 560;
-        (*sheet).buffer = (char *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+        (*sheet).buffer = (u8 *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
 		View *mainView = createView(0, 0, 500, 560);
 
         Color startColor;
@@ -147,7 +148,8 @@ void prepareWindowSheetSys(Sheet *sheet)
 
 		printString(mainView, "System Infomation", 18, 120, 4, textColor, shadowColor);
 
-		processInfoBtn = createButton(5, 24, 150, 32, &sysInfoFactory, null);
+		Image *processIco = (Image *)loadImageFromStorage(ico_btn_sys_process);
+		processInfoBtn = createButton(5, 24, 150, 32, &sysInfoFactory, processIco);
 		(*processInfoBtn).initButton(processInfoBtn, "Process Info", 12, ButtonStyleLightGray);
 		(*processInfoBtn).onMouseClick = onProcessBtnClick;
 		(*mainView).addSubView(mainView, (View *)processInfoBtn);
@@ -169,7 +171,7 @@ void prepareWindowSheetSys(Sheet *sheet)
     }
 }
 
-GridDataItem *processItemRender(GridPanel *this, u32 index, int width, int height)
+static GridDataItem *processItemRender(GridPanel *this, u32 index, int width, int height)
 {
 	Color textColor;
     textColor.red = 0x55;
@@ -209,7 +211,7 @@ GridDataItem *processItemRender(GridPanel *this, u32 index, int width, int heigh
 	return null;
 }
 
-void prepareProcessHeaderList()
+static void prepareProcessHeaderList()
 {
 	HeaderItem *headerItem = headerItemList;
 	(*headerItem).name = "PID";
@@ -237,7 +239,7 @@ void prepareProcessHeaderList()
 	(*headerItem).width = 80;
 }
 
-void prepareProcessDataList()
+static void prepareProcessDataList()
 {
 	ProcessData *processData = processDataList;
 	(*processData).name = "System Kernal";
@@ -265,12 +267,12 @@ void prepareProcessDataList()
 	(*processData).pId = 32;
 }
 
-void onProcessBtnClick(Button *this, MouseEvent *event)
+static void onProcessBtnClick(Button *this, MouseEvent *event)
 {
 	
 }
 
-void onMemoryBtnClick(Button *this, MouseEvent *event)
+static void onMemoryBtnClick(Button *this, MouseEvent *event)
 {
 	
 }

@@ -5,6 +5,8 @@
 #define DIRECTION_UP 1
 #define DIRECTION_DOWN 2
 
+void drawBackround(Sheet *sheet, Image *image);
+
 void drawPoint(View *view, int x, int y, Color color);
 
 void drawBoldPoint(View *view, int x, int y, Color color);

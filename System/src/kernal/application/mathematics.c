@@ -16,41 +16,41 @@
 
 extern Process *mathematicsProcess;
 
-Button *linearBtn;
+static Button *linearBtn;
 
-Button *quadraticBtn;
+static Button *quadraticBtn;
 
-Button *circleBtn;
+static Button *circleBtn;
 
-Button *ellipseBtn;
+static Button *ellipseBtn;
 
-CoorPanel *coorPanel;
+static CoorPanel *coorPanel;
 
-Factory mathematicsFactory;
+static Factory mathematicsFactory;
 
-void drawCoorPoint(View *view, int x, int y, Color color);
+static void drawCoorPoint(View *view, int x, int y, Color color);
 
-void onLinearBtnClick(Button *this, MouseEvent *event);
+static void onLinearBtnClick(Button *this, MouseEvent *event);
 
-void onQuadraticBtnClick(Button *this, MouseEvent *event);
+static void onQuadraticBtnClick(Button *this, MouseEvent *event);
 
-void onCircleBtnClick(Button *this, MouseEvent *event);
+static void onCircleBtnClick(Button *this, MouseEvent *event);
 
-void onEllipseBtnClick(Button *this, MouseEvent *event);
+static void onEllipseBtnClick(Button *this, MouseEvent *event);
 
-void drawCircleFunction(CoorPanel *coorPanel);
+static void drawCircleFunction(CoorPanel *coorPanel);
 
-void drawLinearFunction(CoorPanel *coorPanel);
+static void drawLinearFunction(CoorPanel *coorPanel);
 
-void drawQuadraticFunction(CoorPanel *coorPanel);
+static void drawQuadraticFunction(CoorPanel *coorPanel);
 
-void drawEillpseFunction(CoorPanel *coorPanel);
+static void drawEillpseFunction(CoorPanel *coorPanel);
 
-void mathematicsApplicationMain();
+static void mathematicsApplicationMain();
 
-void prepareWindowSheetMath(Sheet *sheet);
+static void prepareWindowSheetMath(Sheet *sheet);
 
-void mathematicsOnTimer()
+static void mathematicsOnTimer()
 {
 	mathematicsFactory.changeButtonStatus(&mathematicsFactory);
 }
@@ -73,7 +73,7 @@ void startMathematicsApplication()
 	}
 }
 
-void mathematicsApplicationMain()
+static void mathematicsApplicationMain()
 {
 	initFactory(&mathematicsFactory, mathematicsOnTimer);
 	
@@ -88,7 +88,7 @@ void mathematicsApplicationMain()
 	}
 }
 
-void prepareWindowSheetMath(Sheet *sheet)
+static void prepareWindowSheetMath(Sheet *sheet)
 {
     if (sheet != null) {
         (*sheet).x = 80;
@@ -169,10 +169,10 @@ void prepareWindowSheetMath(Sheet *sheet)
     }
 }
 
-void drawCoorPoint(View *view, int x, int y, Color color)
+static void drawCoorPoint(View *view, int x, int y, Color color)
 {
-	int xb=ORIGIN_X+x;
-	int yb=ORIGIN_Y-y;
+	int xb = ORIGIN_X+x;
+	int yb = ORIGIN_Y-y;
 
 	int width=(*view).width;
 	int height=(*view).height;
@@ -182,7 +182,7 @@ void drawCoorPoint(View *view, int x, int y, Color color)
 	}
 }
 
-void drawLinearFunction(CoorPanel *coorPanel)
+static void drawLinearFunction(CoorPanel *coorPanel)
 {
 	if (coorPanel!=null && (*coorPanel).canvas!=null) {		
 		View *canvas = (*coorPanel).canvas;
@@ -261,7 +261,7 @@ void drawLinearFunction(CoorPanel *coorPanel)
 	}
 }
 
-void drawQuadraticFunction(CoorPanel *coorPanel)
+static void drawQuadraticFunction(CoorPanel *coorPanel)
 {
 	if (coorPanel!=null && (*coorPanel).canvas!=null) {		
 		View *canvas = (*coorPanel).canvas;
@@ -340,7 +340,7 @@ void drawQuadraticFunction(CoorPanel *coorPanel)
 	}
 }
 
-void drawCircleFunction(CoorPanel *coorPanel)
+static void drawCircleFunction(CoorPanel *coorPanel)
 {
 	if (coorPanel!=null && (*coorPanel).canvas!=null) {		
 		View *canvas = (*coorPanel).canvas;
@@ -437,7 +437,7 @@ void drawCircleFunction(CoorPanel *coorPanel)
 	}
 }
 
-void drawEillpseFunction(CoorPanel *coorPanel)
+static void drawEillpseFunction(CoorPanel *coorPanel)
 {
 	if (coorPanel!=null && (*coorPanel).canvas!=null) {		
 		View *canvas = (*coorPanel).canvas;
@@ -475,25 +475,25 @@ void drawEillpseFunction(CoorPanel *coorPanel)
 	}
 }
 
-void onLinearBtnClick(Button *this, MouseEvent *event)
+static void onLinearBtnClick(Button *this, MouseEvent *event)
 {
 	(*coorPanel).drawFuncation = drawLinearFunction;
 	(*coorPanel).drawFuncation(coorPanel);
 }
 
-void onQuadraticBtnClick(Button *this, MouseEvent *event)
+static void onQuadraticBtnClick(Button *this, MouseEvent *event)
 {
 	(*coorPanel).drawFuncation = drawQuadraticFunction;
 	(*coorPanel).drawFuncation(coorPanel);
 }
 
-void onCircleBtnClick(Button *this, MouseEvent *event)
+static void onCircleBtnClick(Button *this, MouseEvent *event)
 {
 	(*coorPanel).drawFuncation = drawCircleFunction;
 	(*coorPanel).drawFuncation(coorPanel);
 }
 
-void onEllipseBtnClick(Button *this, MouseEvent *event)
+static void onEllipseBtnClick(Button *this, MouseEvent *event)
 {
 	(*coorPanel).drawFuncation = drawEillpseFunction;
 	(*coorPanel).drawFuncation(coorPanel);

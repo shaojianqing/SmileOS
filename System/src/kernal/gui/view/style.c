@@ -14,6 +14,8 @@ ButtonStyle buttonStyleDarkBlue;
 
 ButtonStyle buttonStyleDarkOrange;
 
+ButtonStyle buttonStyleBlackBlue;
+
 ButtonStyle* ButtonStyleDarkRed()
 {
 	buttonStyleDarkRed.borderColor.red = 240;
@@ -182,4 +184,38 @@ ButtonStyle* ButtonStyleDarkOrange()
 	buttonStyleDarkOrange.corner.rightBtm = 2;
 
 	return &buttonStyleDarkOrange;
+}
+
+ButtonStyle* ButtonStyleBlackBlue()
+{
+	buttonStyleBlackBlue.borderColor.red = 40;
+    buttonStyleBlackBlue.borderColor.green = 60;
+    buttonStyleBlackBlue.borderColor.blue = 80;
+
+	buttonStyleBlackBlue.startColor.red = 20;
+    buttonStyleBlackBlue.startColor.green = 40;
+    buttonStyleBlackBlue.startColor.blue = 60;
+
+	buttonStyleBlackBlue.endColor.red = 40;
+    buttonStyleBlackBlue.endColor.green = 60;
+    buttonStyleBlackBlue.endColor.blue = 80;
+
+	buttonStyleBlackBlue.startDownColor.red = 10;
+    buttonStyleBlackBlue.startDownColor.green = 30;
+    buttonStyleBlackBlue.startDownColor.blue = 50;
+
+	buttonStyleBlackBlue.endDownColor.red = 30;
+    buttonStyleBlackBlue.endDownColor.green = 50;
+    buttonStyleBlackBlue.endDownColor.blue = 70;
+
+	buttonStyleBlackBlue.textColor.red = 200;
+    buttonStyleBlackBlue.textColor.green = 200;
+    buttonStyleBlackBlue.textColor.blue = 200;
+
+	buttonStyleBlackBlue.corner.leftTop = 2;
+	buttonStyleBlackBlue.corner.rightTop = 2;
+	buttonStyleBlackBlue.corner.leftBtm = 2;
+	buttonStyleBlackBlue.corner.rightBtm = 2;
+
+	return &buttonStyleBlackBlue;
 }

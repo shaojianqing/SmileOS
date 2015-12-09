@@ -1,10 +1,10 @@
 #include "../const/const.h"
 #include "../type/type.h"
 #include "../memory/memory.h"
-#include "view/view.h"
 #include "sheet.h"
 #include "color.h"
 #include "corner.h"
+#include "view/view.h"
 #include "graphics.h"
 #include "test.h"
 

@@ -17,59 +17,59 @@
 
 extern Process *calculatorProcess;
 
-Factory calculatorFactory;
+static Factory calculatorFactory;
 
-Button *num1Btn;
+static Button *num1Btn;
 
-Button *num2Btn;
+static Button *num2Btn;
 
-Button *num3Btn;
+static Button *num3Btn;
 
-Button *num4Btn;
+static Button *num4Btn;
 
-Button *num5Btn;
+static Button *num5Btn;
 
-Button *num6Btn;
+static Button *num6Btn;
 
-Button *num7Btn;
+static Button *num7Btn;
 
-Button *num8Btn;
+static Button *num8Btn;
 
-Button *num9Btn;
+static Button *num9Btn;
 
-Button *num0Btn;
+static Button *num0Btn;
 
-Button *num00Btn;
+static Button *num00Btn;
 
-Button *clearBtn;
+static Button *clearBtn;
 
-Button *backBtn;
+static Button *backBtn;
 
-Button *allClearBtn;
+static Button *allClearBtn;
 
-Button *plusBtn;
+static Button *plusBtn;
 
-Button *minusBtn;
+static Button *minusBtn;
 
-Button *multiplyBtn;
+static Button *multiplyBtn;
 
-Button *divisionBtn;
+static Button *divisionBtn;
 
-Button *equalityBtn;
+static Button *equalityBtn;
 
-int sign = 0;
+static int sign = 0;
 
-void numBtnClick(Button *this, MouseEvent *event);
+static void numBtnClick(Button *this, MouseEvent *event);
 
-void operBtnClick(Button *button, MouseEvent *event);
+static void operBtnClick(Button *button, MouseEvent *event);
 
-void prepareProcessLdtLocal(Process *process);
+static void prepareProcessLdtLocal(Process *process);
 
-void calculatorApplicationMain();
+static void calculatorApplicationMain();
 
-void prepareWindowSheetCal(Sheet *sheet);
+static void prepareWindowSheetCal(Sheet *sheet);
 
-void calculatorOnTimer()
+static void calculatorOnTimer()
 {
 	calculatorFactory.changeButtonStatus(&calculatorFactory);
 }
@@ -93,7 +93,7 @@ void startCalculatorApplication()
 	}
 }
 
-void prepareProcessLdtLocal(Process *process)
+static void prepareProcessLdtLocal(Process *process)
 {
 	if (process != null) {
 		setLocalDescriptor((u32)&(*process).ldt, 0, 0xFFFFF, 0x00000000, DA_C|DA_32_4K);
@@ -102,7 +102,7 @@ void prepareProcessLdtLocal(Process *process)
 	}
 }
 
-void calculatorApplicationMain()
+static void calculatorApplicationMain()
 {
 	initFactory(&calculatorFactory, calculatorOnTimer);
 	
@@ -117,7 +117,7 @@ void calculatorApplicationMain()
 	}
 }
 
-void prepareWindowSheetCal(Sheet *sheet)
+static void prepareWindowSheetCal(Sheet *sheet)
 {
     if (sheet != null) {
         (*sheet).x = 40;
@@ -294,7 +294,7 @@ void prepareWindowSheetCal(Sheet *sheet)
     }
 }
 
-void numBtnClick(Button *button, MouseEvent *event)
+static void numBtnClick(Button *button, MouseEvent *event)
 {
 	if (button==num1Btn) {
 		int a=-100;
@@ -308,7 +308,7 @@ void numBtnClick(Button *button, MouseEvent *event)
 	}
 }
 
-void operBtnClick(Button *button, MouseEvent *event)
+static void operBtnClick(Button *button, MouseEvent *event)
 {
 	if (button==equalityBtn) {
 		int result = testGate(0xFF8822);		
@@ -316,6 +316,4 @@ void operBtnClick(Button *button, MouseEvent *event)
 		//sign++;
 	}	
 }
-
-
 

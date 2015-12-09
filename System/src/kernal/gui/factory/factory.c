@@ -111,8 +111,6 @@ void processEvent(Factory *factory, Button *button, MouseEvent *event)
 
 void doProcessEvent(Factory *factory)
 {
-
-	
 	if ((*factory).eventFree<MAX_BUTTON_EVENT) {
 		ButtonEvent (*buttonEvent) = &((*factory).buttonEventList[(*factory).eventQ]);
 		if ((*buttonEvent).button!=null && (*buttonEvent).event!=null) {

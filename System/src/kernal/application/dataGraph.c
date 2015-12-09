@@ -17,35 +17,33 @@
 #include "dataSetting.h"
 #include "dataGraph.h"
 
-Button *barGraphBtn;
-
-Button *lineGraphBtn;
-
-Button *hybridGraphBtn;
-
-Button *financeGraphBtn;
-
-GraphPanel *graphPanel;
-
-Factory dataGraphFactory;
-
 extern Process *dataGraphProcess;
 
-void onBarGraphBtnClick(Button *this, MouseEvent *event);
+static Button *barGraphBtn;
 
-void onLineGraphBtnClick(Button *this, MouseEvent *event);
+static Button *lineGraphBtn;
 
-void onHybridGraphBtnClick(Button *this, MouseEvent *event);
+static Button *hybridGraphBtn;
 
-void onFinanceGraphBtnClick(Button *this, MouseEvent *event);
+static Button *financeGraphBtn;
 
-void drawBarGraph(GraphPanel *this);
+static GraphPanel *graphPanel;
 
-void dataGraphApplicationMain();
+static Factory dataGraphFactory;
 
-void prepareWindowSheetGraph(Sheet *sheet);
+static void onBarGraphBtnClick(Button *this, MouseEvent *event);
 
-void dataGraphOnTimer()
+static void onLineGraphBtnClick(Button *this, MouseEvent *event);
+
+static void onHybridGraphBtnClick(Button *this, MouseEvent *event);
+
+static void onFinanceGraphBtnClick(Button *this, MouseEvent *event);
+
+static void dataGraphApplicationMain();
+
+static void prepareWindowSheetGraph(Sheet *sheet);
+
+static void dataGraphOnTimer()
 {
 	dataGraphFactory.changeButtonStatus(&dataGraphFactory);
 }
@@ -68,7 +66,7 @@ void startDataGraphApplication()
 	}
 }
 
-void dataGraphApplicationMain()
+static void dataGraphApplicationMain()
 {
 	initFactory(&dataGraphFactory, dataGraphOnTimer);
 	
@@ -83,14 +81,14 @@ void dataGraphApplicationMain()
 	}
 }
 
-void prepareWindowSheetGraph(Sheet *sheet)
+static void prepareWindowSheetGraph(Sheet *sheet)
 {
     if (sheet != null) {
         (*sheet).x = 60;
         (*sheet).y = 60;
         (*sheet).width = 800;
         (*sheet).height = 560;
-        (*sheet).buffer = (char *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+        (*sheet).buffer = (u8 *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
 		View *mainView = createView(0, 0, 800, 560);
 
         resetSheet(sheet);
@@ -167,19 +165,19 @@ void prepareWindowSheetGraph(Sheet *sheet)
     }
 }
 
-void onBarGraphBtnClick(Button *this, MouseEvent *event)
+static void onBarGraphBtnClick(Button *this, MouseEvent *event)
 {
 	(*graphPanel).drawGraph = drawBarGraph;
 	(*graphPanel).drawGraph(graphPanel);
 }
 
-void onLineGraphBtnClick(Button *this, MouseEvent *event)
+static void onLineGraphBtnClick(Button *this, MouseEvent *event)
 {
 	(*graphPanel).drawGraph = drawLineGraph;
 	(*graphPanel).drawGraph(graphPanel);
 }
 
-void onHybridGraphBtnClick(Button *this, MouseEvent *event)
+static void onHybridGraphBtnClick(Button *this, MouseEvent *event)
 {
 	(*graphPanel).drawGraph = drawBarGraph;
 	(*graphPanel).drawGraph(graphPanel);
@@ -187,7 +185,7 @@ void onHybridGraphBtnClick(Button *this, MouseEvent *event)
 	(*graphPanel).drawGraph(graphPanel);
 }
 
-void onFinanceGraphBtnClick(Button *this, MouseEvent *event)
+static void onFinanceGraphBtnClick(Button *this, MouseEvent *event)
 {
 	(*graphPanel).drawGraph = drawLineGraph;
 	(*graphPanel).drawGraph(graphPanel);

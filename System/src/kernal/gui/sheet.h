@@ -20,7 +20,7 @@ typedef struct Process Process;
 
 typedef struct Sheet
 {
-    char *buffer;
+    u8 *buffer;
 
     int x, y;
 

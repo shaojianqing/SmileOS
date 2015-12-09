@@ -1,9 +1,9 @@
 #include "../../const/const.h"
 #include "../../type/type.h"
-#include "view.h"
 #include "../sheet.h"
 #include "../color.h"
 #include "../corner.h"
+#include "view.h"
 #include "../graphics.h"
 #include "coorPanel.h"
 
@@ -42,7 +42,7 @@ void initCoorPanel(CoorPanel *this)
 	}
 }
 
-void drawBackground(CoorPanel *this, int width, int height)
+static void drawBackground(CoorPanel *this, int width, int height)
 {
 	Color color;
     color.red = 240;
@@ -52,7 +52,7 @@ void drawBackground(CoorPanel *this, int width, int height)
 	drawRect((View *)this, 0, 0, width, height, color);
 }
 
-void drawGridView(CoorPanel *this, int width, int height)
+static void drawGridView(CoorPanel *this, int width, int height)
 {
 	Color color;
     color.red = 220;
@@ -69,7 +69,7 @@ void drawGridView(CoorPanel *this, int width, int height)
 	}
 }
 
-void drawCoorindate(CoorPanel *this, int width, int height)
+static void drawCoorindate(CoorPanel *this, int width, int height)
 {
 	Color color;
     color.red = 90;
@@ -89,7 +89,7 @@ void drawCoorindate(CoorPanel *this, int width, int height)
 	drawLine((View *)this, 390, 10, 390, height-10, color, LINE_BOLD);
 }
 
-void drawBorder(CoorPanel *this, int width, int height)
+static void drawBorder(CoorPanel *this, int width, int height)
 {
 	Color color;
 	color.red = 160;
@@ -102,7 +102,7 @@ void drawBorder(CoorPanel *this, int width, int height)
 	drawLine((View *)this, width-1, 0, width-1, height, color, LINE_THIN);
 }
 
-void drawFirstLine(CoorPanel *this)
+static void drawFirstLine(CoorPanel *this)
 {
 	Color color;
 	color.red = 160;
@@ -124,7 +124,5 @@ void drawFirstLine(CoorPanel *this)
 	(*canvas).refreshRectView(canvas);
 }
 
-void onMouseDown(View *this, MouseEvent *event)
-{
-	showIntegerValue(898, 100, 50);
-}
+static void onMouseDown(View *this, MouseEvent *event)
+{}

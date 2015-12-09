@@ -3,9 +3,9 @@
 #include "algorithm/algorithm.h"
 #include "macro/macro.h"
 #include "inOutput/inOutput.h"
+#include "gui/color.h"
 #include "gui/view/view.h"
 #include "memory/memory.h"
-#include "gui/color.h"
 #include "gui/video.h"
 #include "gui/sheet.h"
 #include "gui/image.h"
@@ -46,6 +46,8 @@ Process *calculatorProcess;
 
 Process *mathematicsProcess;
 
+Process *imageViewerProcess;
+
 extern Sheet *mouse;
 
 extern Sheet *background;
@@ -83,9 +85,9 @@ void initSystem(void)
 	prepareKernelProcess();				
 	initDesktopInfoSheet();
 
-	testSheet = prepareSheet();
-	prepareTestSheet(testSheet);
-	loadWindowSheet(testSheet);
+	//testSheet = prepareSheet();
+	//prepareTestSheet(testSheet);
+	//loadWindowSheet(testSheet);
 
     while(TRUE) {
         clearInterrupt();

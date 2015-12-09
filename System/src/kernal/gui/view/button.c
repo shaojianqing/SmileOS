@@ -1,11 +1,11 @@
 #include "../../const/const.h"
 #include "../../type/type.h"
 #include "../../include/timing.h"
-#include "view.h"
 #include "../image.h"
 #include "../sheet.h"
 #include "../color.h"
 #include "../corner.h"
+#include "view.h"
 #include "../graphics.h"
 #include "../event/buttonEvent.h"
 #include "../factory/factory.h"
@@ -107,9 +107,12 @@ void drawAppearance(Button *this, int width, int height)
 		buttonStyle=buttonStyleType();			
 	}
 
+	u32 imgHeight = (*((*this).image)).height;
+	u32 y = (height - imgHeight)/2;
+
 	drawCornerRect((View *)this, 0, 0, width, height, (*buttonStyle).borderColor, (*buttonStyle).corner);
     drawGradualVerticalCornerRect((View *)this, 1, 1, width-2, height-2, (*buttonStyle).startColor, (*buttonStyle).endColor, (*buttonStyle).corner, DIRECTION_DOWN);
-	drawImage((View *)this, 4, 4, (*this).image);
+	drawImage((View *)this, 4, y, (*this).image);
 }
 
 void drawDownAppearance(Button *this, int width, int height)
@@ -120,9 +123,12 @@ void drawDownAppearance(Button *this, int width, int height)
 		buttonStyle=buttonStyleType();	
 	}
 
+	u32 imgHeight = (*((*this).image)).height;
+	u32 y = (height - imgHeight)/2;
+
 	drawCornerRect((View *)this, 0, 0, width, height, (*buttonStyle).borderColor, (*buttonStyle).corner);
     drawGradualVerticalCornerRect((View *)this, 1, 1, width-2, height-2, (*buttonStyle).startDownColor, (*buttonStyle).endDownColor, (*buttonStyle).corner, DIRECTION_DOWN);
-	drawImage((View *)this, 4, 4, (*this).image);
+	drawImage((View *)this, 4, y, (*this).image);
 }
 
 void drawButtonText(Button *this, char *string, int length, int width, int height)
@@ -134,11 +140,10 @@ void drawButtonText(Button *this, char *string, int length, int width, int heigh
 	}
 
 	int i=0;
-	int limit = (length<16?length:16);
-	(*this).length = limit;
-	for (i=0;i<limit;++i) {
-		(*this).title[i] = *(string+i);
-	}	
+	(*this).title = string;
+	(*this).length = length;
 
-	printString((View *)this, (*this).title, (*this).length, 38, 8, (*buttonStyle).textColor, (*buttonStyle).shadowColor);
+	u32 y = (height - 16)/2;	
+
+	printString((View *)this, (*this).title, (*this).length, 38, y, (*buttonStyle).textColor, (*buttonStyle).shadowColor);
 }

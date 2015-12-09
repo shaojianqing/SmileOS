@@ -2,33 +2,35 @@
 #include "../../type/type.h"
 #include "../../memory/memory.h"
 #include "../sheet.h"
+#include "../color.h"
 #include "event.h"
 #include "view.h"
 
-bool addSubView(View *this, View *view);
+static bool addSubView(View *this, View *view);
 
-bool removeSubView(View *this, View *view);
+static bool removeSubView(View *this, View *view);
 
-void clearView(View *this);
+static void clearView(View *this);
 
-void releaseView(View *this);
+static void releaseView(View *this);
 
-void retainView(View *this);
+static void retainView(View *this);
 
-void deleteView(View *this);
+static void deleteView(View *this);
 
-void refreshRectView(View *this);
+static void refreshRectView(View *this);
 
-bool isInRange(View *view, MouseEvent *event);
+static bool isInRange(View *view, MouseEvent *event);
 
-void processMouseDownEvent(View *this, MouseEvent *event);
+static void setBackgroundColor(View *this, Color color);
 
-void refreshViewRect(View *this, int x, int y, int w, int h, int z);
+static void processMouseDownEvent(View *this, MouseEvent *event);
 
 View *createView(int x, int y, int width, int height)
 {
 	View *view = (View *)alloc(sizeof(View));	
 	view = initWithViewFunction(view, x, y, width, height);
+	(*view).clearView(view);
 	return view;
 }
 
@@ -47,6 +49,7 @@ View *initWithViewFunction(View *view, int x, int y, int width, int height)
 	(*view).clearView = clearView;
 	(*view).addSubView = addSubView;
 	(*view).removeSubView = removeSubView;
+	(*view).setBackgroundColor = setBackgroundColor;
 	(*view).processMouseDownEvent = processMouseDownEvent;
 	(*view).refreshRectView = refreshRectView;
 	(*view).deleteView = deleteView;
@@ -55,7 +58,7 @@ View *initWithViewFunction(View *view, int x, int y, int width, int height)
 	return view;
 }
 
-bool addSubView(View *this, View *view)
+static bool addSubView(View *this, View *view)
 {
 	if (this!=null && view!=null) {
 		int i=0, k=0;
@@ -87,7 +90,7 @@ bool addSubView(View *this, View *view)
 	refreshViewRect(this, (*view).x, (*view).y, (*view).width, (*view).height, (*view).z);
 }
 
-bool removeSubView(View *this, View *view)
+static bool removeSubView(View *this, View *view)
 {
 	if (this!=null && view!=null) {
 		int i=0, k=0;
@@ -111,7 +114,22 @@ bool removeSubView(View *this, View *view)
 	}
 }
 
-void clearView(View *this)
+static void setBackgroundColor(View *this, Color color)
+{
+	if (this!=null && (*this).buffer!=null) {
+		int width=(*this).width;
+		int height=(*this).height;
+
+		int i=0;
+		for (i=0;i<width*height*SCREEN_DENSITY;i+=3) {
+			*((*this).buffer+i)=color.blue;
+			*((*this).buffer+i+1)=color.green;
+			*((*this).buffer+i+2)=color.red;
+		}
+	}
+}
+
+static void clearView(View *this)
 {
 	if (this!=null && (*this).buffer!=null) {
 		int width=(*this).width;
@@ -124,7 +142,7 @@ void clearView(View *this)
 	}
 }
 
-void processMouseDownEvent(View *this, MouseEvent *event)
+static void processMouseDownEvent(View *this, MouseEvent *event)
 {
 	if (this!=null && event!=null) {
 		if ((*this).subViewNum>0) {
@@ -145,7 +163,7 @@ void processMouseDownEvent(View *this, MouseEvent *event)
 	}
 }
 
-bool isInRange(View *view, MouseEvent *event)
+static bool isInRange(View *view, MouseEvent *event)
 {
 	if (view!=null && event!=null) {
 		if ((*event).x>=(*view).x && (*event).x<(*view).x+(*view).width &&
@@ -156,7 +174,7 @@ bool isInRange(View *view, MouseEvent *event)
 	return FALSE;
 }
 
-void refreshRectView(View *this)
+static void refreshRectView(View *this)
 {
 	if (this!=null) {
 		refreshViewRect(this, (*this).x, (*this).y, (*this).width, (*this).height, (*this).z);
@@ -232,7 +250,7 @@ void fillViewToSheetRect(View *this)
 	}
 }
 
-void deleteView(View *this)
+static void deleteView(View *this)
 {
 	if (this!=null) {
 		if ((*this).buffer!=null) {
@@ -254,7 +272,7 @@ void deleteView(View *this)
 	}
 }
 
-void releaseView(View *this)
+static void releaseView(View *this)
 {
 	if (this!=null) {
 		(*this).reference--;
@@ -264,7 +282,7 @@ void releaseView(View *this)
 	}
 }
 
-void retainView(View *this)
+static void retainView(View *this)
 {
 	if (this!=null) {
 		(*this).reference++;

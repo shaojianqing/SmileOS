@@ -1,11 +1,27 @@
 #include "../const/const.h"
 #include "../type/type.h"
 #include "image.h"
-#include "view/view.h"
 #include "sheet.h"
 #include "color.h"
 #include "corner.h"
+#include "view/view.h"
 #include "graphics.h"
+
+void drawBackround(Sheet *sheet, Image *image)
+{
+	if (sheet!=null && (*sheet).buffer!=null && image!=null) {
+		u16 height=(*image).height, width=(*image).width;
+
+		u32 i=0, j=0;
+		for (j=0; j<height; ++j) {
+		    for (i=0; i<width; ++i) {
+		        *((*sheet).buffer+((height-j-1)*width+i)*3) = *((*image).data+(j*width+i)*3);
+		        *((*sheet).buffer+((height-j-1)*width+i)*3+1) = *((*image).data+(j*width+i)*3+1);
+		        *((*sheet).buffer+((height-j-1)*width+i)*3+2) = *((*image).data+(j*width+i)*3+2);
+		    }
+		}
+	}
+}
 
 void drawPoint(View *view, int x, int y, Color color)
 {
@@ -79,9 +95,14 @@ void drawImage(View *view, int x, int y, Image *image)
 		u32 i=0, j=0;
 		for (j=0; j<height; ++j) {
 		    for (i=0; i<width; ++i) {
-		        *((*view).buffer+((j+y)*viewWidth+i+x)*3) = *((*image).data+(j*width+i)*3);
-		        *((*view).buffer+((j+y)*viewWidth+i+x)*3+1) = *((*image).data+(j*width+i)*3+1);
-		        *((*view).buffer+((j+y)*viewWidth+i+x)*3+2) = *((*image).data+(j*width+i)*3+2);
+				u8 blue = *((*image).data+(j*width+i)*3);
+                u8 green = *((*image).data+(j*width+i)*3+1);
+                u8 red = *((*image).data+(j*width+i)*3+2);
+                if (blue!=TRANSPARENT || green!=TRANSPARENT || red!=TRANSPARENT) {
+                    *((*view).buffer+((height-j-1+y)*viewWidth+i+x)*3) = blue;
+		       		*((*view).buffer+((height-j-1+y)*viewWidth+i+x)*3+1) = green;
+		        	*((*view).buffer+((height-j-1+y)*viewWidth+i+x)*3+2) = red;
+                }
 		    }
 		}
 	}
