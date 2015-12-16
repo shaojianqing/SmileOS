@@ -1,7 +1,7 @@
 # SmileOS
   SmileOS is actually one researching Operating System.It runs in the x86 Protected Mode, and has relatively beautiful GUI Interface. 
-Totally, It has implemented some concepts of Memory Management, Process Management and Schedule, Window Management and GUI Components.
-  Below is the list of SmileOS screenshots:
+Totally, It has implemented some concepts of Memory Management, Process Management and Schedule, Window Management and GUI Components.<br><br>
+  Below is the list of SmileOS screenshots:<br>
   
   ![](https://github.com/shaojianqing/SmileOS/blob/master/Screen/desktop.png) 
  
