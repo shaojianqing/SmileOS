@@ -14,9 +14,9 @@ typedef struct View
 
 	View *subViewList[MAX_SUB_VIEW_NUM];
 
-	int subViewNum;
+	u32 subViewNum;
 
-	int reference;
+	u32 reference;
 
 	u8 *buffer;
 

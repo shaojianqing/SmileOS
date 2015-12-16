@@ -158,11 +158,37 @@ APP5 = tgt/ico_app_grh.image
 APP6 = tgt/ico_app_mat.image
 
 #Icon Resource#
-ICO_BTN_BAR = tgt/ico_btn_bar_graph.image
+ICO_BTN_BAR_GRAPH = tgt/ico_btn_bar_graph.image
 
-ICO_BTN_PRO = tgt/ico_btn_sys_process.image
+ICO_BTN_LINE_GRAPH = tgt/ico_btn_line_graph.image
+
+ICO_BTN_HYBD_GRAPH = tgt/ico_btn_hybd_graph.image
+
+ICO_BTN_FIN_GRAPH = tgt/ico_btn_fin_graph.image
+
+ICO_BTN_LINE_MATH = tgt/ico_btn_line_math.image
+
+ICO_BTN_QUAD_MATH = tgt/ico_btn_quadratic_math.image
+
+ICO_BTN_CIRC_MATH = tgt/ico_btn_circle_math.image
+
+ICO_BTN_ELLI_MATH = tgt/ico_btn_ellipse_math.image
+
+ICO_BTN_PRO_SYS = tgt/ico_btn_sys_process.image
+
+ICO_BTN_MEM_SYS = tgt/ico_btn_sys_memory.image
 
 ICO_BTN_BGD = tgt/ico_btn_background.image
+
+ICO_SYS_NETWORK = tgt/ico_sys_network.image
+
+ICO_SYS_POWER = tgt/ico_sys_power.image
+
+ICO_SYS_LOGO = tgt/ico_sys_logo.image
+
+ICO_BTN_CLS = tgt/ico_btn_close.image
+
+ICO_BTN_MIN = tgt/ico_btn_miniz.image
 
 #Application Resource#
 COMMAND = tgt/command.o
@@ -435,23 +461,76 @@ tgt/ico_app_mat.image : res/images/ico_app_mat.bmp
 tgt/ico_btn_bar_graph.image : res/images/ico_btn_bar_graph.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
 
+tgt/ico_btn_line_graph.image : res/images/ico_btn_line_graph.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
+tgt/ico_btn_hybd_graph.image : res/images/ico_btn_hybd_graph.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
+tgt/ico_btn_fin_graph.image : res/images/ico_btn_fin_graph.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
+tgt/ico_btn_line_math.image : res/images/ico_btn_line_math.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
+tgt/ico_btn_quadratic_math.image : res/images/ico_btn_quadratic_math.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
+tgt/ico_btn_circle_math.image : res/images/ico_btn_circle_math.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
+tgt/ico_btn_ellipse_math.image : res/images/ico_btn_ellipse_math.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
 tgt/ico_btn_sys_process.image : res/images/ico_btn_sys_process.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
+
+tgt/ico_btn_sys_memory.image : res/images/ico_btn_sys_memory.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
 
 tgt/ico_btn_background.image : res/images/ico_btn_background.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 24 24 false
 
+tgt/ico_sys_network.image : res/images/ico_sys_network.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 32 24 false
+
+tgt/ico_sys_power.image : res/images/ico_sys_power.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 60 24 false
+
+tgt/ico_sys_logo.image : res/images/ico_sys_logo.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 100 24 false
+
+tgt/ico_btn_close.image : res/images/ico_btn_close.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 20 20 false
+
+tgt/ico_btn_miniz.image : res/images/ico_btn_miniz.bmp
+	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 20 20 false
+
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/browser.elf tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/bg5.image tgt/bg_small_1.image tgt/bg_small_2.image tgt/bg_small_3.image tgt/bg_small_4.image tgt/bg_small_5.image tgt/bg_middle_1.image tgt/bg_middle_2.image tgt/bg_middle_3.image tgt/bg_middle_4.image tgt/bg_middle_5.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/ico_app_grh.image tgt/ico_app_mat.image tgt/ico_btn_bar_graph.image tgt/ico_btn_sys_process.image tgt/ico_btn_background.image tgt/charset.bin  
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/browser.elf tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/bg5.image tgt/bg_small_1.image tgt/bg_small_2.image tgt/bg_small_3.image tgt/bg_small_4.image tgt/bg_small_5.image tgt/bg_middle_1.image tgt/bg_middle_2.image tgt/bg_middle_3.image tgt/bg_middle_4.image tgt/bg_middle_5.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/ico_app_grh.image tgt/ico_app_mat.image tgt/ico_btn_bar_graph.image tgt/ico_btn_line_graph.image tgt/ico_btn_hybd_graph.image tgt/ico_btn_fin_graph.image tgt/ico_btn_line_math.image tgt/ico_btn_quadratic_math.image tgt/ico_btn_circle_math.image tgt/ico_btn_ellipse_math.image tgt/ico_btn_sys_process.image tgt/ico_btn_sys_memory.image tgt/ico_btn_background.image tgt/ico_sys_logo.image tgt/ico_sys_power.image tgt/ico_sys_network.image tgt/ico_btn_close.image tgt/ico_btn_miniz.image tgt/charset.bin  
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512
 	$(IMAGETOOL) $(COPYBINARY) $@ $(CHARSET) 4096
 	$(IMAGETOOL) $(COPYBINARY) $@ $(KERNAL) 36864
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BROWSER) 2097152   #0x1000
-	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_BAR) 4194304  #0x2000
-	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_PRO) 4196352  #0x2004
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_BAR_GRAPH) 4194304  #0x2000
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_PRO_SYS) 4196352  #0x2004
 	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_BGD) 4198400  #0x2008
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_CLS) 4201472  #0x200e
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_MIN) 4204544  #0x2014
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_LINE_GRAPH) 4207616  #0x201a
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_HYBD_GRAPH) 4210688 #0x2020
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_FIN_GRAPH) 4213760  #0x2026
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_FIN_GRAPH) 4213760  #0x2026
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_LINE_MATH) 4216832  #0x202c
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_QUAD_MATH) 4219904  #0x2032
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_CIRC_MATH) 4222976  #0x2038
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_ELLI_MATH) 4226048  #0x203E
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_MEM_SYS) 4229120  	#0x2044
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_SYS_LOGO) 4232192  	#0x204a
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_SYS_POWER) 4240384  #0x205a
+	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_SYS_NETWORK) 4245504  #0x2064
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS1) 8388608   #0x4000
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS2) 10748928  #0x5202	
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BGS3) 13109248  #0x6404	

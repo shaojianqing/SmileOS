@@ -19,7 +19,7 @@
 
 extern Process *imageViewerProcess;
 
-static Sheet *sheet;
+static Sheet *winImageViewer;
 
 static View *mainView;
 
@@ -28,6 +28,10 @@ static ImageView *imageView;
 static Factory imageViewerFactory;
 
 static Button *setBackgroundBtn;
+
+static ImageButton *closeBtn;
+
+static ImageButton *minizBtn;
 
 static ImageButton *bgSmall1Btn;
 
@@ -49,7 +53,11 @@ static void renderImageListView();
 
 static void imageViewerApplicationMain();
 
-static void prepareWindowSheetImage(Sheet *sheet);
+static void prepareWindowSheetImage();
+
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event);
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event);
 
 static void onBackgroundBtnClick(Button *this, MouseEvent *event);
 
@@ -70,6 +78,10 @@ void startImageViewerApplication()
 		(*imageViewerProcess).tss.cr3 = 0x60000;
 
 		startRunProcess(imageViewerProcess, 4);
+	} else {
+		if (winImageViewer!=null && (*winImageViewer).visible==FALSE) {
+			showWindowSheet(winImageViewer);
+		}		
 	}
 }
 
@@ -82,7 +94,7 @@ static void imageViewerApplicationMain()
 {
 	initFactory(&imageViewerFactory, imageViewerOnTimer);
 	
-	Sheet *winImageViewer = prepareSheet();
+	winImageViewer = prepareSheet();
     prepareWindowSheetImage(winImageViewer);
     loadWindowSheet(winImageViewer);
 	(*imageViewerProcess).mainWindow = winImageViewer;
@@ -93,10 +105,9 @@ static void imageViewerApplicationMain()
 	}
 }
 
-static void prepareWindowSheetImage(Sheet *sheetPara)
+static void prepareWindowSheetImage()
 {
-    if (sheetPara != null) {
-		sheet = sheetPara;
+    if (winImageViewer != null) {
 
 		initMainView();
 		renderImageListView();
@@ -106,11 +117,11 @@ static void prepareWindowSheetImage(Sheet *sheetPara)
 
 static void initMainView()
 {
-	(*sheet).x = 80;
-    (*sheet).y = 70;
-    (*sheet).width = 800;
-    (*sheet).height = 560;
-    (*sheet).buffer = (u8 *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+	(*winImageViewer).x = 80;
+    (*winImageViewer).y = 70;
+    (*winImageViewer).width = 800;
+    (*winImageViewer).height = 560;
+    (*winImageViewer).buffer = (u8 *)allocPage((*winImageViewer).width*(*winImageViewer).height*SCREEN_DENSITY);
 	mainView = createView(0, 0, 800, 560);
 
     Color startColor;
@@ -154,6 +165,11 @@ static void initMainView()
     separateColor.green = 60;
     separateColor.blue = 70;
 
+	Color transparentColor;
+	transparentColor.red = 0;
+    transparentColor.green = 0;
+    transparentColor.blue = 0;
+
     drawCornerRect(mainView, 0, 0, (*mainView).width, 40, mainBgColor, corner);
     drawGradualVerticalCornerRect(mainView, 1, 1, (*mainView).width-2, 40, startColor, endColor, corner, DIRECTION_UP);
 	drawRect(mainView, 0, 40, (*mainView).width, 530, mainBgColor);
@@ -162,51 +178,75 @@ static void initMainView()
 
 	printString(mainView, "ImageViewer", 12, 350, 12, textColor, shadowColor);
 
+	Image *image = loadImageFromStorage(ico_btn_close);
+	closeBtn = createImageButton(770, 10, 20, 20);
+	(*closeBtn).initWithImage(closeBtn, image, transparentColor, transparentColor);
+	(*closeBtn).onMouseClick = onCloseBtnClick;
+	(*mainView).addSubView(mainView, (View *)closeBtn);
+	(*image).release(image);
+
+	image = loadImageFromStorage(ico_btn_miniz);
+	minizBtn = createImageButton(750, 10, 20, 20);
+	(*minizBtn).initWithImage(minizBtn, image, transparentColor, transparentColor);
+	(*minizBtn).onMouseClick = onMinizBtnClick;
+	(*mainView).addSubView(mainView, (View *)minizBtn);
+	(*image).release(image);
+
 	Image *backgroundIco = (Image *)loadImageFromStorage(ico_btn_background);
 	setBackgroundBtn = createButton(500, 514, 270, 36, &imageViewerFactory, backgroundIco);
 	(*setBackgroundBtn).initButton(setBackgroundBtn, "Set As Desktop Background", 26, ButtonStyleBlackBlue);
 	(*setBackgroundBtn).onMouseClick = onBackgroundBtnClick;
 	(*mainView).addSubView(mainView, (View *)setBackgroundBtn);
 
-	loadContentView(sheet, mainView);
+	loadContentView(winImageViewer, mainView);
 }
 
 static void renderImageListView()
 {
-	Color borderColor;
-    borderColor.red = 80;
-    borderColor.green = 100;
-    borderColor.blue = 120;
+	Color normalColor;
+    normalColor.red = 80;
+    normalColor.green = 100;
+    normalColor.blue = 120;
+
+	Color selectColor;
+    selectColor.red = 240;
+    selectColor.green = 240;
+    selectColor.blue = 250;
 
 	Image *image = loadImageFromStorage(bg_small_1);
 	bgSmall1Btn = createImageButton(18, 58, 122, 92);
-	(*bgSmall1Btn).initWithImage(bgSmall1Btn, image, borderColor);
+	(*bgSmall1Btn).initWithImage(bgSmall1Btn, image, normalColor, selectColor);
 	(*bgSmall1Btn).onMouseClick = onImageButtonClick;
 	(*mainView).addSubView(mainView, (View *)bgSmall1Btn);
+	(*image).release(image);
 
 	image = loadImageFromStorage(bg_small_2);
 	bgSmall2Btn = createImageButton(18, 158, 122, 92);
-	(*bgSmall2Btn).initWithImage(bgSmall2Btn, image, borderColor);
+	(*bgSmall2Btn).initWithImage(bgSmall2Btn, image, normalColor, selectColor);
 	(*bgSmall2Btn).onMouseClick = onImageButtonClick;
 	(*mainView).addSubView(mainView, (View *)bgSmall2Btn);
+	(*image).release(image);
 
 	image = loadImageFromStorage(bg_small_3);
 	bgSmall3Btn = createImageButton(18, 258, 122, 92);
-	(*bgSmall3Btn).initWithImage(bgSmall3Btn, image, borderColor);
+	(*bgSmall3Btn).initWithImage(bgSmall3Btn, image, normalColor, selectColor);
 	(*bgSmall3Btn).onMouseClick = onImageButtonClick;
 	(*mainView).addSubView(mainView, (View *)bgSmall3Btn);
+	(*image).release(image);
 
 	image = loadImageFromStorage(bg_small_4);
 	bgSmall4Btn = createImageButton(18, 358, 122, 92);
-	(*bgSmall4Btn).initWithImage(bgSmall4Btn, image, borderColor);
+	(*bgSmall4Btn).initWithImage(bgSmall4Btn, image, normalColor, selectColor);
 	(*bgSmall4Btn).onMouseClick = onImageButtonClick;
 	(*mainView).addSubView(mainView, (View *)bgSmall4Btn);
+	(*image).release(image);
 
 	image = loadImageFromStorage(bg_small_5);
 	bgSmall5Btn = createImageButton(18, 458, 122, 92);
-	(*bgSmall5Btn).initWithImage(bgSmall5Btn, image, borderColor);
+	(*bgSmall5Btn).initWithImage(bgSmall5Btn, image, normalColor, selectColor);
 	(*bgSmall5Btn).onMouseClick = onImageButtonClick;
 	(*mainView).addSubView(mainView, (View *)bgSmall5Btn);
+	(*image).release(image);
 
 	currentImgBtn = bgSmall1Btn;
 	(*currentImgBtn).setSelect(currentImgBtn, TRUE);
@@ -223,6 +263,7 @@ static void renderImageView()
 	imageView = createImageView(168, 58, 602, 452);
 	(*imageView).initWithImage(imageView, image, borderColor);
 	(*mainView).addSubView(mainView, (View *)imageView);
+	(*image).release(image);
 }
 
 static void onImageButtonClick(ImageButton *this, MouseEvent *event)
@@ -272,5 +313,15 @@ static void onBackgroundBtnClick(Button *this, MouseEvent *event)
 	} 
 
 	setBackground(bgImageCode);
+}
+
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event)
+{
+	
+}
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event)
+{
+	hideWindowSheet(winImageViewer);
 }
 

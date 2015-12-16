@@ -16,5 +16,3 @@ typedef struct CoorPanel
 } CoorPanel;
 
 CoorPanel *createCoorPanel(int x, int y, int w, int h);
-
-void initCoorPanel(CoorPanel *this);

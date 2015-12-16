@@ -24,6 +24,22 @@
 #define 		ico_app_mat					0x9ac8
 
 #define 		ico_btn_bar_graph			0x2000
+#define 		ico_btn_line_graph			0x201a
+#define 		ico_btn_hybd_graph			0x2020
+#define 		ico_btn_fin_graph			0x2026
+
+#define 		ico_btn_line_math			0x202c
+#define 		ico_btn_quad_math			0x2032
+#define 		ico_btn_circ_math			0x2038
+#define 		ico_btn_elli_math			0x203e
+
 #define 		ico_btn_sys_process			0x2004
+#define 		ico_btn_sys_memory			0x2044
+
 #define			ico_btn_background          0x2008
+#define			ico_btn_close	            0x200e
+#define			ico_btn_miniz	            0x2014
+#define			ico_sys_logo	            0x204a
+#define			ico_sys_power	            0x205a
+#define			ico_sys_network	            0x2064
 

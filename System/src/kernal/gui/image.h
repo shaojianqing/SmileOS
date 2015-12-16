@@ -1,5 +1,7 @@
 #define IMAGE_HEADER_SIZE 8
 
+typedef struct Image Image;
+
 typedef struct Image
 {
     u8 *head;
@@ -11,6 +13,12 @@ typedef struct Image
     u16 width;
 	
 	u16 height;
+
+	u32 reference;
+
+	void (*retain)(Image *image);
+
+	void (*release)(Image *image);
 
 } Image;
 

@@ -1,3 +1,5 @@
+#define 		TRANSPARENT				0x00
+
 typedef struct Color
 {
     u8 red;

@@ -7,11 +7,11 @@ typedef struct ImageButton
 
 	Image *image;
 
-	Color borderColor;
+	Color normalColor;
 
 	Color selectColor;
 
-	void (*initWithImage)(ImageButton *this, Image *image, Color borderColor);
+	void (*initWithImage)(ImageButton *this, Image *image, Color normalColor, Color selectColor);
 	
 	void (*onMouseClick)(ImageButton *this, MouseEvent *event);
 

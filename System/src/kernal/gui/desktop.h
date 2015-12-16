@@ -1,4 +1,4 @@
-#define INFO_BAR_HEIGHT 30
+#define INFO_BAR_HEIGHT 24
 
 #define START_BAR_BG_HEIGHT 80
 

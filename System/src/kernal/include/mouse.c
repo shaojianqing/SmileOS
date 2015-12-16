@@ -21,8 +21,6 @@ extern Process *mathematicsProcess;
 
 extern Process *calculatorProcess;
 
-int count =91;
-
 void intHandler2c()
 {
 	u32 data;

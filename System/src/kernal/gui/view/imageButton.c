@@ -12,7 +12,7 @@ static void setSelect(ImageButton *this, bool isSelect);
 
 static void onMouseDown(View *this, MouseEvent *event);
 
-static void initWithImage(ImageButton *this, Image *image, Color borderColor);
+static void initWithImage(ImageButton *this, Image *image, Color normalColor, Color selectColor);
 
 ImageButton *createImageButton(int x, int y, int w, int h)
 {
@@ -25,23 +25,28 @@ ImageButton *createImageButton(int x, int y, int w, int h)
 	return imageButton;
 }
 
-static void initWithImage(ImageButton *this, Image *image, Color borderColor)
+static void initWithImage(ImageButton *this, Image *image, Color normalColor, Color selectColor)
 {
 	if (this!=null && image!=null) {
+		Image *originImage = (*this).image;
+		if (originImage!=null) {
+			(*originImage).release(originImage);
+		}
+		(*image).retain(image);	
 		(*this).image = image;
 		View *view = (View *)this;
 		u32 width = (*view).width;
 		u32 height = (*view).height;
 
-		(*this).borderColor.red = borderColor.red;
-		(*this).borderColor.green = borderColor.green;
-		(*this).borderColor.blue = borderColor.blue;
+		(*this).normalColor.red = normalColor.red;
+		(*this).normalColor.green = normalColor.green;
+		(*this).normalColor.blue = normalColor.blue;
 
-		(*this).selectColor.red = 200;
-		(*this).selectColor.green = 200;
-		(*this).selectColor.blue = 240;
+		(*this).selectColor.red = selectColor.red;
+		(*this).selectColor.green = selectColor.green;
+		(*this).selectColor.blue = selectColor.blue;
 
-		drawRect((View *)this, 0, 0, width, height, (*this).borderColor);
+		drawRect((View *)this, 0, 0, width, height, (*this).normalColor);
 		drawImage((View *)this, 1, 1, (*this).image);
 		refreshViewRect(view, 0, 0, width, height, (*view).z);	
 	}
@@ -56,7 +61,7 @@ static void setSelect(ImageButton *this, bool isSelect)
 	if (isSelect) {
 		drawRect((View *)this, 0, 0, width, height, (*this).selectColor);
 	} else {
-		drawRect((View *)this, 0, 0, width, height, (*this).borderColor);
+		drawRect((View *)this, 0, 0, width, height, (*this).normalColor);
 	}
 
 	drawImage((View *)this, 1, 1, (*this).image);

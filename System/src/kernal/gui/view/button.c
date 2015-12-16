@@ -13,17 +13,17 @@
 #include "event.h"
 #include "button.h"
 
-void selectButtonStatus(Button *this, bool select);
+static void selectButtonStatus(Button *this, bool select);
 
-void onMouseDown(View *this, MouseEvent *event);
+static void onMouseDown(View *this, MouseEvent *event);
 
-void resetViewBuffer(Button *this, int width, int height);
+static void resetViewBuffer(Button *this, int width, int height);
 
-void drawAppearance(Button *this, int width, int height);
+static void drawAppearance(Button *this, int width, int height);
 
-void drawDownAppearance(Button *this, int width, int height);
+static void drawDownAppearance(Button *this, int width, int height);
 
-void drawButtonText(Button *this, char *string, int length, int width, int height);
+static void drawButtonText(Button *this, char *string, int length, int width, int height);
 
 Button *createButton(int x, int y, int w, int h, Factory *factory, Image *image)
 {
@@ -44,7 +44,11 @@ void initButton(Button *this, char text[16], int length, ButtonStyleType buttonS
 	if (this!=null) {		
 		int width = (*this).view.width;
 		int height = (*this).view.height;
-		(*this).buttonStyleType = buttonStyleType;	
+		(*this).buttonStyleType = buttonStyleType;
+		Image *image = (*this).image;
+		if (image!=null) {
+			(*image).retain(image);	
+		}
 
 		resetViewBuffer(this, width, height);
 		drawAppearance(this, width, height);		
@@ -52,7 +56,7 @@ void initButton(Button *this, char text[16], int length, ButtonStyleType buttonS
 	}
 }
 
-void onMouseDown(View *this, MouseEvent *event)
+static void onMouseDown(View *this, MouseEvent *event)
 {
 	Button *button = (Button *)this;
 	if ((*button).select==FALSE) {
@@ -66,7 +70,7 @@ void onMouseDown(View *this, MouseEvent *event)
 	}	
 }
 
-void selectButtonStatus(Button *this, bool select)
+static void selectButtonStatus(Button *this, bool select)
 {
 	if (this!=null) {
 		char *text = (*this).title;
@@ -90,7 +94,7 @@ void selectButtonStatus(Button *this, bool select)
 	}
 } 
 
-void resetViewBuffer(Button *this, int width, int height)
+static void resetViewBuffer(Button *this, int width, int height)
 {
 	u8 *buffer = (*this).view.buffer;
 	int i=0;
@@ -99,7 +103,7 @@ void resetViewBuffer(Button *this, int width, int height)
 	}
 }
 
-void drawAppearance(Button *this, int width, int height)
+static void drawAppearance(Button *this, int width, int height)
 {
 	ButtonStyle *buttonStyle;
 	ButtonStyleType buttonStyleType=(*this).buttonStyleType;
@@ -111,11 +115,12 @@ void drawAppearance(Button *this, int width, int height)
 	u32 y = (height - imgHeight)/2;
 
 	drawCornerRect((View *)this, 0, 0, width, height, (*buttonStyle).borderColor, (*buttonStyle).corner);
-    drawGradualVerticalCornerRect((View *)this, 1, 1, width-2, height-2, (*buttonStyle).startColor, (*buttonStyle).endColor, (*buttonStyle).corner, DIRECTION_DOWN);
+    drawGradualVerticalCornerRect((View *)this, 1, 1, width-2, height-2, (*buttonStyle).startColor, 
+								  (*buttonStyle).endColor, (*buttonStyle).corner, DIRECTION_DOWN);
 	drawImage((View *)this, 4, y, (*this).image);
 }
 
-void drawDownAppearance(Button *this, int width, int height)
+static void drawDownAppearance(Button *this, int width, int height)
 {
 	ButtonStyle *buttonStyle;
 	ButtonStyleType buttonStyleType=(*this).buttonStyleType;
@@ -127,11 +132,12 @@ void drawDownAppearance(Button *this, int width, int height)
 	u32 y = (height - imgHeight)/2;
 
 	drawCornerRect((View *)this, 0, 0, width, height, (*buttonStyle).borderColor, (*buttonStyle).corner);
-    drawGradualVerticalCornerRect((View *)this, 1, 1, width-2, height-2, (*buttonStyle).startDownColor, (*buttonStyle).endDownColor, (*buttonStyle).corner, DIRECTION_DOWN);
+    drawGradualVerticalCornerRect((View *)this, 1, 1, width-2, height-2, 
+								  (*buttonStyle).startDownColor, (*buttonStyle).endDownColor, (*buttonStyle).corner, DIRECTION_DOWN);
 	drawImage((View *)this, 4, y, (*this).image);
 }
 
-void drawButtonText(Button *this, char *string, int length, int width, int height)
+static void drawButtonText(Button *this, char *string, int length, int width, int height)
 {
 	ButtonStyle *buttonStyle;
 	ButtonStyleType buttonStyleType=(*this).buttonStyleType;

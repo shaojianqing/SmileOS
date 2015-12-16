@@ -47,9 +47,9 @@ static void initGraphPanel(GraphPanel *this)
 static void drawBackground(GraphPanel *this, int width, int height)
 {
 	Color color;
-    color.red = 240;
-    color.green = 240;
-    color.blue = 240;
+    color.red = 30;
+    color.green = 50;
+    color.blue = 70;
 	
 	drawRect((View *)this, 0, 0, width, height, color);
 }
@@ -57,9 +57,9 @@ static void drawBackground(GraphPanel *this, int width, int height)
 static void drawGridView(GraphPanel *this, int width, int height)
 {
 	Color color;
-    color.red = 200;
-    color.green = 220;
-    color.blue = 220;
+    color.red = 50;
+    color.green = 70;
+    color.blue = 90;
 
 	drawLine((View *)this, 10, 10, width-10, 10, color, LINE_THIN);
 	drawLine((View *)this, width-10, 10, width-10, height-10, color, LINE_THIN);	
@@ -78,8 +78,8 @@ static void drawCoorindate(GraphPanel *this, int width, int height)
 {
 	Color color;
     color.red = 160;
-    color.green = 160;
-    color.blue = 180;
+    color.green = 180;
+    color.blue = 200;
 
 	drawLine((View *)this, 10, height-10, width-10, height-10, color, LINE_BOLD);
 	drawLine((View *)this, 10, 10, 10, height-10, color, LINE_BOLD);
@@ -97,9 +97,9 @@ static void drawCoorindate(GraphPanel *this, int width, int height)
 static void drawBorder(GraphPanel *this, int width, int height)
 {
 	Color color;
-	color.red = 160;
-    color.green = 160;
-    color.blue = 160;
+	color.red = 80;
+    color.green = 100;
+    color.blue = 120;
 	
 	drawLine((View *)this, 0, 0, width, 0, color, LINE_THIN);
 	drawLine((View *)this, 0, 0, 0, height, color, LINE_THIN);

@@ -3,12 +3,15 @@
 #include "../gui/color.h"
 #include "../gui/corner.h"
 #include "../gui/sheet.h"
+#include "../gui/image.h"
+#include "../gui/resource.h"
 #include "../gui/graphics.h"
 #include "../gui/view/view.h"
 #include "../gui/view/style.h"
 #include "../gui/event/buttonEvent.h"
 #include "../gui/factory/factory.h"
 #include "../gui/view/button.h"
+#include "../gui/view/imageButton.h"
 #include "../gui/view/coorPanel.h"
 #include "../system/descriptor.h"
 #include "../execute/execute.h"
@@ -16,6 +19,12 @@
 #include "calculator.h"
 
 extern Process *calculatorProcess;
+
+static Sheet *winCalculator;
+
+static ImageButton *closeBtn;
+
+static ImageButton *minizBtn;
 
 static Factory calculatorFactory;
 
@@ -63,11 +72,15 @@ static void numBtnClick(Button *this, MouseEvent *event);
 
 static void operBtnClick(Button *button, MouseEvent *event);
 
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event);
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event);
+
 static void prepareProcessLdtLocal(Process *process);
 
 static void calculatorApplicationMain();
 
-static void prepareWindowSheetCal(Sheet *sheet);
+static void prepareWindowSheetCal();
 
 static void calculatorOnTimer()
 {
@@ -90,6 +103,10 @@ void startCalculatorApplication()
 		(*calculatorProcess).tss.cr3 = 0x60000;
 				
 		startRunProcess(calculatorProcess, 4);
+	} else {
+		if (winCalculator!=null && (*winCalculator).visible==FALSE) {
+			showWindowSheet(winCalculator);
+		}	
 	}
 }
 
@@ -106,8 +123,8 @@ static void calculatorApplicationMain()
 {
 	initFactory(&calculatorFactory, calculatorOnTimer);
 	
-	Sheet *winCalculator = prepareSheet();
-    prepareWindowSheetCal(winCalculator);
+	winCalculator = prepareSheet();
+    prepareWindowSheetCal();
     loadWindowSheet(winCalculator);
 	(*calculatorProcess).mainWindow = winCalculator;
 
@@ -117,14 +134,14 @@ static void calculatorApplicationMain()
 	}
 }
 
-static void prepareWindowSheetCal(Sheet *sheet)
+static void prepareWindowSheetCal()
 {
-    if (sheet != null) {
-        (*sheet).x = 40;
-        (*sheet).y = 80;
-        (*sheet).width = 400;
-        (*sheet).height = 500;
-        (*sheet).buffer = (char *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+    if (winCalculator != null) {
+        (*winCalculator).x = 40;
+        (*winCalculator).y = 80;
+        (*winCalculator).width = 400;
+        (*winCalculator).height = 500;
+        (*winCalculator).buffer = (char *)allocPage((*winCalculator).width*(*winCalculator).height*SCREEN_DENSITY);
 		View *mainView = createView(0, 0,400, 500);
 
         Color startColor;
@@ -163,6 +180,11 @@ static void prepareWindowSheetCal(Sheet *sheet)
         shadowColor.green = 0x55;
         shadowColor.blue = 0x55;
 
+		Color transparentColor;
+		transparentColor.red = 0;
+		transparentColor.green = 0;
+		transparentColor.blue = 0;
+
         drawCornerRect(mainView, 0, 0, (*mainView).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect(mainView, 1, 1, (*mainView).width-2, 20, startColor, endColor, corner, DIRECTION_UP);
         drawRect(mainView, 0, 21, (*mainView).width, 480, mainBgColor);
@@ -194,6 +216,20 @@ static void prepareWindowSheetCal(Sheet *sheet)
 		drawCornerRect(mainView, 12, 32, (*mainView).width-24, 76, inputColor, inputCorner);
 
 		printString(mainView, "Calculator", 10, 160, 4, textColor, shadowColor);
+
+		Image *image = loadImageFromStorage(ico_btn_close);
+		closeBtn = createImageButton(370, 1, 20, 20);
+		(*closeBtn).initWithImage(closeBtn, image, transparentColor, transparentColor);
+		(*closeBtn).onMouseClick = onCloseBtnClick;
+		(*mainView).addSubView(mainView, (View *)closeBtn);
+		(*image).release(image);
+
+		image = loadImageFromStorage(ico_btn_miniz);
+		minizBtn = createImageButton(350, 1, 20, 20);
+		(*minizBtn).initWithImage(minizBtn, image, transparentColor, transparentColor);
+		(*minizBtn).onMouseClick = onMinizBtnClick;
+		(*mainView).addSubView(mainView, (View *)minizBtn);
+		(*image).release(image);	
 
 		clearBtn = createButton(10, 150, 80, 60, &calculatorFactory, null);
 		(*clearBtn).initButton(clearBtn, "C", 1, ButtonStyleDarkOrange);
@@ -290,7 +326,7 @@ static void prepareWindowSheetCal(Sheet *sheet)
 		(*equalityBtn).onMouseClick = operBtnClick;
 		(*mainView).addSubView(mainView, (View *)equalityBtn);
 		
-		loadContentView(sheet, mainView);	
+		loadContentView(winCalculator, mainView);	
     }
 }
 
@@ -311,9 +347,19 @@ static void numBtnClick(Button *button, MouseEvent *event)
 static void operBtnClick(Button *button, MouseEvent *event)
 {
 	if (button==equalityBtn) {
-		int result = testGate(0xFF8822);		
-		showIntegerValue(result, 100, 50);
+		//int result = testGate(0xFF8822);		
+		//showIntegerValue(result, 100, 50);
 		//sign++;
 	}	
+}
+
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event)
+{
+	
+}
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event)
+{
+	hideWindowSheet(winCalculator);
 }
 

@@ -4,12 +4,14 @@
 #include "../gui/color.h"
 #include "../gui/corner.h"
 #include "../gui/sheet.h"
+#include "../gui/image.h"
 #include "../gui/graphics.h"
 #include "../gui/view/view.h"
 #include "../gui/view/style.h"
 #include "../gui/event/buttonEvent.h"
 #include "../gui/factory/factory.h"
 #include "../gui/view/button.h"
+#include "../gui/view/imageButton.h"
 #include "../gui/view/item/headerItem.h"
 #include "../gui/view/item/gridDataItem.h"
 #include "../gui/view/gridPanel.h"
@@ -20,6 +22,12 @@
 #include "systemInfo.h"
 
 extern Process *sysInfoProcess;
+
+static Sheet *winSysInfo;
+
+static ImageButton *closeBtn;
+
+static ImageButton *minizBtn;
 
 static Factory sysInfoFactory;
 
@@ -39,9 +47,13 @@ static void prepareProcessDataList();
 
 static void sysInfoApplicationMain();
 
-static void prepareWindowSheetSys(Sheet *sheet);
+static void prepareWindowSheetSys();
 
 static GridDataItem *processItemRender(GridPanel *this, u32 index, int width, int height);
+
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event);
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event);
 
 static void onProcessBtnClick(Button *this, MouseEvent *event);
 
@@ -67,6 +79,10 @@ void startSysInfoApplication()
 		(*sysInfoProcess).tss.cr3 = 0x60000;
 
 		startRunProcess(sysInfoProcess, 4);
+	} else {
+		if (winSysInfo!=null && (*winSysInfo).visible==FALSE) {
+			showWindowSheet(winSysInfo);
+		}		
 	}
 }
 
@@ -74,8 +90,8 @@ static void sysInfoApplicationMain()
 {
 	initFactory(&sysInfoFactory, sysInfoOnTimer);
 	
-	Sheet *winSysInfo = prepareSheet();
-    prepareWindowSheetSys(winSysInfo);
+	winSysInfo = prepareSheet();
+    prepareWindowSheetSys();
     loadWindowSheet(winSysInfo);
 	(*sysInfoProcess).mainWindow = winSysInfo;
 
@@ -87,13 +103,15 @@ static void sysInfoApplicationMain()
 
 static void prepareWindowSheetSys(Sheet *sheet)
 {
-    if (sheet != null) {
-        (*sheet).x = 460;
-        (*sheet).y = 50;
-        (*sheet).width = 500;
-        (*sheet).height = 560;
-        (*sheet).buffer = (u8 *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+    if (winSysInfo != null) {
+        (*winSysInfo).x = 460;
+        (*winSysInfo).y = 50;
+        (*winSysInfo).width = 500;
+        (*winSysInfo).height = 560;
+        (*winSysInfo).buffer = (u8 *)allocPage((*winSysInfo).width*(*winSysInfo).height*SCREEN_DENSITY);
 		View *mainView = createView(0, 0, 500, 560);
+
+		resetSheet(winSysInfo);
 
         Color startColor;
         startColor.red = 250;
@@ -141,23 +159,45 @@ static void prepareWindowSheetSys(Sheet *sheet)
         contentColor.green = 250;
         contentColor.blue = 250;
 
+		Color transparentColor;
+		transparentColor.red = 0;
+		transparentColor.green = 0;
+		transparentColor.blue = 0;
+
         drawCornerRect(mainView, 0, 0, (*mainView).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect(mainView, 1, 1, (*mainView).width-2, 20, startColor, endColor, corner, DIRECTION_UP);
         drawRect(mainView, 0, 21, (*mainView).width, 540, mainBgColor);
 		drawRect(mainView, 1, 21, (*mainView).width-2, 538, mainColor);
 
-		printString(mainView, "System Infomation", 18, 120, 4, textColor, shadowColor);
+		printString(mainView, "System Infomation", 18, 180, 4, textColor, shadowColor);
+
+		Image *image = loadImageFromStorage(ico_btn_close);
+		closeBtn = createImageButton(470, 1, 20, 20);
+		(*closeBtn).initWithImage(closeBtn, image, transparentColor, transparentColor);
+		(*closeBtn).onMouseClick = onCloseBtnClick;
+		(*mainView).addSubView(mainView, (View *)closeBtn);
+		(*image).release(image);
+
+		image = loadImageFromStorage(ico_btn_miniz);
+		minizBtn = createImageButton(450, 1, 20, 20);
+		(*minizBtn).initWithImage(minizBtn, image, transparentColor, transparentColor);
+		(*minizBtn).onMouseClick = onMinizBtnClick;
+		(*mainView).addSubView(mainView, (View *)minizBtn);
+		(*image).release(image);
 
 		Image *processIco = (Image *)loadImageFromStorage(ico_btn_sys_process);
 		processInfoBtn = createButton(5, 24, 150, 32, &sysInfoFactory, processIco);
 		(*processInfoBtn).initButton(processInfoBtn, "Process Info", 12, ButtonStyleLightGray);
 		(*processInfoBtn).onMouseClick = onProcessBtnClick;
 		(*mainView).addSubView(mainView, (View *)processInfoBtn);
+		(*processIco).release(processIco);
 
-		memoryInfoBtn = createButton(160, 24, 150, 32, &sysInfoFactory, null);
+		Image *memoryIco = (Image *)loadImageFromStorage(ico_btn_sys_memory);
+		memoryInfoBtn = createButton(160, 24, 150, 32, &sysInfoFactory, memoryIco);
 		(*memoryInfoBtn).initButton(memoryInfoBtn, "Memory Info", 11, ButtonStyleLightGray);
 		(*memoryInfoBtn).onMouseClick = onMemoryBtnClick;
 		(*mainView).addSubView(mainView, (View *)memoryInfoBtn);
+		(*memoryIco).release(memoryIco);
 
 		prepareProcessHeaderList();
 		prepareProcessDataList();
@@ -167,7 +207,7 @@ static void prepareWindowSheetSys(Sheet *sheet)
 		(*processDataGrid).renderDataGrid(processDataGrid, 5, processItemRender);
 		(*mainView).addSubView(mainView, (View *)processDataGrid);
 
-		loadContentView(sheet, mainView);
+		loadContentView(winSysInfo, mainView);
     }
 }
 
@@ -275,5 +315,15 @@ static void onProcessBtnClick(Button *this, MouseEvent *event)
 static void onMemoryBtnClick(Button *this, MouseEvent *event)
 {
 	
+}
+
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event)
+{
+	
+}
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event)
+{
+	hideWindowSheet(winSysInfo);
 }
 

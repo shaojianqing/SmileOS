@@ -1,8 +1,15 @@
 #include "../const/const.h"
 #include "../type/type.h"
+#include "../gui/resource.h"
 #include "../gui/color.h"
 #include "../gui/corner.h"
+#include "../gui/resource.h"
 #include "../gui/sheet.h"
+#include "../gui/image.h"
+#include "../gui/view/view.h"
+#include "../gui/graphics.h"
+#include "../gui/event/buttonEvent.h"
+#include "../gui/view/imageButton.h"
 #include "../execute/execute.h"
 #include "../system/descriptor.h"
 #include "../process/process.h"
@@ -10,9 +17,19 @@
 
 extern Process *commandProcess;
 
+static Sheet *winCommand;
+
+static ImageButton *closeBtn;
+
+static ImageButton *minizBtn;
+
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event);
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event);
+
 static void commandApplicationMain();
 
-static void prepareWindowSheetCmd(Sheet *sheet);
+static void prepareWindowSheetCmd();
 
 void startCommandApplication()
 {
@@ -29,13 +46,17 @@ void startCommandApplication()
 		(*commandProcess).tss.cr3 = 0x60000;
 
 		startRunProcess(commandProcess, 4);
+	} else {
+		if (winCommand!=null) {
+			showWindowSheet(winCommand);
+		}	
 	}
 }
 
 static void commandApplicationMain()
 {
-	Sheet *winCommand = prepareSheet();
-    prepareWindowSheetCmd(winCommand);
+	winCommand = prepareSheet();
+    prepareWindowSheetCmd();
     loadWindowSheet(winCommand);
 	(*commandProcess).mainWindow = winCommand;
 	int count = 0;
@@ -45,16 +66,17 @@ static void commandApplicationMain()
 	}
 }
 
-static void prepareWindowSheetCmd(Sheet *sheet)
+static void prepareWindowSheetCmd()
 {
-    if (sheet != null) {
-        (*sheet).x = 80;
-        (*sheet).y = 80;
-        (*sheet).width = 800;
-        (*sheet).height = 560;
-        (*sheet).buffer = (char *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
-
-        resetSheet(sheet);
+    if (winCommand != null) {
+        (*winCommand).x = 100;
+        (*winCommand).y = 60;
+        (*winCommand).width = 800;
+        (*winCommand).height = 560;
+        (*winCommand).buffer = (char *)allocPage((*winCommand).width*(*winCommand).height*SCREEN_DENSITY);
+		View *mainView = createView(0, 0, 800, 560);		
+	
+        resetSheet(winCommand);
 
         Color startColor;
         startColor.red = 250;
@@ -92,13 +114,49 @@ static void prepareWindowSheetCmd(Sheet *sheet)
         shadowColor.green = 0x55;
         shadowColor.blue = 0x55;
 
-        drawCornerRect((*sheet).buffer, sheet, 0, 0, (*sheet).width, 21, mainBgColor, corner);
-        drawGradualVerticalCornerRect((*sheet).buffer, sheet, 1, 1, (*sheet).width-2, 20, startColor, endColor, corner);
-        //drawRect((*sheet).buffer, sheet, 0, 21, (*sheet).width, 539, mainBgColor);
-        //drawRect((*sheet).buffer, sheet, 1, 22, (*sheet).width-2, 538, mainColor);
+		Color separateColor;
+		separateColor.red = 50;
+		separateColor.green = 60;
+		separateColor.blue = 70;
 
-		printString(sheet, "Command", 8, 370, 4, textColor, shadowColor);
+		Color transparentColor;
+		transparentColor.red = 0;
+		transparentColor.green = 0;
+		transparentColor.blue = 0;
+
+		drawCornerRect(mainView, 0, 0, (*mainView).width, 21, mainBgColor, corner);
+        drawGradualVerticalCornerRect(mainView, 1, 1, (*mainView).width-2, 20, startColor, endColor, corner, DIRECTION_UP);
+        drawRect(mainView, 1, 20, (*mainView).width-2, 21, separateColor);
+		drawRect(mainView, 0, 21, (*mainView).width, 540, mainBgColor);
+		drawRect(mainView, 1, 21, (*mainView).width-2, 538, mainColor);
+
+		printString(mainView, "Command", 7, 350, 4, textColor, shadowColor);
+
+		Image *image = loadImageFromStorage(ico_btn_close);
+		closeBtn = createImageButton(770, 1, 20, 20);
+		(*closeBtn).initWithImage(closeBtn, image, transparentColor, transparentColor);
+		(*closeBtn).onMouseClick = onCloseBtnClick;
+		(*mainView).addSubView(mainView, (View *)closeBtn);
+		(*image).release(image);
+
+		image = loadImageFromStorage(ico_btn_miniz);
+		minizBtn = createImageButton(750, 1, 20, 20);
+		(*minizBtn).initWithImage(minizBtn, image, transparentColor, transparentColor);
+		(*minizBtn).onMouseClick = onMinizBtnClick;
+		(*mainView).addSubView(mainView, (View *)minizBtn);
+		(*image).release(image);
+
+		loadContentView(winCommand, mainView);
     }
 }
 
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event)
+{
+	
+}
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event)
+{
+	hideWindowSheet(winCommand);
+}
 

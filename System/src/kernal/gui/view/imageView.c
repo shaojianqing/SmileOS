@@ -22,6 +22,11 @@ ImageView *createImageView(int x, int y, int w, int h)
 static void initWithImage(ImageView *this, Image *image, Color borderColor)
 {
 	if (this!=null && image!=null) {
+		Image *originImage = (*this).image;
+		if (originImage!=null) {
+			(*originImage).release(originImage);
+		}
+		(*image).retain(image);	
 		(*this).image = image;
 		View *view = (View *)this;
 		u32 width = (*view).width;

@@ -43,6 +43,7 @@ Sheet* prepareSheet()
         Sheet *sheet = (Sheet *)((*sheetManager).sheetList+i);
         if ((*sheet).status == STATUS_SHEET_UNUSE) {
             (*sheet).status = STATUS_SHEET_USING;
+			(*sheet).visible = TRUE;
             (*sheet).z = -1;
             return sheet;
         }
@@ -186,6 +187,30 @@ void refreshSheetRect(Sheet *sheet, int x, int y, int w, int h)
     refreshSheetSub((*sheet).x + x, (*sheet).y + y, (*sheet).x + x + w, (*sheet).y + y + h, (*sheet).z, (*sheet).z);
 }
 
+void refreshSheetStack(Sheet *sheet, int x, int y, int w, int h)
+{
+	refreshSheetMap((*sheet).x + x, (*sheet).y + y, (*sheet).x + x + w, (*sheet).y + y + h, 0);
+    refreshSheetSub((*sheet).x + x, (*sheet).y + y, (*sheet).x + x + w, (*sheet).y + y + h, 0, 0);
+}
+
+void showWindowSheet(Sheet *sheet)
+{
+	if (sheet!=null) {
+		(*sheet).visible = TRUE;
+		refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x + (*sheet).width, (*sheet).y + (*sheet).height, (*sheet).z);
+	    refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x + (*sheet).width, (*sheet).y + (*sheet).height, (*sheet).z, (*sheet).z);
+	}
+}
+
+void hideWindowSheet(Sheet *sheet)
+{
+	if (sheet!=null) {
+		(*sheet).visible = FALSE;
+		refreshSheetMap((*sheet).x, (*sheet).y, (*sheet).x + (*sheet).width, (*sheet).y + (*sheet).height, 0);
+	    refreshSheetSub((*sheet).x, (*sheet).y, (*sheet).x + (*sheet).width, (*sheet).y + (*sheet).height, 0, 0);
+	}
+}
+
 void refreshSheetMap(int x1, int y1, int x2, int y2, int z1)
 {
     if (x2>x1 && y2>y1) {
@@ -210,39 +235,41 @@ void refreshSheetMap(int x1, int y1, int x2, int y2, int z1)
 
         for (i=z1; i<(*sheetManager).sheetNum; ++i) {
             Sheet *sheet = (*sheetManager).sheets[i];
-            xb1 = x1 - (*sheet).x;
-            yb1 = y1 - (*sheet).y;
-            xb2 = x2 - (*sheet).x;
-            yb2 = y2 - (*sheet).y;
-            sid = i+1;
+			if ((*sheet).visible==TRUE) {
+		        xb1 = x1 - (*sheet).x;
+		        yb1 = y1 - (*sheet).y;
+		        xb2 = x2 - (*sheet).x;
+		        yb2 = y2 - (*sheet).y;
+		        sid = i+1;
 
-            if (xb1<0) {
-                xb1=0;
-            }
-            if (yb1<0) {
-                yb1=0;
-            }
-            if (xb2>(*sheet).width) {
-                xb2=(*sheet).width;
-            }
-            if (yb2>(*sheet).height) {
-                yb2=(*sheet).height;
-            }
+		        if (xb1<0) {
+		            xb1=0;
+		        }
+		        if (yb1<0) {
+		            yb1=0;
+		        }
+		        if (xb2>(*sheet).width) {
+		            xb2=(*sheet).width;
+		        }
+		        if (yb2>(*sheet).height) {
+		            yb2=(*sheet).height;
+		        }
 
-            if (xb2>xb1 && yb2>yb1) {
-                for (y=yb1; y<yb2; ++y) {
-                    vy = (*sheet).y + y;
-                    for (x=xb1; x<xb2; ++x) {
-                        vx = (*sheet).x + x;
-                        char blue = *((*sheet).buffer + (y*(*sheet).width + x)*3);
-                        char green = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 1);
-                        char red = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 2);
-                        if (blue!=TRANSPARENT || green!=TRANSPARENT || red!=TRANSPARENT) {
-                            *(map+vy*SCREEN_WIDTH + vx) = sid;
-                        }
-                    }
-                }
-            }
+		        if (xb2>xb1 && yb2>yb1) {
+		            for (y=yb1; y<yb2; ++y) {
+		                vy = (*sheet).y + y;
+		                for (x=xb1; x<xb2; ++x) {
+		                    vx = (*sheet).x + x;
+		                    u8 blue = *((*sheet).buffer + (y*(*sheet).width + x)*3);
+		                    u8 green = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 1);
+		                    u8 red = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 2);
+		                    if (blue!=TRANSPARENT || green!=TRANSPARENT || red!=TRANSPARENT) {
+		                        *(map+vy*SCREEN_WIDTH + vx) = sid;
+		                    }
+		                }
+		            }
+		        }
+			}
         }
     }
 }
@@ -253,7 +280,7 @@ void refreshSheetSub(int x1, int y1, int x2, int y2, int z1, int z2)
         SheetManager *sheetManager = (SheetManager *)SHEET_MANAGE_TABLE;
         u8 *vram = (u8 *)((*videoModeInfo).bufferAddress);
         u8 *map = (u8 *)MAP_ADDRESS;
-        char *buffer;
+        u8 *buffer;
         int x, y, xb1, yb1, xb2, yb2, vx, vy;
         u8 i=0, sid=0;
 
@@ -272,49 +299,51 @@ void refreshSheetSub(int x1, int y1, int x2, int y2, int z1, int z2)
 
         for (i=z1; i<=z2; ++i) {
             Sheet *sheet = (*sheetManager).sheets[i];
-            xb1 = x1 - (*sheet).x;
-            yb1 = y1 - (*sheet).y;
-            xb2 = x2 - (*sheet).x;
-            yb2 = y2 - (*sheet).y;
-            sid = i+1;
+			if ((*sheet).visible==TRUE) {
+		        xb1 = x1 - (*sheet).x;
+		        yb1 = y1 - (*sheet).y;
+		        xb2 = x2 - (*sheet).x;
+		        yb2 = y2 - (*sheet).y;
+		        sid = i+1;
 
-            if (xb1<0) {
-                xb1=0;
-            }
-            if (yb1<0) {
-                yb1=0;
-            }
-            if (xb2>(*sheet).width) {
-                xb2=(*sheet).width;
-            }
-            if (yb2>(*sheet).height) {
-                yb2=(*sheet).height;
-            }
-            if (xb2>xb1 && yb2>yb1) {
-                for (y=yb1; y<yb2; ++y) {
-                    vy = (*sheet).y + y;
-                    for (x=xb1; x<xb2; ++x) {
-                        vx = (*sheet).x + x;                        
-                        if (*(map+vy*SCREEN_WIDTH + vx)==sid) {
-							char blue = *((*sheet).buffer + (y*(*sheet).width + x)*3);
-		                    char green = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 1);
-		                    char red = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 2);
-		                    if (blue != TRANSPARENT || green != TRANSPARENT || red != TRANSPARENT) {
-								#if REAL						
-		                            *(vram + (vy*SCREEN_WIDTH + vx)*4) = blue;
-		                            *(vram + (vy*SCREEN_WIDTH + vx)*4 + 1) = green;
-		                            *(vram + (vy*SCREEN_WIDTH + vx)*4 + 2) = red;
-									*(vram + (vy*SCREEN_WIDTH + vx)*4 + 3) = 0xff;
-								#else
-									*(vram + (vy*SCREEN_WIDTH + vx)*3) = blue;
-		                            *(vram + (vy*SCREEN_WIDTH + vx)*3 + 1) = green;
-		                            *(vram + (vy*SCREEN_WIDTH + vx)*3 + 2) = red;
-								#endif
-                            }
-                        }
-                    }
-                }
-            }
+		        if (xb1<0) {
+		            xb1=0;
+		        }
+		        if (yb1<0) {
+		            yb1=0;
+		        }
+		        if (xb2>(*sheet).width) {
+		            xb2=(*sheet).width;
+		        }
+		        if (yb2>(*sheet).height) {
+		            yb2=(*sheet).height;
+		        }
+		        if (xb2>xb1 && yb2>yb1) {
+		            for (y=yb1; y<yb2; ++y) {
+		                vy = (*sheet).y + y;
+		                for (x=xb1; x<xb2; ++x) {
+		                    vx = (*sheet).x + x;                        
+		                    if (*(map+vy*SCREEN_WIDTH + vx)==sid) {
+								u8 blue = *((*sheet).buffer + (y*(*sheet).width + x)*3);
+				                u8 green = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 1);
+				                u8 red = *((*sheet).buffer + (y*(*sheet).width + x)*3 + 2);
+				                if (blue != TRANSPARENT || green != TRANSPARENT || red != TRANSPARENT) {
+									#if REAL						
+				                        *(vram + (vy*SCREEN_WIDTH + vx)*4) = blue;
+				                        *(vram + (vy*SCREEN_WIDTH + vx)*4 + 1) = green;
+				                        *(vram + (vy*SCREEN_WIDTH + vx)*4 + 2) = red;
+										*(vram + (vy*SCREEN_WIDTH + vx)*4 + 3) = 0xff;
+									#else
+										*(vram + (vy*SCREEN_WIDTH + vx)*3) = blue;
+				                        *(vram + (vy*SCREEN_WIDTH + vx)*3 + 1) = green;
+				                        *(vram + (vy*SCREEN_WIDTH + vx)*3 + 2) = red;
+									#endif
+		                        }
+		                    }
+		                }
+		            }
+		        }
+			}
         }
     }
 }

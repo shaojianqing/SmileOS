@@ -28,6 +28,8 @@ typedef struct Sheet
 
 	int z, status;
 
+	bool visible;
+
 	View *contentView;
 
 	Process *process;
@@ -58,6 +60,8 @@ void loadContentView(Sheet *sheet, View *view);
 
 void refreshSheetRect(Sheet *sheet, int x, int y, int w, int h);
 
+void refreshSheetStack(Sheet *sheet, int x, int y, int w, int h);
+
 void initMouseSheet(Sheet *sheet);
 
 void loadWindowSheet(Sheet *sheet);
@@ -67,6 +71,10 @@ void initBackgroundSheet(Sheet *sheet);
 void slideSheet(Sheet *sheet, int x, int y);
 
 void processSheetMouseDownEvent(Sheet *sheet, int x, int y);
+
+void showWindowSheet(Sheet *sheet);
+
+void hideWindowSheet(Sheet *sheet);
 
 void releaseSheet(Sheet *sheet);
 

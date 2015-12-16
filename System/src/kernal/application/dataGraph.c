@@ -13,11 +13,15 @@
 #include "../gui/event/buttonEvent.h"
 #include "../gui/factory/factory.h"
 #include "../gui/view/button.h"
+#include "../gui/image.h"
+#include "../gui/view/imageButton.h"
 #include "../gui/view/graphPanel.h"
 #include "dataSetting.h"
 #include "dataGraph.h"
 
 extern Process *dataGraphProcess;
+
+static Sheet *winDataGraph;
 
 static Button *barGraphBtn;
 
@@ -27,9 +31,17 @@ static Button *hybridGraphBtn;
 
 static Button *financeGraphBtn;
 
+static ImageButton *closeBtn;
+
+static ImageButton *minizBtn;
+
 static GraphPanel *graphPanel;
 
 static Factory dataGraphFactory;
+
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event);
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event);
 
 static void onBarGraphBtnClick(Button *this, MouseEvent *event);
 
@@ -41,7 +53,7 @@ static void onFinanceGraphBtnClick(Button *this, MouseEvent *event);
 
 static void dataGraphApplicationMain();
 
-static void prepareWindowSheetGraph(Sheet *sheet);
+static void prepareWindowSheetGraph();
 
 static void dataGraphOnTimer()
 {
@@ -63,6 +75,10 @@ void startDataGraphApplication()
 		(*dataGraphProcess).tss.cr3 = 0x60000;
 
 		startRunProcess(dataGraphProcess, 4);
+	} else {
+		if (winDataGraph!=null && (*winDataGraph).visible==FALSE) {
+			showWindowSheet(winDataGraph);
+		}	
 	}
 }
 
@@ -70,7 +86,7 @@ static void dataGraphApplicationMain()
 {
 	initFactory(&dataGraphFactory, dataGraphOnTimer);
 	
-	Sheet *winDataGraph = prepareSheet();
+	winDataGraph = prepareSheet();
     prepareWindowSheetGraph(winDataGraph);
     loadWindowSheet(winDataGraph);
 	(*dataGraphProcess).mainWindow = winDataGraph;
@@ -81,87 +97,119 @@ static void dataGraphApplicationMain()
 	}
 }
 
-static void prepareWindowSheetGraph(Sheet *sheet)
+static void prepareWindowSheetGraph()
 {
-    if (sheet != null) {
-        (*sheet).x = 60;
-        (*sheet).y = 60;
-        (*sheet).width = 800;
-        (*sheet).height = 560;
-        (*sheet).buffer = (u8 *)allocPage((*sheet).width*(*sheet).height*SCREEN_DENSITY);
+    if (winDataGraph != null) {
+        (*winDataGraph).x = 60;
+        (*winDataGraph).y = 60;
+        (*winDataGraph).width = 800;
+        (*winDataGraph).height = 560;
+        (*winDataGraph).buffer = (u8 *)allocPage((*winDataGraph).width*(*winDataGraph).height*SCREEN_DENSITY);
 		View *mainView = createView(0, 0, 800, 560);
 
-        resetSheet(sheet);
+        resetSheet(winDataGraph);
 
         Color startColor;
-        startColor.red = 250;
-        startColor.green = 250;
-        startColor.blue = 250;
+		startColor.red = 20;
+		startColor.green = 36;
+		startColor.blue = 54;
 
-        Color endColor;
-        endColor.red = 220;
-        endColor.green = 220;
-        endColor.blue = 220;
+		Color endColor;
+		endColor.red = 32;
+		endColor.green = 42;
+		endColor.blue = 60;
 
-        Corner corner;
-        corner.leftTop=2;
-        corner.rightTop=2;
-        corner.leftBtm=0;
-        corner.rightBtm=0;
+		Corner corner;
+		corner.leftTop = 2;
+		corner.rightTop = 2;
+		corner.leftBtm = 0;
+		corner.rightBtm = 0;
 
-        Color mainBgColor;
-        mainBgColor.red = 120;
-        mainBgColor.green = 120;
-        mainBgColor.blue = 120;
+		Color mainBgColor;
+		mainBgColor.red = 120;
+		mainBgColor.green = 120;
+		mainBgColor.blue = 120;
 
 		Color mainColor;
-        mainColor.red = 210;
-        mainColor.green = 210;
-        mainColor.blue = 210;
+		mainColor.red = 20;
+		mainColor.green = 36;
+		mainColor.blue = 54;
 
 		Color textColor;
-        textColor.red = 0x55;
-        textColor.green = 0x55;
-        textColor.blue = 0x55;
+		textColor.red = 0xaa;
+		textColor.green = 0xbb;
+		textColor.blue = 0x66;
 
 		Color shadowColor;
-        shadowColor.red = 0x55;
-        shadowColor.green = 0x55;
-        shadowColor.blue = 0x55;
+		shadowColor.red = 0xaa;
+		shadowColor.green = 0xbb;
+		shadowColor.blue = 0x66;
+
+		Color separateColor;
+		separateColor.red = 50;
+		separateColor.green = 60;
+		separateColor.blue = 70;
+
+		Color transparentColor;
+		transparentColor.red = 0;
+		transparentColor.green = 0;
+		transparentColor.blue = 0;
 
        	drawCornerRect(mainView, 0, 0, (*mainView).width, 21, mainBgColor, corner);
         drawGradualVerticalCornerRect(mainView, 1, 1, (*mainView).width-2, 20, startColor, endColor, corner, DIRECTION_UP);
-        drawRect(mainView, 0, 21, (*mainView).width, 540, mainBgColor);
+        drawRect(mainView, 1, 20, (*mainView).width-2, 21, separateColor);
+		drawRect(mainView, 0, 21, (*mainView).width, 540, mainBgColor);
 		drawRect(mainView, 1, 21, (*mainView).width-2, 538, mainColor);
 
 		printString(mainView, "DataGraph", 9, 350, 4, textColor, shadowColor);
+
+		Image *image = loadImageFromStorage(ico_btn_close);
+		closeBtn = createImageButton(770, 1, 20, 20);
+		(*closeBtn).initWithImage(closeBtn, image, transparentColor, transparentColor);
+		(*closeBtn).onMouseClick = onCloseBtnClick;
+		(*mainView).addSubView(mainView, (View *)closeBtn);
+		(*image).release(image);
+
+		image = loadImageFromStorage(ico_btn_miniz);
+		minizBtn = createImageButton(750, 1, 20, 20);
+		(*minizBtn).initWithImage(minizBtn, image, transparentColor, transparentColor);
+		(*minizBtn).onMouseClick = onMinizBtnClick;
+		(*mainView).addSubView(mainView, (View *)minizBtn);
+		(*image).release(image);
 
 		graphPanel = createGraphPanel(5, 60, 790, 494);
 		(*mainView).addSubView(mainView, (View *)graphPanel);
 		(*mainView).addSubView(mainView, (*graphPanel).canvas);
 
-		Image *image = (Image *)loadImageFromStorage(ico_btn_bar_graph);
-		barGraphBtn = createButton(5, 24, 140, 32, &dataGraphFactory, image);
-		(*barGraphBtn).initButton(barGraphBtn, "Bar Graph", 9, ButtonStyleLightGray);
+		Image *barIco = (Image *)loadImageFromStorage(ico_btn_bar_graph);
+		barGraphBtn = createButton(5, 24, 140, 32, &dataGraphFactory, barIco);
+		(*barGraphBtn).initButton(barGraphBtn, "Bar Graph", 9, ButtonStyleBlackBlue);
 		(*barGraphBtn).onMouseClick = onBarGraphBtnClick;
 		(*mainView).addSubView(mainView, (View *)barGraphBtn);
+		(*barIco).release(barIco);
 
-		lineGraphBtn = createButton(150, 24, 140, 32, &dataGraphFactory, null);
-		(*lineGraphBtn).initButton(lineGraphBtn, "Line Graph", 10, ButtonStyleLightGray);
+		Image *lineIco = (Image *)loadImageFromStorage(ico_btn_line_graph);
+		lineGraphBtn = createButton(150, 24, 140, 32, &dataGraphFactory, lineIco);
+		(*lineGraphBtn).initButton(lineGraphBtn, "Line Graph", 10, ButtonStyleBlackBlue);
 		(*lineGraphBtn).onMouseClick = onLineGraphBtnClick;
 		(*mainView).addSubView(mainView, (View *)lineGraphBtn);
+		(*lineIco).release(lineIco);
 
-		hybridGraphBtn = createButton(295, 24, 140, 32, &dataGraphFactory, null);
-		(*hybridGraphBtn).initButton(hybridGraphBtn, "Hybrid Graph", 12, ButtonStyleLightGray);
+		Image *hybdIco = (Image *)loadImageFromStorage(ico_btn_hybd_graph);
+		hybridGraphBtn = createButton(295, 24, 140, 32, &dataGraphFactory, hybdIco);
+		(*hybridGraphBtn).initButton(hybridGraphBtn, "Hybrid Graph", 12, ButtonStyleBlackBlue);
 		(*hybridGraphBtn).onMouseClick = onHybridGraphBtnClick;
 		(*mainView).addSubView(mainView, (View *)hybridGraphBtn);
+		(*hybdIco).release(hybdIco);
 
-		financeGraphBtn = createButton(440, 24, 140, 32, &dataGraphFactory, null);
-		(*financeGraphBtn).initButton(financeGraphBtn, "Stack Graph", 11, ButtonStyleLightGray);
+		Image *finIco = (Image *)loadImageFromStorage(ico_btn_fin_graph);
+		financeGraphBtn = createButton(440, 24, 140, 32, &dataGraphFactory, finIco);
+		(*financeGraphBtn).initButton(financeGraphBtn, "Stack Graph", 11, ButtonStyleBlackBlue);
 		(*financeGraphBtn).onMouseClick = onFinanceGraphBtnClick;
 		(*mainView).addSubView(mainView, (View *)financeGraphBtn);
+		(*finIco).release(finIco);
 
-		loadContentView(sheet, mainView);	
+		loadContentView(winDataGraph, mainView);	
     }
 }
 
@@ -189,5 +237,15 @@ static void onFinanceGraphBtnClick(Button *this, MouseEvent *event)
 {
 	(*graphPanel).drawGraph = drawLineGraph;
 	(*graphPanel).drawGraph(graphPanel);
+}
+
+static void onCloseBtnClick(ImageButton *this, MouseEvent *event)
+{
+	
+}
+
+static void onMinizBtnClick(ImageButton *this, MouseEvent *event)
+{
+	hideWindowSheet(winDataGraph);
 }
 

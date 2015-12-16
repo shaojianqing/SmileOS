@@ -17,6 +17,8 @@ static void drawBorder(CoorPanel *this, int width, int height);
 
 static void onMouseDown(View *this, MouseEvent *event);
 
+static void initCoorPanel(CoorPanel *this);
+
 CoorPanel *createCoorPanel(int x, int y, int w, int h)
 {
 	CoorPanel *coorPanel = (CoorPanel *)allocPage(sizeof(CoorPanel));
@@ -29,7 +31,7 @@ CoorPanel *createCoorPanel(int x, int y, int w, int h)
 	return coorPanel;
 }
 
-void initCoorPanel(CoorPanel *this)
+static void initCoorPanel(CoorPanel *this)
 {
 	if (this!=null) {		
 		int width = (*this).view.width;
@@ -45,9 +47,9 @@ void initCoorPanel(CoorPanel *this)
 static void drawBackground(CoorPanel *this, int width, int height)
 {
 	Color color;
-    color.red = 240;
-    color.green = 240;
-    color.blue = 240;
+    color.red = 40;
+    color.green = 60;
+    color.blue = 80;
 	
 	drawRect((View *)this, 0, 0, width, height, color);
 }
@@ -55,9 +57,9 @@ static void drawBackground(CoorPanel *this, int width, int height)
 static void drawGridView(CoorPanel *this, int width, int height)
 {
 	Color color;
-    color.red = 220;
-    color.green = 220;
-    color.blue = 220;
+    color.red = 90;
+    color.green = 90;
+    color.blue = 80;
 
 	int i=0;
 	for (i=1;i<=48;++i) {
@@ -65,16 +67,16 @@ static void drawGridView(CoorPanel *this, int width, int height)
 	}
 	
 	for (i=1;i<=78;++i) {
-		drawLine((View *)this, i*10, 0, i*10, height, color, LINE_THIN);	
+		drawLine((View *)this, i*10, 0, i*10, height-1, color, LINE_THIN);	
 	}
 }
 
 static void drawCoorindate(CoorPanel *this, int width, int height)
 {
 	Color color;
-    color.red = 90;
-    color.green = 90;
-    color.blue = 90;
+    color.red = 160;
+    color.green = 180;
+    color.blue = 80;
 
 	int i=0;
 	for (i=1;i<=48;++i) {
@@ -92,9 +94,9 @@ static void drawCoorindate(CoorPanel *this, int width, int height)
 static void drawBorder(CoorPanel *this, int width, int height)
 {
 	Color color;
-	color.red = 160;
-    color.green = 160;
-    color.blue = 160;
+	color.red = 80;
+    color.green = 100;
+    color.blue = 120;
 	
 	drawLine((View *)this, 0, 0, width, 0, color, LINE_THIN);
 	drawLine((View *)this, 0, 0, 0, height, color, LINE_THIN);
