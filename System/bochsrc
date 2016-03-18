@@ -16,8 +16,7 @@ ata0-master: type=disk, path="System.vhd", mode=flat, cylinders=65, heads=16, sp
 # choose the boot disk.
 boot: disk
 
-# disable the mouse
-mouse: enabled=1
+# disable the mousmouse: enabled=1
 
 # enable key mapping, using US layout as default.
 keyboard_mapping: enabled=1, map=/usr/share/bochs/keymaps/x11-pc-us.map

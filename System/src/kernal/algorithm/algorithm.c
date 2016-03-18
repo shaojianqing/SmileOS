@@ -61,6 +61,7 @@ void sort(Object *list[], u32 num, Compare compare)
 		u32 i=0, j=0, index=0;
 		for (i=0;i<num-1;++i) {
 			minObject = list[i];
+			index = i;
 			for (j=i+1;j<num;++j) {
 				Object *object = list[j];
 				if (compare(minObject, object)==TRUE) {
@@ -68,7 +69,7 @@ void sort(Object *list[], u32 num, Compare compare)
 					index = j;
 				}							
 			}
-			if (minObject!=list[i]) {
+			if (i!=index) {
 				Object *object = list[i];
 				list[index] = object;
 				list[i] = minObject;

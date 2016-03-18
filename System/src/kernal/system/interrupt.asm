@@ -13,6 +13,8 @@ extern intHandler2e
 
 [bits 32]
 
+; Initialize the hardware interrupt settings so that
+; the hardware devices can trigger interrupts. 
 initPic:
     mov al, 0x11
     out 0x20, al
@@ -44,6 +46,7 @@ initPic:
 
     ret
 
+;The assembly signature of the timing interrupt handler entry point
 asmIntHandler20:
 	push ds
 	pushad
@@ -57,6 +60,7 @@ asmIntHandler20:
 	pop ds
 	iretd
 
+;The assembly signature of the keyboard interrupt handler entry point
 asmIntHandler21:
 	push ds
 	pushad
@@ -70,6 +74,7 @@ asmIntHandler21:
 	pop ds
 	iretd
 
+;The assembly signature of the mouse interrupt handler entry point
 asmIntHandler2c:
 	push ds
 	pushad
@@ -83,6 +88,7 @@ asmIntHandler2c:
 	pop ds		
 	iretd
 
+;The assembly signature of the harddisk interrupt handler entry point
 asmIntHandler2e:
 	push ds
 	pushad

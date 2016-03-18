@@ -100,6 +100,7 @@ Timer* requestCurrentTimer(u64 timeout, void (*onTimer)())
 	timeout+=timeManager.time;
 	Timer* timer = requestTimer(timeout, onTimer);
 	setupInterrupt();
+	return timer;
 }
 
 void releaseTimer(Timer *timer)

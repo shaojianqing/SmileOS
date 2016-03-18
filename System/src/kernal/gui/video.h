@@ -1,5 +1,12 @@
+/* 
+ * The base address constant of the VideoModeInfo data in the memory.
+ */
 #define			VIDEO_INFO_BASE			0x21800
 
+/* 
+ * According to the VESA_VBE standard, here is the data structure of the Video mode infomation.
+ * The detailed meaning is listed below, please refer to the name of the data field.
+ */
 typedef struct VideoModeInfo
 {
 	u16 modeAttribute;
@@ -70,5 +77,15 @@ typedef struct VideoModeInfo
 
 } VideoModeInfo;
 
+/* 
+ * Set the videoModeInfo point to the specified address, so that the OS can 
+ * get the video infomation and settings by accessing the videoModeInfo data
+ * structure.
+ *
+ * Parameters:
+ * 		no parameters.
+ * Return:
+ *		no return value.
+ */
 void initVideoModeInfo();
 

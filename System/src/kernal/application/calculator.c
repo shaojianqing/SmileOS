@@ -66,8 +66,6 @@ static Button *divisionBtn;
 
 static Button *equalityBtn;
 
-static int sign = 0;
-
 static void numBtnClick(Button *this, MouseEvent *event);
 
 static void operBtnClick(Button *button, MouseEvent *event);
@@ -332,25 +330,12 @@ static void prepareWindowSheetCal()
 
 static void numBtnClick(Button *button, MouseEvent *event)
 {
-	if (button==num1Btn) {
-		int a=-100;
-		int b=a+133;
-
-		showIntegerValue(b, 100, 50);
-	} else if (button==num2Btn) {
-		showIntegerValue(2, 100, 50);
-	} else if (button==num3Btn) {
-		showIntegerValue(3, 100, 50);
-	}
+	
 }
 
 static void operBtnClick(Button *button, MouseEvent *event)
 {
-	if (button==equalityBtn) {
-		//int result = testGate(0xFF8822);		
-		//showIntegerValue(result, 100, 50);
-		//sign++;
-	}	
+		
 }
 
 static void onCloseBtnClick(ImageButton *this, MouseEvent *event)

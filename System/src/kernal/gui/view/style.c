@@ -30,13 +30,13 @@ ButtonStyle* ButtonStyleDarkRed()
     buttonStyleDarkRed.endColor.green = 80;
 	buttonStyleDarkRed.endColor.blue = 60;
 
-	buttonStyleDarkRed.startDownColor.red = 160;
-    buttonStyleDarkRed.startDownColor.green = 160;
-    buttonStyleDarkRed.startDownColor.blue = 160;
+	buttonStyleDarkRed.startDownColor.red = 200;
+    buttonStyleDarkRed.startDownColor.green = 60;
+    buttonStyleDarkRed.startDownColor.blue = 40;
 
-	buttonStyleDarkRed.endDownColor.red = 200;
-    buttonStyleDarkRed.endDownColor.green = 200;
-    buttonStyleDarkRed.endDownColor.blue = 200;
+	buttonStyleDarkRed.endDownColor.red = 220;
+    buttonStyleDarkRed.endDownColor.green = 60;
+    buttonStyleDarkRed.endDownColor.blue = 40;
 
 	buttonStyleDarkRed.textColor.red = 240;
     buttonStyleDarkRed.textColor.green = 240;
@@ -166,13 +166,13 @@ ButtonStyle* ButtonStyleDarkOrange()
     buttonStyleDarkOrange.endColor.green = 140;
     buttonStyleDarkOrange.endColor.blue = 70;
 
-	buttonStyleDarkOrange.startDownColor.red = 20;
+	buttonStyleDarkOrange.startDownColor.red = 160;
     buttonStyleDarkOrange.startDownColor.green = 100;
-    buttonStyleDarkOrange.startDownColor.blue = 170;
+    buttonStyleDarkOrange.startDownColor.blue = 30;
 
-	buttonStyleDarkOrange.endDownColor.red = 60;
-    buttonStyleDarkOrange.endDownColor.green = 140;
-    buttonStyleDarkOrange.endDownColor.blue = 210;
+	buttonStyleDarkOrange.endDownColor.red = 180;
+    buttonStyleDarkOrange.endDownColor.green = 120;
+    buttonStyleDarkOrange.endDownColor.blue = 50;
 
 	buttonStyleDarkOrange.textColor.red = 240;
     buttonStyleDarkOrange.textColor.green = 240;
