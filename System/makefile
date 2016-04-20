@@ -1,25 +1,56 @@
 ################################
-# Makefile for Shaojianqing OS #
+#    Makefile for Smile OS     #
 ################################
 
+# The general compiling commands #
 CP = cp
 LD = ld
 CC = gcc
 ASM = nasm
+
+# The Elf file compiling flages #
 ELFFLAGES = -f elf 
+
+# The C file compiling flages #
 CCFLAGES = -c -m32
+
+# The target file linking flages #
 LDFLAGES = -m elf_i386 -s -Ttext
-KERNALSTART = 0x80000
+
+# The start address of the kernel #
+KERNELSTART = 0x80000
+
+# The start address of application #
 APPLICATIONSTART = 0x0000
+
+# The imageTool command prefix #
 IMAGETOOL = java -jar ImageTool.jar
+
+# The create image command #
 CREATEIMAGE = createImage
+
+# The copy binary data command #
 COPYBINARY = copyBinary
+
+# The convert image data command #
 CONVERTIMAGE = convertImage
+
+# The build charset command #
 BUILDCHARSET = buildCharSet
+
+# The trim elf file header command #
 TRIMELFHEADER = objcopy -O binary
+
+# The fill byte content command #
 FILLBYTECONTENT = fillByteContent
+
+# The convert virtual harddisk command #
 CONVERT-VHD-FMT = VBoxManage clonehd
+
+# The vdi format flages #
 VDI-FORMAT = --format vdi
+
+# The start virtual machine command #
 RUN-SYSTEM = VBoxManage startvm System
 
 TGT = tgt/*
@@ -42,12 +73,12 @@ PUBLICOBJS = tgt/public.o
 #Interrupt Object#
 INTERRUPTOBJS = tgt/interrupta.o tgt/interruptc.o 
 
-#Kernal Target#
-KERNAL = tgt/kernal.sys
+#Kernel Target#
+KERNEL = tgt/kernel.sys
 
-KERNALBIN = tgt/kernal.bin
+KERNELBIN = tgt/kernel.bin
 
-KERNALOBJS = tgt/ka.o tgt/kc.o
+KERNELOBJS = tgt/ka.o tgt/kc.o
 
 #Module Target#
 PERIPHERAL = tgt/peripheral.o
@@ -235,120 +266,120 @@ tgt/boot.bin : src/boot/boot.asm
 tgt/loader.bin : src/boot/loader.asm src/boot/structure.inc
 	$(ASM) $< -o $@
 
-tgt/public.o : src/kernal/public/public.asm
+tgt/public.o : src/kernel/public/public.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
-tgt/interrupta.o : src/kernal/system/interrupt.asm
+tgt/interrupta.o : src/kernel/system/interrupt.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
 #---------------------------------------------------------------#
-tgt/peripheral.o : src/kernal/include/peripheral.c
+tgt/peripheral.o : src/kernel/include/peripheral.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/algorithm.o : src/kernal/algorithm/algorithm.c
+tgt/algorithm.o : src/kernel/algorithm/algorithm.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/charset.o : src/kernal/gui/charset.c
+tgt/charset.o : src/kernel/gui/charset.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/descriptor.o : src/kernal/system/descriptor.c
+tgt/descriptor.o : src/kernel/system/descriptor.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/interface.o : src/kernal/interface/interface.c
+tgt/interface.o : src/kernel/interface/interface.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/interruptc.o : src/kernal/system/interrupt.c
+tgt/interruptc.o : src/kernel/system/interrupt.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/process.o : src/kernal/process/process.c
+tgt/process.o : src/kernel/process/process.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/desktop.o : src/kernal/gui/desktop.c
+tgt/desktop.o : src/kernel/gui/desktop.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/memory.o : src/kernal/memory/memory.c
+tgt/memory.o : src/kernel/memory/memory.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/graphics.o : src/kernal/gui/graphics.c
+tgt/graphics.o : src/kernel/gui/graphics.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/harddisk.o : src/kernal/include/harddisk.c
+tgt/harddisk.o : src/kernel/include/harddisk.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/application.o : src/kernal/execute/application.c
+tgt/application.o : src/kernel/execute/application.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/timing.o : src/kernal/include/timing.c
+tgt/timing.o : src/kernel/include/timing.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/sheet.o : src/kernal/gui/sheet.c
+tgt/sheet.o : src/kernel/gui/sheet.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/window.o : src/kernal/gui/window.c
+tgt/window.o : src/kernel/gui/window.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/image.o : src/kernal/gui/image.c
+tgt/image.o : src/kernel/gui/image.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/video.o : src/kernal/gui/video.c
+tgt/video.o : src/kernel/gui/video.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/keyboard.o : src/kernal/include/keyboard.c
+tgt/keyboard.o : src/kernel/include/keyboard.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/mouse.o : src/kernal/include/mouse.c
+tgt/mouse.o : src/kernel/include/mouse.c
 	$(CC) $(CCFLAGES) $< -o $@
 
 #---------------------------------------------------------------#
-tgt/view.o : src/kernal/gui/view/view.c
+tgt/view.o : src/kernel/gui/view/view.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/test.o : src/kernal/gui/test.c
+tgt/test.o : src/kernel/gui/test.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/imageView.o : src/kernal/gui/view/imageView.c
+tgt/imageView.o : src/kernel/gui/view/imageView.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/startButton.o : src/kernal/gui/view/startButton.c
+tgt/startButton.o : src/kernel/gui/view/startButton.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/imageButton.o : src/kernal/gui/view/imageButton.c
+tgt/imageButton.o : src/kernel/gui/view/imageButton.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/coorPanel.o : src/kernal/gui/view/coorPanel.c
+tgt/coorPanel.o : src/kernel/gui/view/coorPanel.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/gridPanel.o : src/kernal/gui/view/gridPanel.c
+tgt/gridPanel.o : src/kernel/gui/view/gridPanel.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/graphPanel.o : src/kernal/gui/view/graphPanel.c
+tgt/graphPanel.o : src/kernel/gui/view/graphPanel.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/button.o : src/kernal/gui/view/button.c
+tgt/button.o : src/kernel/gui/view/button.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/gridDataItem.o : src/kernal/gui/view/item/gridDataItem.c
+tgt/gridDataItem.o : src/kernel/gui/view/item/gridDataItem.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/style.o : src/kernal/gui/view/style.c
+tgt/style.o : src/kernel/gui/view/style.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/factory.o : src/kernal/gui/factory/factory.c
+tgt/factory.o : src/kernel/gui/factory/factory.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/execute.o : src/kernal/execute/execute.c
+tgt/execute.o : src/kernel/execute/execute.c
 	$(CC) $(CCFLAGES) $< -o $@
 #---------------------------------------------------------------#
-tgt/ka.o : src/kernal/kernal.asm
+tgt/ka.o : src/kernel/kernel.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
-tgt/kc.o : src/kernal/kernal.c
+tgt/kc.o : src/kernel/kernel.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/kernal.bin : $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH)  $(DATA_SETTING) $(IMAGEVIEWER) $(STARTBUTTON) $(IMAGEBUTTON) $(IMAGEVIEW) $(COORPANEL) $(GRIDPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(GRIDDATAITEM) $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION)
-	$(LD) $(LDFLAGES) $(KERNALSTART) $(KERNALOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(DATA_SETTING) $(IMAGEVIEWER) $(STARTBUTTON) $(IMAGEBUTTON) $(IMAGEVIEW) $(COORPANEL) $(GRIDPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(GRIDDATAITEM) $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION) -o $@
+tgt/kernel.bin : $(KERNELOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(CHARAPI) $(GRAPHICS) $(HARDDISK) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH)  $(DATA_SETTING) $(IMAGEVIEWER) $(STARTBUTTON) $(IMAGEBUTTON) $(IMAGEVIEW) $(COORPANEL) $(GRIDPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(GRIDDATAITEM) $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION)
+	$(LD) $(LDFLAGES) $(KERNELSTART) $(KERNELOBJS) $(PUBLICOBJS) $(INTERRUPTOBJS) $(PERIPHERAL) $(ALGORITHM) $(GRAPHICS) $(HARDDISK) $(CHARAPI) $(DESCRIPTOR) $(INTERFACE) $(MEMORY) $(TIMING) $(PROCESS) $(KEYBOARD) $(MOUSE) $(VIDEO) $(SHEET) $(IMAGE) $(VIEW) $(DESKTOP) $(WINDOW) $(COMMAND) $(SYSINFO) $(MATHE) $(CALCU) $(GRAPH) $(DATA_SETTING) $(IMAGEVIEWER) $(STARTBUTTON) $(IMAGEBUTTON) $(IMAGEVIEW) $(COORPANEL) $(GRIDPANEL) $(GRAPHPANEL) $(STYLE) $(BUTTON) $(GRIDDATAITEM) $(TEST) $(FACTORY) $(EXECUTE) $(APPLICATION) -o $@
 
-tgt/kernal.sys : $(KERNALBIN)
+tgt/kernel.sys : $(KERNELBIN)
 	$(TRIMELFHEADER) $< $@
 
 #---------------------------------------------------------------#
@@ -356,38 +387,38 @@ tgt/charset.bin : res/charset/charset.csr
 	$(IMAGETOOL) $(BUILDCHARSET) $< $@
 
 #---------------------------------------------------------------#
-tgt/mouse.sys : src/kernal/mouse/mouse.asm
+tgt/mouse.sys : src/kernel/mouse/mouse.asm
 	$(ASM) $< -o $@
 
 #---------------------------------------------------------------#
-tgt/command.o : src/kernal/application/command.c
+tgt/command.o : src/kernel/application/command.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/sysInfo.o : src/kernal/application/systemInfo.c
+tgt/sysInfo.o : src/kernel/application/systemInfo.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/mathematics.o : src/kernal/application/mathematics.c
+tgt/mathematics.o : src/kernel/application/mathematics.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/calculator.o : src/kernal/application/calculator.c
+tgt/calculator.o : src/kernel/application/calculator.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/dataGraph.o : src/kernal/application/dataGraph.c
+tgt/dataGraph.o : src/kernel/application/dataGraph.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/dataSetting.o : src/kernal/application/dataSetting.c
+tgt/dataSetting.o : src/kernel/application/dataSetting.c
 	$(CC) $(CCFLAGES) $< -o $@
 
-tgt/imageViewer.o : src/kernal/application/imageViewer.c
+tgt/imageViewer.o : src/kernel/application/imageViewer.c
 	$(CC) $(CCFLAGES) $< -o $@
 #---------------------------------------------------------------#
-tgt/systemApi.o :src/kernal/execute/systemApi.asm
+tgt/systemApi.o :src/kernel/execute/systemApi.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
-tgt/runnable.o :src/kernal/execute/runnable.asm
+tgt/runnable.o :src/kernel/execute/runnable.asm
 	$(ASM) $(ELFFLAGES) $< -o $@
 
-tgt/browser.o : src/kernal/application/browser.c
+tgt/browser.o : src/kernel/application/browser.c
 	$(CC) $(CCFLAGES) $< -o $@
 
 tgt/browser.elf : tgt/runnable.o tgt/browser.o tgt/systemApi.o
@@ -507,12 +538,12 @@ tgt/ico_btn_miniz.image : res/images/ico_btn_miniz.bmp
 	$(IMAGETOOL) $(CONVERTIMAGE) $< $@ 20 20 false
 
 #---------------------------------------------------------------#
-System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernal.sys tgt/browser.elf tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/bg5.image tgt/bg_small_1.image tgt/bg_small_2.image tgt/bg_small_3.image tgt/bg_small_4.image tgt/bg_small_5.image tgt/bg_middle_1.image tgt/bg_middle_2.image tgt/bg_middle_3.image tgt/bg_middle_4.image tgt/bg_middle_5.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/ico_app_grh.image tgt/ico_app_mat.image tgt/ico_btn_bar_graph.image tgt/ico_btn_line_graph.image tgt/ico_btn_hybd_graph.image tgt/ico_btn_fin_graph.image tgt/ico_btn_line_math.image tgt/ico_btn_quadratic_math.image tgt/ico_btn_circle_math.image tgt/ico_btn_ellipse_math.image tgt/ico_btn_sys_process.image tgt/ico_btn_sys_memory.image tgt/ico_btn_background.image tgt/ico_sys_logo.image tgt/ico_sys_power.image tgt/ico_sys_network.image tgt/ico_btn_close.image tgt/ico_btn_miniz.image tgt/charset.bin  
+System.vhd : tgt/boot.bin tgt/loader.bin tgt/kernel.sys tgt/browser.elf tgt/bg1.image tgt/bg2.image tgt/bg3.image tgt/bg4.image tgt/bg5.image tgt/bg_small_1.image tgt/bg_small_2.image tgt/bg_small_3.image tgt/bg_small_4.image tgt/bg_small_5.image tgt/bg_middle_1.image tgt/bg_middle_2.image tgt/bg_middle_3.image tgt/bg_middle_4.image tgt/bg_middle_5.image tgt/ico_app_sys.image tgt/ico_app_cmd.image tgt/ico_app_img.image tgt/ico_app_cal.image tgt/ico_app_grh.image tgt/ico_app_mat.image tgt/ico_btn_bar_graph.image tgt/ico_btn_line_graph.image tgt/ico_btn_hybd_graph.image tgt/ico_btn_fin_graph.image tgt/ico_btn_line_math.image tgt/ico_btn_quadratic_math.image tgt/ico_btn_circle_math.image tgt/ico_btn_ellipse_math.image tgt/ico_btn_sys_process.image tgt/ico_btn_sys_memory.image tgt/ico_btn_background.image tgt/ico_sys_logo.image tgt/ico_sys_power.image tgt/ico_sys_network.image tgt/ico_btn_close.image tgt/ico_btn_miniz.image tgt/charset.bin  
 	$(CP) $(EMPTY) $@
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BOOT) 0
 	$(IMAGETOOL) $(COPYBINARY) $@ $(LOADER) 512
 	$(IMAGETOOL) $(COPYBINARY) $@ $(CHARSET) 4096
-	$(IMAGETOOL) $(COPYBINARY) $@ $(KERNAL) 36864
+	$(IMAGETOOL) $(COPYBINARY) $@ $(KERNEL) 36864
 	$(IMAGETOOL) $(COPYBINARY) $@ $(BROWSER) 2097152   #0x1000
 	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_BAR_GRAPH) 4194304  #0x2000
 	$(IMAGETOOL) $(COPYBINARY) $@ $(ICO_BTN_PRO_SYS) 4196352  #0x2004

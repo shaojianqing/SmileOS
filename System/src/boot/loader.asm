@@ -149,9 +149,9 @@ vram:
 
 	jmp dword SYS_SELECTOR : KERNAL_ADDR 
 
-packageSize: db 0
-reserveByte: db 0
-blockCount:  dw 0
-bufferOffs:  dw 0
-bufferSegm:  dw 0
-blockNum:    dq 0
+packageSize: db 		0
+reserveByte: db 		0
+blockCount:  dw 		0
+bufferOffs:  dw 		0
+bufferSegm:  dw 		0
+blockNum:    dq 		0
