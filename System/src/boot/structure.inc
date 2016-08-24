@@ -1,9 +1,9 @@
 
 
-DA_DATA         EQU       0x
+DA_DATA     EQU   0x00
 ;----------------------------------------------------------------------------
-DA_32		EQU       0x04000	
-DA_32_4K        EQU       0x0C000
+DA_32		EQU   0x04000	
+DA_32_4K    EQU   0x0C000
 
 DA_DPL0		EQU	  0x00	
 DA_DPL1		EQU	  0x20	

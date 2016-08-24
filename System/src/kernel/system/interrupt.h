@@ -6,7 +6,7 @@
 #define LIMIT_IDT 			0x7FF
 
 /* 
- * The Arributes of interrupt gate descriptor.
+ * The Attributes of interrupt gate descriptor.
  */
 #define AR_INTGATE32 		0x008e
 

@@ -30,6 +30,7 @@ void intHandler2e()
 {
 	inByte(REG_STATUS);
 	outByte(0x20, 0xA0);
+	outByte(0x20, 0x20);
 	isHardDiskReady = TRUE;
 	return;
 }

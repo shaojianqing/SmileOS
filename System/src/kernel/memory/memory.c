@@ -65,6 +65,7 @@ bool isSizeLargeThan(Object *object1, Object *object2)
 u32 alloc(u32 size)
 {
     if (size>0) {
+		clearInterrupt();
 		size = ((size+0xf)&0xfffffff0);
         MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
 		MemoryInfo *currentMemoryInfo = (*memoryManager).firstMemoryInfo;
@@ -121,6 +122,7 @@ u32 alloc(u32 size)
 			(*memoryManager).firstMemoryInfo = (*memoryManager).memoryInfos[0];
 			(*memoryManager).lastMemoryInfo = (*memoryManager).memoryInfos[totalNum-1];
 		}
+		setupInterrupt();
 		return (*allocedMemoryInfo).addr;
     }
     return null;
@@ -129,6 +131,7 @@ u32 alloc(u32 size)
 u32 allocPage(u32 size)
 {
     if (size>0) {
+		clearInterrupt();
 		int *page = (int *)MEM_PAGE_BASE;
 		int start = (SYS_PAGE_BASE/0x1000);
         size = ((size+0xfff)&0xfffff000);
@@ -152,6 +155,7 @@ u32 allocPage(u32 size)
 			}
 			p = *(page+start);
 			u32 address = (p&0xFFFFF000);
+			setupInterrupt();
 			return address;
 		}				
     }
@@ -161,6 +165,7 @@ u32 allocPage(u32 size)
 void release(u32 addr)
 {
 	if (addr!=null) {
+		clearInterrupt();
 		MemoryManager *memoryManager = (MemoryManager *)MEM_MANAGE_BASE;
 		MemoryInfo *currentMemoryInfo = (*memoryManager).firstMemoryInfo;
 		MemoryInfo *memoryInfo = (*memoryManager).lastMemoryInfo;
@@ -229,12 +234,14 @@ void release(u32 addr)
 				}
 			}						
 		}
+		setupInterrupt();
 	}
 }
 
 void releasePage(u32 addr, u32 size)
 {
 	if (size>0) {
+		clearInterrupt();
 		size = ((size+0xfff)&0xfffff000);
 		int *page = (int *)MEM_PAGE_BASE;
 		int num = size/0x1000, p = 0, i = 0, j = 0, total = 0;
@@ -248,7 +255,8 @@ void releasePage(u32 addr, u32 size)
 				*(page+start+i) = p;
 				++i;
 			}
-		}			
+		}
+		setupInterrupt();		
 	}
 }
 

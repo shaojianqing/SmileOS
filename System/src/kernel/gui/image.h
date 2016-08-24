@@ -32,7 +32,7 @@ typedef struct Image
 } Image;
 
 /* 
- * Load the imgae data at the specified sector position and mainly from the harddisk.
+ * Load the image data at the specified sector position and mainly from the harddisk.
  *
  * Parameters:
  * 		sector: the starting sector position of the image data in the harddisk.

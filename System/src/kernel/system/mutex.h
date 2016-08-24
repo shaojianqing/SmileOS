@@ -1,7 +1,7 @@
 
 #define STATUS_LOCK			TRUE
 #define STATUS_UNLOCK		FALSE
-
+k
 /* The data structure of the mutex, containing the lock/unlock
  * status and the process pointer the mutex controls. 
  */

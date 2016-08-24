@@ -507,6 +507,8 @@ static void drawEillpseFunction(CoorPanel *coorPanel)
 			}			
 		}
 
+		printString(canvas, "x*x/40000+y*y/10000=1", 21, 540, 150, linearColor, linearColor);
+
 		linearColor.red = 20;
         linearColor.green = 220;
         linearColor.blue = 180;
@@ -518,6 +520,8 @@ static void drawEillpseFunction(CoorPanel *coorPanel)
 				}				
 			}			
 		}
+
+		//printString(canvas, "x^2+y^2=160^160", 15, 540, 200, linearColor, linearColor);
 
 		View *view = (View *)coorPanel;
 		(*view).refreshRectView(view);

@@ -39,6 +39,7 @@ Process *requestProcess()
 {	
 	int i=0;
 	Process *process=null;
+	clearInterrupt();
 	for (i=0;i<USER_PROCESS_NUM;++i) {
 		if ((*processManager).processArray[i].status == STATUS_PROCESS_INIT) {
 			process = &((*processManager).processArray[i]);
@@ -62,17 +63,21 @@ Process *requestProcess()
 			(*process).tss.ds = 0;
 			(*process).tss.fs = 0;
 			(*process).tss.gs = 0;
-
+			setupInterrupt();
 			return process;
 		}
 	}
+	setupInterrupt();
 	return null;
 }
 
 Process *getCurrentProcess()
 {
+	clearInterrupt();
 	ProcessManager *processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
-	return (*processManager).processList[(*processManager).current];
+	Process *currentProcess = (*processManager).processList[(*processManager).current];
+	setupInterrupt();
+	return currentProcess;
 }
 
 void registerKernelProcess()
@@ -87,12 +92,14 @@ Process *addProcess(Process *process)
 {	
 	if (process != null) {
 		ProcessManager *processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
+		clearInterrupt();
 		if ((*processManager).running<TOTAL_PROCESS_NUM) {
 			(*process).index = (*processManager).running;
 			(*processManager).processList[(*processManager).running] = process;
 			(*process).status = STATUS_PROCESS_RUNNING;
 			(*processManager).running++;
-		}		
+		}
+		setupInterrupt();	
 	}
 	return process;
 }
@@ -102,6 +109,7 @@ Process *removeProcess(Process *process)
 	if (process != null) {
 		ProcessManager *processManager = (ProcessManager *)PROCESS_TABLE_ADDRESS;
 		int i=0;
+		clearInterrupt();
 		for(i=0;i<(*processManager).running;++i) {
 			if ((*processManager).processList[i]==process) {
 				break;			
@@ -118,6 +126,7 @@ Process *removeProcess(Process *process)
 		for (;i<(*processManager).running;++i) {
 			(*processManager).processList[i] = (*processManager).processList[i + 1];
 		}
+		setupInterrupt();
 	}
 	return process;
 }
@@ -149,6 +158,7 @@ Process *startRunProcess(Process *process, int priority)
 
 void startSwitchProcess()
 {
+	clearInterrupt();
 	if ((*processManager).currentPriority==0) {
 		Process *newProcess, *currentProcess = (*processManager).processList[(*processManager).current];
 
@@ -167,12 +177,14 @@ void startSwitchProcess()
 	} else {
 		(*processManager).currentPriority--;
 	}
+	setupInterrupt();
 	return;
 }
 
 void switchKernelProcess()
 {
 	if (processManager!=null) {
+		clearInterrupt();
 		Process *currentProcess = (*processManager).processList[(*processManager).current];
 		if (currentProcess!=null && kernelProcess!=currentProcess) {
 			u32 index = (*kernelProcess).index;
@@ -184,6 +196,7 @@ void switchKernelProcess()
 			short kernelProcessNum = (*kernelProcess).tssSelector;
 			switchProcess(0, kernelProcessNum);
 		}
+		setupInterrupt();
 	}
 }
 

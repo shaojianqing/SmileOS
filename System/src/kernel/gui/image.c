@@ -46,7 +46,6 @@ static void releaseSelf(Image *image)
 			u32 size = ((*image).width)*((*image).height)*SCREEN_DENSITY;
 			releasePage((u32)(*image).buffer, size);
 			release((u32)image);
-			
 		}
 	}
 }

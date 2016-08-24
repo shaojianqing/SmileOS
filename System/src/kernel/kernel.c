@@ -72,8 +72,8 @@ int testCallGate(int color)
 
 void initSystem(void)
 {
-    mouseData.phase = 0;
- 	
+	mouseData.phase = 0;
+
 	initVideoModeInfo();				
 	initInterfaceTable();				
 	initInterruptHandler();				
@@ -81,8 +81,8 @@ void initSystem(void)
 	initTimerManagement();				
 	initPeripheralStatus();				
 	initKeyTableSetting();				
-    initMemoryManagement();				
-    initSheetManagement();				
+	initMemoryManagement();				
+	initSheetManagement();				
 	initProcessManagement();
 	prepareKernelProcess();				
 	initDesktopInfoSheet();
