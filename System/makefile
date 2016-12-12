@@ -51,7 +51,7 @@ CONVERT-VHD-FMT = VBoxManage clonehd
 VDI-FORMAT = --format vdi
 
 # The start virtual machine command #
-RUN-SYSTEM = VBoxManage startvm System
+RUN-SYSTEM = VBoxManage startvm SmileOS
 
 TGT = tgt/*
 

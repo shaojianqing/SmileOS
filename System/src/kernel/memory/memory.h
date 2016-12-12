@@ -25,13 +25,15 @@
 
 typedef struct MemoryInfo MemoryInfo;
 
+typedef struct MemoryManager MemoryManager;
+
 /* 
  * The MemoryInfo data structure, it represents one memory fragment in total memory,
  * and it has the address and size field, as welll as the status field which marks the
  * memory fragment being alloced or unalloced.There are also another fields prev and next
  * pointer because the memoryInfo is organized and managed in the form of linked list.
  */
-typedef struct MemoryInfo
+struct MemoryInfo
 {
 	u8 status;
 
@@ -43,14 +45,14 @@ typedef struct MemoryInfo
 
 	MemoryInfo *next;
 
-} MemoryInfo;
+};
 
 /* 
  * The MemoryManager data structure, it keep record of the total memory size,
  * the memoryInfo list, so that it can record and manage the allocation of the
  * system memory.
  */
-typedef struct MemoryManager
+struct MemoryManager
 {
 	u32 totalNum;
 	
@@ -62,7 +64,7 @@ typedef struct MemoryManager
 
     MemoryInfo memoryInfoList[MEM_INFO_NUM];
 
-} MemoryManager;
+};
 
 /* 
  * Initialize the MemoryManager instance, including initialize the memoryInfo

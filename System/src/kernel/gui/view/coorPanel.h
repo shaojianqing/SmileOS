@@ -12,7 +12,7 @@ typedef struct CoorPanel CoorPanel;
  * It extends the View class, and is designed to draw a variety
  * of mathmetics pictures.
  */
-typedef struct CoorPanel
+struct CoorPanel
 {
     View view;
 
@@ -39,7 +39,7 @@ typedef struct CoorPanel
 	 */
 	void (*drawFuncation)(CoorPanel *this);
 
-} CoorPanel;
+};
 
 /* 
  * Create and initialize one coorPanel object with the specified

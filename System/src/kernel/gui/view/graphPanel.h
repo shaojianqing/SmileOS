@@ -12,7 +12,7 @@ typedef struct GraphPanel GraphPanel;
  * It extends the View class, and is designed to draw a variety
  * of statistics graph like bar graph, line graph.
  */
-typedef struct GraphPanel
+struct GraphPanel
 {
     View view;
 
@@ -39,7 +39,7 @@ typedef struct GraphPanel
 	 */
 	void (*drawGraph)(GraphPanel *this);
 
-} GraphPanel;
+};
 
 /* 
  * Create and initialize one graphPanel object with the specified

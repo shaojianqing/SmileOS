@@ -1,16 +1,16 @@
 
-typedef struct Factory Factory;
+struct Factory;
+
+struct ButtonStyle;
 
 typedef struct Button Button;
-
-typedef ButtonStyle* (*ButtonStyleType)();
 
 /* 
  * The Button data structure represents the Button class.
  * It extends the View class, and is designed to be the
  * button object. 
  */
-typedef struct Button
+struct Button
 {
     View view;
 
@@ -22,9 +22,9 @@ typedef struct Button
 
 	Image *image;
 
-	Factory *factory;
+	struct Factory *factory;
 
-	ButtonStyleType buttonStyleType;
+	struct ButtonStyle* (*buttonStyleType)();
 
 	/* 
 	 * Initialize one button object with the specified parameters.
@@ -37,7 +37,7 @@ typedef struct Button
 	 * Return:
 	 *		no return value.
 	 */
-	void (*initButton)(Button *this, char *text, int length, ButtonStyleType buttonStyleType);
+	void (*initButton)(Button *this, char *text, int length, struct ButtonStyle* (*buttonStyleType)());
 
 	/* 
 	 * The callback function of the mouse click operation.
@@ -72,7 +72,7 @@ typedef struct Button
 	 */
 	void (*buttonOnTimer)();
 
-} Button;
+};
 
 /* 
  * Create and initialize one button object with the specified
@@ -88,4 +88,4 @@ typedef struct Button
  * Return:
  *		Button pointer.
  */
-Button *createButton(int x, int y, int w, int h, Factory *factory, Image *image);
+Button *createButton(int x, int y, int w, int h, struct Factory *factory, Image *image);

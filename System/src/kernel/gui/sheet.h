@@ -25,11 +25,13 @@
 
 #define SHEET_NUM 256
 
-typedef struct View View;
+struct View;
 
-typedef struct Image Image;
+struct Process;
 
-typedef struct Process Process;
+typedef struct Sheet Sheet;
+
+typedef struct SheetManager SheetManager;
 
 /* 
  * The Sheet data structure represents one window or layer
@@ -37,7 +39,7 @@ typedef struct Process Process;
  * the data buffer, x and y axis, width and height property, and 
  * other content.
  */
-typedef struct Sheet
+struct Sheet
 {
     u8 *buffer;
 
@@ -49,18 +51,18 @@ typedef struct Sheet
 
 	bool visible;
 
-	View *contentView;
+	struct View *contentView;
 
-	Process *process;
+	struct Process *process;
 
-} Sheet;
+};
 
 /* 
  * The Sheet Manager data structure manages sheet, maintains
  * sheet list, keeps record of sheetNum and recycles sheet and so on.
  * There is only one instance of Sheet Manager in this OS.
  */
-typedef struct SheetManager
+struct SheetManager
 {
     u8 sheetNum;
 
@@ -68,7 +70,7 @@ typedef struct SheetManager
 
     Sheet sheetList[SHEET_NUM];
 
-} SheetManager;
+};
 
 /* 
  * Initialize the SheetManager instance, including building the 
@@ -132,7 +134,7 @@ Sheet* getCurrentSheet(int x, int y);
  * Return:
  *		no return value.
  */
-void loadContentView(Sheet *sheet, View *view);
+void loadContentView(Sheet *sheet, struct View *view);
 
 /* 
  * Refresh the sheet content in the specified area.

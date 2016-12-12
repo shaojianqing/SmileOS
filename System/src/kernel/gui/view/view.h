@@ -3,11 +3,11 @@
  */
 #define MAX_SUB_VIEW_NUM 64
 
+struct Sheet;
+
+struct MouseEvent;
+
 typedef struct View View;
-
-typedef struct Sheet Sheet;
-
-typedef struct MouseEvent MouseEvent;
 
 /* 
  * The View data structure represents the View class.It is base class
@@ -15,9 +15,9 @@ typedef struct MouseEvent MouseEvent;
  * to display one view and funcions to perform some basic operation on the
  * view.
  */
-typedef struct View
+struct View
 {
-    Sheet *sheet;
+    struct Sheet *sheet;
 
 	View *parentView;
 
@@ -135,7 +135,7 @@ typedef struct View
 	 * Return:
 	 *		no return value.
 	 */
-	void (*onMouseDown)(View *this, MouseEvent *event);
+	void (*onMouseDown)(View *this, struct MouseEvent *event);
 	
 	/* 
      * The mouse event handler, it is called every time mouse operation
@@ -147,9 +147,9 @@ typedef struct View
 	 * Return:
 	 *		no return value.
 	 */
-	void (*processMouseDownEvent)(View *this, MouseEvent *event);
+	void (*processMouseDownEvent)(View *this, struct MouseEvent *event);
 
-} View;
+};
 
 /* 
  * Create and initialize one View object with the specified

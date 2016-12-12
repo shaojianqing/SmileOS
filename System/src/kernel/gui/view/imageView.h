@@ -6,7 +6,7 @@ typedef struct ImageView ImageView;
  * It extends the View class, and is used to show one image in 
  * the particular view area.
  */
-typedef struct ImageView
+struct ImageView
 {
     View view;
 
@@ -24,7 +24,7 @@ typedef struct ImageView
 	 */
 	void (*initWithImage)(ImageView *this, Image *image, Color borderColor);
 
-} ImageView;
+};
 
 /* 
  * Create and initialize one imageView object with the specified

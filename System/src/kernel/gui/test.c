@@ -5,6 +5,7 @@
 #include "color.h"
 #include "corner.h"
 #include "view/view.h"
+#include "image.h"
 #include "graphics.h"
 #include "test.h"
 

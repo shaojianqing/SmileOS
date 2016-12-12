@@ -11,7 +11,7 @@ typedef struct Image Image;
  * Meanwhile, it also has retain and release function pointers to implement
  * the memory allocation and release operation.
  */
-typedef struct Image
+struct Image
 {
     u8 *head;
 
@@ -29,7 +29,7 @@ typedef struct Image
 
 	void (*release)(Image *image);
 
-} Image;
+};
 
 /* 
  * Load the image data at the specified sector position and mainly from the harddisk.

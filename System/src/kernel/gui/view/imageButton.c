@@ -4,13 +4,14 @@
 #include "../color.h"
 #include "../corner.h"
 #include "view.h"
+#include "event.h"
 #include "../image.h"
 #include "../graphics.h"
 #include "imageButton.h"
 
 static void setSelect(ImageButton *this, bool isSelect);
 
-static void onMouseDown(View *this, MouseEvent *event);
+static void onMouseDown(View *this, struct MouseEvent *event);
 
 static void initWithImage(ImageButton *this, Image *image, Color normalColor, Color selectColor);
 

@@ -6,7 +6,7 @@ typedef struct StartButton StartButton;
  * It extends the View class, and is used as the entry button to 
  * start one applicaion.
  */
-typedef struct StartButton
+struct StartButton
 {
 	/* 
 	 * View element at the first place as the parent class of the
@@ -25,7 +25,7 @@ typedef struct StartButton
 	 */
 	void (*initWithImage)(StartButton *this, Image *image);
 
-} StartButton;
+};
 
 /* 
  * Create and initialize one StartButton object with the specified

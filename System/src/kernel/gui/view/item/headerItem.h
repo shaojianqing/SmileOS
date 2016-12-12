@@ -1,6 +1,4 @@
 
-typedef struct HeaderItem HeaderItem;
-
 typedef struct HeaderItem
 {
     char *name;

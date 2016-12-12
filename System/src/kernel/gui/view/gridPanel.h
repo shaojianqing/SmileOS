@@ -12,7 +12,7 @@ typedef GridDataItem *(*ItemRender)(GridPanel *this, u32 index, int width, int h
  * It extends the View class, and is designed to draw the particular
  * dataGrid.
  */
-typedef struct GridPanel
+struct GridPanel
 {
     View view;
 
@@ -45,7 +45,7 @@ typedef struct GridPanel
 	 */
 	void (*renderDataGrid)(GridPanel *this, u32 dataSize, ItemRender itemRender);
 
-} GridPanel;
+};
 
 /* 
  * Create and initialize one gridPanel object with the specified

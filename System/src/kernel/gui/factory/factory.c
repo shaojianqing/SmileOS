@@ -4,6 +4,7 @@
 #include "../color.h"
 #include "../corner.h"
 #include "../view/view.h"
+#include "../view/event.h"
 #include "../view/style.h"
 #include "../view/button.h"
 #include "../event/buttonEvent.h"

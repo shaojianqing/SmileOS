@@ -4,6 +4,8 @@
 #include "../color.h"
 #include "../corner.h"
 #include "view.h"
+#include "event.h"
+#include "../image.h"
 #include "../graphics.h"
 #include "graphPanel.h"
 

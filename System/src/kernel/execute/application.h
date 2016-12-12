@@ -14,6 +14,8 @@
 #define PAGE_DIR_SIZE			0x400000
 #define PAGE_SIZE				0x1000
 
+struct Process;
+
 /* 
  * The Application data struture represents one application image in the memory.
  * It is usually constructed from the ExecutableFile data and is used to create
@@ -25,7 +27,7 @@ typedef struct Application
 
 	int totalSize;
 
-	Process *process;
+	struct Process *process;
 
 } Application;
 

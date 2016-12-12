@@ -5,8 +5,6 @@
 #define SIGN_PROCESS_BLOCKED 1
 #define SIGN_PROCESS_READY 2
 
-typedef struct ProcessData ProcessData;
-
 typedef struct ProcessData
 {
 	int pId;

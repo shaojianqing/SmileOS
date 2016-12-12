@@ -2,19 +2,19 @@
 
 #define MAX_BUTTON_EVENT 64
 
-typedef struct Button Button;
+struct Button;
+
+struct ButtonEvent;
 
 typedef struct Factory Factory;
 
-typedef struct ButtonEvent ButtonEvent;
-
-typedef struct Factory
+struct Factory
 {
-	Button *selectButtonList[MAX_BUTTON_SIZE];
+	struct Button *selectButtonList[MAX_BUTTON_SIZE];
 
-	Button *deselectButtonList[MAX_BUTTON_SIZE];
+	struct Button *deselectButtonList[MAX_BUTTON_SIZE];
 
-	ButtonEvent buttonEventList[MAX_BUTTON_EVENT];
+	struct ButtonEvent buttonEventList[MAX_BUTTON_EVENT];
 
 	int selectFree, deselectFree;
 
@@ -26,9 +26,9 @@ typedef struct Factory
 
 	int eventP, eventQ;
 
-	void (*selectButton)(Factory *factory, Button *button);
+	void (*selectButton)(Factory *factory, struct Button *button);
 
-	void (*processEvent)(Factory *factory, Button *button, MouseEvent *event);
+	void (*processEvent)(Factory *factory, struct Button *button, MouseEvent *event);
 
 	void (*deselectButton)(Factory *factory);
 
@@ -38,6 +38,6 @@ typedef struct Factory
 
     void (*onTimer)();
 
-} Factory;
+};
 
 void initFactory(Factory *factory, void (*onTimer)());

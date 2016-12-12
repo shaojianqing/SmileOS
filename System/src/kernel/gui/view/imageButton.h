@@ -1,4 +1,6 @@
 
+struct MouseEvent;
+
 typedef struct ImageButton ImageButton;
 
 /* 
@@ -6,7 +8,7 @@ typedef struct ImageButton ImageButton;
  * It extends the View class, and is used to show one image and perform
  * button operation.
  */
-typedef struct ImageButton
+struct ImageButton
 {
     View view;
 
@@ -39,7 +41,7 @@ typedef struct ImageButton
 	 * Return:
 	 *		no return value.
 	 */
-	void (*onMouseClick)(ImageButton *this, MouseEvent *event);
+	void (*onMouseClick)(ImageButton *this, struct MouseEvent *event);
 
 	/* 
 	 * Set the appearance of the button to be selected or unselected. 
@@ -52,7 +54,7 @@ typedef struct ImageButton
 	 */
 	void (*setSelect)(ImageButton *this, bool isSelect);
 
-} ImageButton;
+};
 
 /* 
  * Create and initialize one imageButton object with the specified

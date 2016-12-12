@@ -2,6 +2,7 @@
 #include "../type/type.h"
 #include "../gui/color.h"
 #include "../gui/corner.h"
+#include "../gui/sheet.h"
 #include "../gui/image.h"
 #include "../gui/view/view.h"
 #include "../gui/view/style.h"

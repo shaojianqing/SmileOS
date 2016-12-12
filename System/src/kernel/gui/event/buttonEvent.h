@@ -1,11 +1,13 @@
-typedef struct Button Button;
+
+struct Button;
+
+struct MouseEvent;
 
 typedef struct ButtonEvent ButtonEvent;
 
-typedef struct ButtonEvent
+struct ButtonEvent
 {
-	Button *button;
+	struct Button *button;
 
-	MouseEvent *event;
-
-} ButtonEvent;
+	struct MouseEvent *event;
+};

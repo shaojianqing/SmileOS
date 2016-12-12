@@ -6,12 +6,14 @@
 #include "../color.h"
 #include "../corner.h"
 #include "view.h"
+#include "event.h"
 #include "../graphics.h"
 #include "../event/buttonEvent.h"
 #include "../factory/factory.h"
 #include "style.h"
-#include "event.h"
 #include "button.h"
+
+typedef struct ButtonStyle* (*ButtonStyleType)();
 
 static void selectButtonStatus(Button *this, bool select);
 
@@ -25,7 +27,7 @@ static void drawDownAppearance(Button *this, int width, int height);
 
 static void drawButtonText(Button *this, char *string, int length, int width, int height);
 
-static void initButton(Button *this, char *text, int length, ButtonStyleType buttonStyleType);
+static void initButton(Button *this, char *text, int length, struct ButtonStyle* (*buttonStyleType)());
 
 Button *createButton(int x, int y, int w, int h, Factory *factory, Image *image)
 {
@@ -41,7 +43,7 @@ Button *createButton(int x, int y, int w, int h, Factory *factory, Image *image)
 	return button;
 }
 
-void initButton(Button *this, char text[16], int length, ButtonStyleType buttonStyleType)
+void initButton(Button *this, char text[16], int length, struct ButtonStyle* (*buttonStyleType)())
 {
 	if (this!=null) {		
 		int width = (*this).view.width;
